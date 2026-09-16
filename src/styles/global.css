@@ -1,0 +1,99 @@
+@import 'tailwindcss';
+
+@layer base {
+	html,
+	body {
+		background-color: #f7f5f2; /* Warm beige */
+		color: #1c1917; /* stone-900 */
+	}
+}
+
+/* Texture & Grid */
+.paper-texture {
+	position: fixed;
+	inset: 0;
+	z-index: -1;
+	background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+	pointer-events: none;
+}
+
+.subtle-grid {
+	background-size: 40px 40px;
+	background-image:
+		linear-gradient(to right, rgba(28, 25, 23, 0.04) 1px, transparent 1px),
+		linear-gradient(to bottom, rgba(28, 25, 23, 0.04) 1px, transparent 1px);
+	mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+	-webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+}
+
+/* Elegant List Styling */
+.markdown-content ul {
+	list-style: none;
+	padding: 0;
+	margin-top: 0.75rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.markdown-content li {
+	position: relative;
+	padding-left: 1.25rem;
+	color: #44403c; /* stone-700 */
+}
+
+.markdown-content li::before {
+	content: '→';
+	position: absolute;
+	left: 0;
+	color: #a8a29e;
+	font-family: monospace;
+}
+
+.markdown-content strong {
+	color: #1c1917;
+	font-weight: 600;
+}
+
+/* =========================================
+   ATS-FRIENDLY PDF PRINT STYLES 
+   ========================================= */
+@media print {
+	/* Strip backgrounds for clean printing */
+	body {
+		background: white !important;
+		color: black !important;
+	}
+	.paper-texture,
+	.subtle-grid,
+	.no-print {
+		display: none !important;
+	}
+
+	/* Force single-column flow for ATS parsers */
+	.print-col {
+		display: block !important;
+		width: 100% !important;
+		position: static !important;
+	}
+
+	/* Expand links so ATS systems can read the URLs */
+	a:not(.no-print)::after {
+		content: ' (' attr(href) ')';
+		font-size: 0.8em;
+		color: #666;
+	}
+
+	/* Remove borders and shadows for print */
+	.print-no-border {
+		border: none !important;
+		box-shadow: none !important;
+		padding: 0 !important;
+		margin-bottom: 1.5rem !important;
+	}
+
+	/* Ensure page breaks don't cut jobs in half */
+	.print-break-inside-avoid {
+		break-inside: avoid;
+	}
+}
