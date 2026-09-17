@@ -1,0 +1,194 @@
+---
+import '../../styles/global.css';
+import { siteConfig } from '../../config';
+import { getCollection, render } from 'astro:content';
+import CVPrintTemplate from '../../components/CVPrintTemplate.astro';
+import TopNav from '../../components/TopNav.astro';
+
+const basicsList = await getCollection('resume', ({ data }) => data.type === 'basics');
+const summaryList = await getCollection('resume', ({ data }) => data.type === 'summary');
+
+const basics = basicsList[0]?.data;
+const summaryObj = summaryList[0];
+
+const allExperience = await getCollection('experience');
+const sortedExperience = allExperience.sort((a, b) => a.data.order - b.data.order);
+
+const allProjects = await getCollection('projects');
+const sortedProjects = allProjects.sort((a, b) => a.data.order - b.data.order);
+
+const allPosts = await getCollection('blog');
+const publishedPosts = allPosts.filter(post => !post.data.draft);
+const sortedPosts = publishedPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()).slice(0, 3);
+
+const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Content: () => null };
+---
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth bg-white text-black">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{basics?.name} | {basics?.role}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --brutal-shadow: 8px 8px 0px rgba(0,0,0,1);
+      --brutal-hover: 4px 4px 0px rgba(0,0,0,1);
+      --brutal-active: 0px 0px 0px rgba(0,0,0,1);
+    }
+    
+    .font-grotesk { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.04em; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* Neo-Brutalist Base */
+    .brutal-border { border: 4px solid black; }
+    .brutal-box {
+      border: 4px solid black;
+      background: white;
+      box-shadow: var(--brutal-shadow);
+      transition: all 0.2s ease-out;
+    }
+    .brutal-box:hover {
+      transform: translate(4px, 4px);
+      box-shadow: var(--brutal-hover);
+    }
+    .brutal-box:active {
+      transform: translate(8px, 8px);
+      box-shadow: var(--brutal-active);
+    }
+
+    /* Infinite Marquee */
+    .marquee-container {
+      width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      border-top: 4px solid black;
+      border-bottom: 4px solid black;
+      background: #ffff00; /* High contrast yellow */
+      padding: 1rem 0;
+    }
+    .marquee-content {
+      display: inline-block;
+      animation: marquee 20s linear infinite;
+    }
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* GSAP Card Stacking */
+    .stack-card {
+      position: sticky;
+      top: 10vh; /* Adjust based on nav height */
+      margin-bottom: 4rem;
+    }
+    
+    .prose-brutal p { font-size: 1.125rem; margin-bottom: 1.5em; font-weight: 500; }
+    .prose-brutal h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; border-bottom: 4px solid black; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+  </style>
+</head>
+<body class="font-grotesk antialiased min-h-[100dvh] relative selection:bg-[#ffff00] selection:text-black">
+  
+  <!-- Brutalist TopNav Override -->
+  <nav class="fixed top-0 left-0 w-full z-50 bg-white border-b-4 border-black px-6 py-4 flex justify-between items-center print:hidden">
+    <a href="/" class="font-mono font-bold text-xl uppercase tracking-tighter hover:bg-[#ffff00] px-2 transition-colors">
+      [ {basics?.name} ]
+    </a>
+    <div class="flex gap-4 font-mono font-bold text-sm uppercase">
+      <a href="/" class="hover:underline underline-offset-4 decoration-4">Resume</a>
+      <a href="/blog" class="hover:underline underline-offset-4 decoration-4">Writing</a>
+    </div>
+  </nav>
+
+  <main class="w-full max-w-full print:hidden pt-20">
+    
+    <!-- Hero (Editorial Split) -->
+    <header class="flex flex-col md:flex-row min-h-[80vh] border-b-4 border-black">
+      <div class="w-full md:w-1/2 p-8 md:p-16 border-b-4 md:border-b-0 md:border-r-4 border-black flex flex-col justify-center bg-[#ffff00]">
+        <div class="font-mono font-bold text-xl mb-6 inline-block bg-black text-white px-4 py-2 self-start uppercase">
+          >> {basics?.role}
+        </div>
+        <h1 class="text-7xl md:text-[8rem] font-bold leading-[0.85] tracking-tighter uppercase mb-8">
+          Build<br/>Robust<br/>Systems.
+        </h1>
+      </div>
+      <div class="w-full md:w-1/2 p-8 md:p-16 flex flex-col justify-center bg-white">
+        <div class="font-mono text-xl md:text-2xl font-bold leading-relaxed mb-12 max-w-xl">
+          <SummaryContent />
+        </div>
+        <div class="flex gap-6">
+          <button onclick="window.print()" class="brutal-box font-mono font-bold text-lg uppercase px-8 py-4">
+            Download.PDF
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Marquee -->
+    <div class="marquee-container">
+      <div class="marquee-content font-mono font-bold text-2xl uppercase">
+        <span>&nbsp;/// ENGINEER /// ARCHITECT /// DEVELOPER /// STRATEGIST /// DESIGNER /// CODER /// MAKER /// </span>
+        <span>&nbsp;/// ENGINEER /// ARCHITECT /// DEVELOPER /// STRATEGIST /// DESIGNER /// CODER /// MAKER /// </span>
+      </div>
+    </div>
+
+    <!-- GSAP Card Stacking (Experience) -->
+    <section class="py-24 md:py-48 px-6 md:px-12 bg-[#f4f4f4]">
+      <div class="max-w-5xl mx-auto">
+        <h2 class="text-[6rem] font-bold uppercase tracking-tighter mb-24 border-b-8 border-black pb-4">Experience</h2>
+        
+        <div class="stack-container">
+          {sortedExperience.map(async (job, i) => {
+            const { Content } = await render(job);
+            const rotation = i % 2 === 0 ? '-1deg' : '1deg';
+            return (
+              <div class="stack-card brutal-box bg-white p-8 md:p-12 flex flex-col md:flex-row gap-8" style={`transform: rotate(${rotation}); z-index: ${10 + i};`}>
+                <div class="md:w-1/3">
+                  <div class="font-mono font-bold text-sm bg-[#ffff00] border-2 border-black px-3 py-1 inline-block mb-4">
+                    {job.data.startDate} // {job.data.endDate}
+                  </div>
+                  <h3 class="text-4xl font-bold uppercase tracking-tight mb-2">{job.data.company}</h3>
+                  <div class="font-mono font-bold text-lg uppercase text-black/60">{job.data.title}</div>
+                </div>
+                <div class="md:w-2/3 prose prose-brutal max-w-none">
+                  <Content />
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects Grid -->
+    <section class="border-t-4 border-black">
+      <div class="grid grid-cols-1 md:grid-cols-2">
+        <div class="col-span-1 md:col-span-2 border-b-4 border-black p-6 md:p-12 bg-black text-white">
+          <h2 class="text-[6rem] font-bold uppercase tracking-tighter">Projects</h2>
+        </div>
+        
+        {sortedProjects.map((project, i) => (
+          <a href={project.data.url || '#'} class={`group block p-8 md:p-16 border-b-4 border-black hover:bg-[#ffff00] transition-colors ${i % 2 === 0 ? 'md:border-r-4' : ''}`}>
+            <h3 class="text-5xl font-bold uppercase tracking-tight mb-6">{project.data.title}</h3>
+            <p class="font-mono text-lg font-bold mb-8 max-w-md">{project.data.description}</p>
+            <div class="flex flex-wrap gap-3">
+              {project.data.tags.map(tag => (
+                <span class="border-2 border-black bg-white px-3 py-1 font-mono font-bold text-sm uppercase">{tag}</span>
+              ))}
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+  </main>
+
+  <div class="hidden print:block bg-white text-black">
+    <CVPrintTemplate />
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,44 @@
+---
+const currentPath = Astro.url.pathname;
+const isHome = currentPath === '/' || currentPath.startsWith('/theme/');
+const isBlog = currentPath.startsWith('/blog');
+---
+
+<div class="fixed top-6 left-0 w-full z-[100] flex justify-center pointer-events-none print:hidden">
+  <nav class="pointer-events-auto bg-black/40 dark:bg-white/10 backdrop-blur-2xl border border-black/5 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.12)] rounded-full px-6 py-3 flex items-center justify-between gap-8 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]">
+    
+    <!-- Logo / Brand (Hidden on Home, Shown on Blog) -->
+    {!isHome && (
+      <a href="/" class="text-current font-semibold text-xs tracking-[0.2em] uppercase flex items-center gap-3 hover:opacity-70 transition-opacity">
+        <div class="w-1.5 h-1.5 rounded-full bg-current animate-pulse"></div>
+        <span>Jagadish K</span>
+      </a>
+    )}
+
+    <!-- Navigation Links -->
+    <div class="flex items-center gap-6">
+      <a 
+        href="/" 
+        class={`text-xs font-semibold tracking-wider uppercase transition-colors ${isHome ? 'text-current opacity-100' : 'opacity-50 hover:opacity-100'}`}
+      >
+        Resume
+      </a>
+      <a 
+        href="/blog" 
+        class={`text-xs font-semibold tracking-wider uppercase transition-colors ${isBlog ? 'text-current opacity-100' : 'opacity-50 hover:opacity-100'}`}
+      >
+        Writing
+      </a>
+      <a 
+        href="mailto:hello@jagadishk.work" 
+        class="text-xs font-semibold tracking-wider uppercase opacity-50 hover:opacity-100 transition-colors flex items-center gap-1.5"
+      >
+        Contact
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="7" y1="17" x2="17" y2="7"></line>
+          <polyline points="7 7 17 7 17 17"></polyline>
+        </svg>
+      </a>
+    </div>
+  </nav>
+</div>

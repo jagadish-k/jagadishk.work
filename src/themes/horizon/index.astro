@@ -1,0 +1,171 @@
+---
+import '../../styles/global.css';
+import { siteConfig } from '../../config';
+import { getCollection, render } from 'astro:content';
+import CVPrintTemplate from '../../components/CVPrintTemplate.astro';
+import TopNav from '../../components/TopNav.astro';
+
+const basicsList = await getCollection('resume', ({ data }) => data.type === 'basics');
+const summaryList = await getCollection('resume', ({ data }) => data.type === 'summary');
+
+const basics = basicsList[0]?.data;
+const summaryObj = summaryList[0];
+
+const allExperience = await getCollection('experience');
+const sortedExperience = allExperience.sort((a, b) => a.data.order - b.data.order);
+
+const allProjects = await getCollection('projects');
+const sortedProjects = allProjects.sort((a, b) => a.data.order - b.data.order);
+
+const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Content: () => null };
+---
+
+<!DOCTYPE html>
+<html lang="en" class="bg-[#1C1C1C] text-[#EFEFEF]">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{basics?.name} | {basics?.role}</title>
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cubic-spring: cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .font-satoshi { font-family: 'Satoshi', sans-serif; letter-spacing: -0.02em; }
+    
+    /* GSAP Horizontal Scroll Container */
+    body { overflow-x: hidden; }
+    .horizontal-wrapper {
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .horizontal-container {
+      display: flex;
+      flex-wrap: nowrap;
+      height: 100%;
+      width: max-content;
+    }
+    .horizontal-panel {
+      width: 100vw;
+      height: 100vh;
+      flex-shrink: 0;
+      padding: 6rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .panel-auto {
+      width: auto;
+      min-width: 50vw;
+    }
+
+    /* Cinematic Image Carousel Elements */
+    .carousel-image {
+      height: 60vh;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      border-radius: 1rem;
+      filter: grayscale(100%);
+      transition: filter 0.5s ease;
+    }
+    .group:hover .carousel-image {
+      filter: grayscale(0%);
+    }
+  </style>
+</head>
+<body class="font-satoshi antialiased selection:bg-[#EFEFEF] selection:text-[#1C1C1C]">
+  
+  <TopNav />
+
+  <div class="print:hidden horizontal-wrapper">
+    <div class="horizontal-container" id="hz-container">
+      
+      <!-- Panel 1: Hero -->
+      <section class="horizontal-panel">
+        <div class="max-w-5xl">
+          <h1 class="text-[clamp(4rem,10vw,12rem)] font-black leading-[0.85] tracking-tighter mb-12">
+            {basics?.name}
+          </h1>
+          <div class="text-2xl md:text-4xl font-medium text-white/50 leading-tight max-w-3xl mb-12">
+            <SummaryContent />
+          </div>
+          <p class="text-sm font-bold tracking-widest uppercase text-white/30">Scroll to explore &rarr;</p>
+        </div>
+      </section>
+
+      <!-- Panel 2: Projects Carousel -->
+      <section class="horizontal-panel panel-auto flex-row items-center gap-16 px-16 border-l border-white/10">
+        <div class="shrink-0 max-w-sm mr-8">
+          <h2 class="text-6xl font-black mb-6">Selected<br/>Works</h2>
+          <p class="text-white/50 text-xl leading-relaxed">A curated exhibition of digital products and structural engineering.</p>
+        </div>
+        
+        {sortedProjects.map((project, i) => (
+          <a href={project.data.url || '#'} class="group shrink-0 flex flex-col gap-6 no-underline w-[35vw] min-w-[400px]">
+            <img src={`https://picsum.photos/seed/hz${i}/800/1000`} alt={project.title} class="carousel-image w-full" />
+            <div>
+              <h3 class="text-4xl font-bold mb-3 group-hover:text-[#C5A880] transition-colors">{project.data.title}</h3>
+              <p class="text-white/50 text-lg leading-relaxed">{project.data.description}</p>
+            </div>
+          </a>
+        ))}
+      </section>
+
+      <!-- Panel 3: Experience -->
+      <section class="horizontal-panel panel-auto flex-row items-start pt-32 gap-32 px-16 border-l border-white/10">
+        <div class="shrink-0">
+          <h2 class="text-6xl font-black mb-6">Experience</h2>
+        </div>
+        
+        <div class="flex gap-24">
+          {sortedExperience.map(async (job) => {
+            const { Content } = await render(job);
+            return (
+              <div class="w-[40vw] min-w-[500px] shrink-0 border-t border-white/20 pt-8">
+                <div class="text-sm font-bold tracking-widest uppercase text-white/40 mb-6">{job.data.startDate} — {job.data.endDate}</div>
+                <h3 class="text-5xl font-black tracking-tight mb-4">{job.data.company}</h3>
+                <div class="text-2xl font-medium text-white/60 mb-8">{job.data.title}</div>
+                <div class="prose prose-invert prose-lg max-w-none text-white/70">
+                  <Content />
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <div class="hidden print:block bg-white text-black">
+    <CVPrintTemplate />
+  </div>
+
+  <script>
+    import { gsap } from 'gsap';
+    import { ScrollTrigger } from 'gsap/ScrollTrigger';
+    
+    gsap.registerPlugin(ScrollTrigger);
+
+    let mm = gsap.matchMedia();
+
+    // Only apply horizontal scroll on desktop
+    mm.add("(min-width: 768px)", () => {
+      const container = document.getElementById('hz-container');
+      if (container) {
+        gsap.to(container, {
+          x: () => -(container.scrollWidth - window.innerWidth) + "px",
+          ease: "none",
+          scrollTrigger: {
+            trigger: ".horizontal-wrapper",
+            pin: true,
+            scrub: 1,
+            end: () => "+=" + container.scrollWidth
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

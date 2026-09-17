@@ -1,11 +1,11 @@
 ---
 import { siteConfig } from '../config';
-import MinimalTheme from '../themes/minimal/index.astro';
-import LinearTheme from '../themes/linear/index.astro';
-import KeynoteTheme from '../themes/keynote/index.astro';
+import MonolithTheme from '../themes/monolith/index.astro';
+import KineticTheme from '../themes/kinetic/index.astro';
+import NeoBrutalistTheme from '../themes/neo-brutalist/index.astro';
+import HorizonTheme from '../themes/horizon/index.astro';
 import EditorialTheme from '../themes/editorial/index.astro';
-import SpatialTheme from '../themes/spatial/index.astro';
-import BrutalistTheme from '../themes/brutalist/index.astro';
+import StructuralTheme from '../themes/structural/index.astro';
 import DevThemeSwitcher from '../components/DevThemeSwitcher.astro';
 
 // Read the theme strictly from config for the root page
@@ -13,14 +13,14 @@ const requestedTheme = siteConfig.theme;
 
 const getThemeComponent = (theme: string) => {
   switch(theme) {
-    case 'keynote': return KeynoteTheme;
     case 'editorial': return EditorialTheme;
-    case 'spatial': return SpatialTheme;
-    case 'brutalist': return BrutalistTheme;
-    case 'minimal': return MinimalTheme;
-    case 'linear':
+    case 'structural': return StructuralTheme;
+    case 'kinetic': return KineticTheme;
+    case 'neo-brutalist': return NeoBrutalistTheme;
+    case 'horizon': return HorizonTheme;
+    case 'monolith':
     default:
-      return LinearTheme;
+      return MonolithTheme;
   }
 };
 

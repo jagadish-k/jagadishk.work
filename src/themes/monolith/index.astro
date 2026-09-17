@@ -1,0 +1,232 @@
+---
+import '../../styles/global.css';
+import { siteConfig } from '../../config';
+import { getCollection, render } from 'astro:content';
+import CVPrintTemplate from '../../components/CVPrintTemplate.astro';
+import TopNav from '../../components/TopNav.astro';
+
+const basicsList = await getCollection('resume', ({ data }) => data.type === 'basics');
+const summaryList = await getCollection('resume', ({ data }) => data.type === 'summary');
+
+const basics = basicsList[0]?.data;
+const summaryObj = summaryList[0];
+
+const allExperience = await getCollection('experience');
+const sortedExperience = allExperience.sort((a, b) => a.data.order - b.data.order);
+
+const allProjects = await getCollection('projects');
+const sortedProjects = allProjects.sort((a, b) => a.data.order - b.data.order);
+
+const allPosts = await getCollection('blog');
+const publishedPosts = allPosts.filter(post => !post.data.draft);
+const sortedPosts = publishedPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()).slice(0, 3);
+
+const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Content: () => null };
+---
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth bg-[#020202] text-[#f1f1f1]">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{basics?.name} | {basics?.role}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cubic-spring: cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .font-sans { font-family: 'Geist', -apple-system, sans-serif; letter-spacing: -0.03em; }
+    
+    /* Gapless Bento Base */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-auto-flow: dense;
+      gap: 0;
+    }
+    .bento-cell {
+      border: 1px solid rgba(255,255,255,0.05);
+      background: #050505;
+      padding: 3rem;
+      position: relative;
+      overflow: hidden;
+      margin: -0.5px; /* Interlocking borders */
+      transition: background 500ms var(--cubic-spring);
+    }
+    .bento-cell:hover { background: #0a0a0a; }
+
+    @media (max-width: 768px) {
+      .bento-grid { display: flex; flex-direction: column; gap: 0; }
+      .bento-cell { padding: 2rem; border-left: none; border-right: none; margin: 0; margin-bottom: -1px; }
+    }
+
+    /* Scrub Text Effect */
+    .scrub-text { color: rgba(255, 255, 255, 0.1); background-clip: text; }
+    .scrub-word { opacity: 0.1; transition: opacity 0.1s; }
+    
+    /* Image Styles */
+    .grayscale-img {
+      filter: grayscale(100%) contrast(120%) brightness(80%);
+      mix-blend-mode: luminosity;
+      transition: all 700ms var(--cubic-spring);
+    }
+    .group:hover .grayscale-img { filter: grayscale(0%) contrast(100%) brightness(100%); transform: scale(1.05); }
+
+    /* Button */
+    .mono-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.25rem 2.5rem;
+      border-radius: 9999px;
+      background: #f1f1f1;
+      color: #020202;
+      font-weight: 700;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: transform 300ms var(--cubic-spring);
+    }
+    .mono-btn:active { transform: scale(0.97); }
+
+    /* Markdown Overrides */
+    .prose-monolith p { margin-bottom: 1.5em; color: rgba(241,241,241,0.6); }
+  </style>
+</head>
+<body class="font-sans antialiased relative selection:bg-white selection:text-black">
+  
+  <TopNav />
+
+  <main class="overflow-x-hidden w-full max-w-full print:hidden pt-32">
+    
+    <!-- Hero (Artistic Asymmetry) -->
+    <header class="w-full max-w-7xl mx-auto px-6 md:px-12 py-24 md:py-48 relative min-h-[90vh] flex flex-col justify-center">
+      <div class="relative z-10 w-full max-w-6xl">
+        <h1 class="text-[4rem] md:text-[clamp(5rem,9vw,9rem)] font-extrabold leading-[0.9] tracking-tighter text-white mb-12 mix-blend-difference">
+          {basics?.name}
+        </h1>
+        <div class="max-w-2xl text-xl md:text-3xl font-medium text-white/50 leading-relaxed scrub-container" id="hero-summary">
+          <SummaryContent />
+        </div>
+        
+        <div class="mt-16">
+          <button onclick="window.print()" class="mono-btn cursor-pointer border-0">
+            Resumé
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Overlapping Artistic Image -->
+      <div class="absolute bottom-12 md:bottom-24 right-6 md:right-12 w-3/4 md:w-1/2 max-w-lg aspect-[3/4] overflow-hidden -z-0 opacity-40 mix-blend-screen pointer-events-none">
+        <img src="https://picsum.photos/seed/monolith/800/1000" alt="Monolithic Vibe" class="w-full h-full object-cover grayscale-img" />
+      </div>
+    </header>
+
+    <!-- Gapless Bento Grid -->
+    <section class="py-24 md:py-48 border-t border-white/5 relative z-10 bg-[#020202]">
+      <div class="max-w-7xl mx-auto px-6 md:px-12 mb-24 flex items-end justify-between">
+        <h2 class="text-[clamp(3rem,5vw,5rem)] font-extrabold tracking-tighter leading-none text-white/20">Selected<br/>Works</h2>
+      </div>
+      
+      <div class="w-full bento-grid max-w-[1440px] mx-auto border border-white/5">
+        {sortedProjects.map((project, i) => {
+          let spanClass = 'md:col-span-6';
+          if (i === 0) spanClass = 'md:col-span-8 md:row-span-2';
+          else if (i === 1) spanClass = 'md:col-span-4';
+          else if (i === 2) spanClass = 'md:col-span-4';
+          
+          return (
+            <a href={project.data.url || '#'} class={`group bento-cell no-underline flex flex-col justify-between min-h-[400px] ${spanClass}`}>
+              <div class="flex justify-between items-start mb-16 relative z-10">
+                <h3 class="text-3xl md:text-5xl font-extrabold tracking-tight text-white/90 group-hover:text-white">{project.data.title}</h3>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white/20 group-hover:text-white transition-colors duration-500 shrink-0"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+              </div>
+              
+              <div class="relative z-10">
+                <p class="text-lg text-white/50 leading-relaxed mb-8 max-w-md">{project.data.description}</p>
+                <div class="flex flex-wrap gap-2">
+                  {project.data.tags.map(tag => (
+                    <span class="px-3 py-1 bg-white/5 text-[10px] font-bold tracking-[0.1em] uppercase text-white/40">{tag}</span>
+                  ))}
+                </div>
+              </div>
+              
+              <!-- Subtle Hover Image Injection -->
+              <div class="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-700 pointer-events-none">
+                <img src={`https://picsum.photos/seed/proj${i}/800/800`} alt="" class="w-full h-full object-cover grayscale-img" />
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    </section>
+
+    <!-- Experience Accordion -->
+    <section class="py-24 md:py-48 border-t border-white/5">
+      <div class="max-w-7xl mx-auto px-6 md:px-12">
+        <h2 class="text-[clamp(3rem,5vw,5rem)] font-extrabold tracking-tighter leading-none text-white/20 mb-24">Experience</h2>
+        
+        <div class="flex flex-col border-t border-white/5">
+          {sortedExperience.map(async (job) => {
+            const { Content } = await render(job);
+            return (
+              <div class="group border-b border-white/5 flex flex-col md:flex-row py-12 md:py-16 hover:bg-white/[0.02] transition-colors duration-500 px-6 -mx-6">
+                <div class="md:w-1/3 shrink-0 mb-8 md:mb-0">
+                  <div class="text-[10px] font-mono text-white/40 mb-4">{job.data.startDate} — {job.data.endDate}</div>
+                  <h3 class="text-3xl font-extrabold tracking-tight text-white mb-2">{job.data.company}</h3>
+                  <div class="text-sm font-semibold tracking-wide text-white/50">{job.data.title}</div>
+                </div>
+                <div class="md:w-2/3 prose prose-monolith text-lg max-w-2xl opacity-50 group-hover:opacity-100 transition-opacity duration-500">
+                  <Content />
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="hidden print:block bg-white text-black">
+    <CVPrintTemplate />
+  </div>
+
+  <script>
+    import { gsap } from 'gsap';
+    import { ScrollTrigger } from 'gsap/ScrollTrigger';
+    
+    gsap.registerPlugin(ScrollTrigger);
+
+    // GSAP Text Scrubbing Logic
+    // We target paragraphs inside .scrub-container and wrap words in spans
+    const scrubContainers = document.querySelectorAll('.scrub-container p');
+    scrubContainers.forEach(p => {
+      const text = p.textContent || '';
+      const words = text.split(' ');
+      p.innerHTML = '';
+      words.forEach(word => {
+        const span = document.createElement('span');
+        span.textContent = word + ' ';
+        span.className = 'scrub-word';
+        p.appendChild(span);
+      });
+      
+      const spans = p.querySelectorAll('.scrub-word');
+      gsap.to(spans, {
+        opacity: 1,
+        stagger: 0.1,
+        scrollTrigger: {
+          trigger: p,
+          start: 'top 80%',
+          end: 'bottom 40%',
+          scrub: true
+        }
+      });
+    });
+  </script>
+</body>
+</html>

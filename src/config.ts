@@ -4,13 +4,13 @@ export const siteConfig = {
 	email: 'jagadish.kasi@pm.me',
 	location: 'Bengaluru, India',
 	// Available themes:
-	// 'keynote'   - Apple Keynote Kinetic Story (GSAP, Horizontal scroll, high motion)
-	// 'linear'    - Engineering Console (Dark mode, bento grids, ultra-precise)
-	// 'editorial' - Asymmetric Grid (Vignette layout, large serif typography, off-white)
-	// 'spatial'   - Glass & Depth (3D tilts, aurora backgrounds, highly tactile)
-	// 'brutalist' - Developer Terminal (Monospace, neon accents, high contrast)
-	// 'minimal'   - Print minimal (Clean, unstyled layout - matching the PDF output)
-	theme: 'keynote',
+	// 'monolith'      - Dark, Vantablack, Geist font, GSAP Scrubbing
+	// 'kinetic'       - Bright, Cabinet Grotesk, Inline typography media, GSAP Pinning
+	// 'neo-brutalist' - Raw structural grids, Space Grotesk, Card Stacking
+	// 'horizon'       - High-fashion horizontal scroll hijack with Satoshi font
+	// 'editorial'     - Editorial Luxury (Light blue background, serif typography)
+	// 'structural'    - Soft Structuralism (Airy, cascading z-axis layers)
+	theme: 'monolith',
 	links: {
 		github: 'https://github.com/jagadish-k',
 		linkedin: 'https://linkedin.com/in/jagadish-kasi',
