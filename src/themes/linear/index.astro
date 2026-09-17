@@ -1,0 +1,232 @@
+---
+import '../../styles/global.css';
+import { siteConfig } from '../../config';
+import { getCollection, render } from 'astro:content';
+import CVPrintTemplate from '../../components/CVPrintTemplate.astro';
+
+const basicsList = await getCollection('resume', ({ data }) => data.type === 'basics');
+const summaryList = await getCollection('resume', ({ data }) => data.type === 'summary');
+const skillsList = await getCollection('resume', ({ data }) => data.type === 'skills');
+
+const basics = basicsList[0]?.data;
+const summaryObj = summaryList[0];
+const skills = skillsList[0]?.data.categories || {};
+
+const allExperience = await getCollection('experience');
+const sortedExperience = allExperience.sort((a, b) => a.data.order - b.data.order);
+
+const allProjects = await getCollection('projects');
+const sortedProjects = allProjects.sort((a, b) => a.data.order - b.data.order);
+
+const allPosts = await getCollection('blog');
+const publishedPosts = allPosts.filter(post => !post.data.draft);
+const sortedPosts = publishedPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()).slice(0, 3);
+
+const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Content: () => null };
+---
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth bg-black text-[#ebebf599]">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{basics?.name} | {basics?.role}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .font-sans { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+    
+    /* Bento Box Hover Effects */
+    .bento-card {
+      background: #1c1c1e;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 1.5rem;
+      transition: transform 250ms var(--ease-out), border-color 250ms var(--ease-out), box-shadow 250ms var(--ease-out);
+      overflow: hidden;
+      position: relative;
+    }
+    
+    @media (hover: hover) and (pointer: fine) {
+      .bento-card.interactive:hover {
+        border-color: rgba(255, 255, 255, 0.15);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
+      }
+    }
+    
+    .bento-card.interactive:active {
+      transform: scale(0.98);
+      transition: transform 150ms var(--ease-out);
+    }
+    
+    /* Apple-like button */
+    .btn-primary {
+      background: #ffffff;
+      color: #000000;
+      transition: transform 160ms var(--ease-out), opacity 160ms var(--ease-out);
+    }
+    .btn-secondary {
+      background: #2c2c2e;
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: transform 160ms var(--ease-out), background-color 160ms var(--ease-out);
+    }
+    
+    @media (hover: hover) and (pointer: fine) {
+      .btn-primary:hover { opacity: 0.9; }
+      .btn-secondary:hover { background: #3a3a3c; }
+    }
+    
+    .btn-primary:active, .btn-secondary:active {
+      transform: scale(0.96);
+    }
+    
+    /* Text rendering */
+    .text-primary { color: rgba(255, 255, 255, 0.95); }
+    .text-secondary { color: rgba(235, 235, 245, 0.6); }
+    
+    /* Markdown Prose Overrides */
+    .prose-custom p { margin-top: 0.5em; margin-bottom: 0.5em; }
+    .prose-custom ul { margin-top: 0.5em; margin-bottom: 0.5em; list-style-type: disc; padding-left: 1.25em; }
+    .prose-custom li { margin-top: 0.25em; margin-bottom: 0.25em; }
+    .prose-custom li::marker { color: rgba(235, 235, 245, 0.3); }
+    .prose-custom a { color: #0A84FF; text-decoration: none; transition: color 150ms var(--ease-out); }
+    .prose-custom a:hover { color: #60A5FA; }
+  </style>
+</head>
+<body class="font-sans antialiased min-h-screen relative selection:bg-white selection:text-black">
+
+  <!-- ===============================
+       WEB VIEW (Hidden on Print) 
+       =============================== -->
+  <div class="print:hidden max-w-6xl mx-auto px-6 py-12 md:py-24">
+    
+    <!-- Hero Section -->
+    <header class="mb-16 md:mb-24 text-center md:text-left">
+      <h1 class="text-4xl md:text-6xl font-bold text-primary tracking-tight mb-4">
+        {basics?.name}
+      </h1>
+      <h2 class="text-xl md:text-2xl font-medium text-secondary mb-8 max-w-3xl leading-relaxed">
+        {basics?.role}
+      </h2>
+      
+      <div class="flex flex-wrap items-center justify-center md:justify-start gap-4">
+        {basics?.links && Object.entries(basics.links).map(([name, url]) => (
+          <a href={`https://${url}`} target="_blank" class="btn-secondary px-5 py-2.5 text-sm font-medium rounded-full">
+            {name}
+          </a>
+        ))}
+        <button onclick="window.print()" class="btn-primary px-5 py-2.5 text-sm font-semibold rounded-full flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+          Download PDF
+        </button>
+      </div>
+    </header>
+
+    <!-- Bento Grid Layout -->
+    <main class="grid grid-cols-1 md:grid-cols-12 gap-5 auto-rows-[minmax(180px,_auto)]">
+      
+      <!-- Summary Tile -->
+      <div class="bento-card md:col-span-8 md:row-span-2 p-8 md:p-10 flex flex-col justify-center">
+        <h3 class="text-xs font-semibold tracking-widest text-secondary uppercase mb-5">About</h3>
+        <div class="prose prose-invert prose-lg prose-p:text-primary prose-headings:text-primary max-w-none leading-relaxed font-light">
+          <SummaryContent />
+        </div>
+      </div>
+
+      <!-- Quick Stats / Core Skills Tile -->
+      <div class="bento-card md:col-span-4 md:row-span-2 p-8">
+        <h3 class="text-xs font-semibold tracking-widest text-secondary uppercase mb-5">Core Competencies</h3>
+        <div class="flex flex-wrap gap-2">
+          {Object.entries(skills).slice(0, 3).map(([category, items]) => (
+             (items as string[]).slice(0, 4).map(skill => (
+               <span class="px-3 py-1.5 bg-[#2c2c2e] text-primary text-xs font-medium rounded-lg border border-[rgba(255,255,255,0.05)]">
+                 {skill}
+               </span>
+             ))
+          ))}
+          <span class="px-3 py-1.5 text-secondary text-xs font-medium rounded-lg border border-dashed border-[rgba(255,255,255,0.1)]">
+            + many more
+          </span>
+        </div>
+      </div>
+
+      <!-- Experience Section -->
+      <div class="md:col-span-12 mt-10 mb-2">
+        <h3 class="text-xl font-semibold text-primary tracking-tight">Experience</h3>
+      </div>
+
+      {sortedExperience.map(async (job) => {
+        const { Content } = await render(job);
+        return (
+          <div class="bento-card md:col-span-12 p-8 flex flex-col md:flex-row gap-6 md:gap-10">
+            <div class="md:w-1/4 shrink-0">
+              <h4 class="text-lg font-bold text-primary mb-1">{job.data.company}</h4>
+              <p class="text-sm text-secondary font-medium mb-3">{job.data.startDate} — {job.data.endDate}</p>
+              <div class="inline-flex px-2.5 py-1 bg-[#2c2c2e] text-xs font-medium rounded-md text-primary">
+                {job.data.title}
+              </div>
+            </div>
+            <div class="md:w-3/4 prose prose-invert prose-sm prose-p:text-secondary prose-li:text-secondary prose-headings:text-primary max-w-none leading-relaxed">
+              <Content />
+            </div>
+          </div>
+        )
+      })}
+
+      <!-- Projects Section -->
+      <div class="md:col-span-12 mt-10 mb-2">
+        <h3 class="text-xl font-semibold text-primary tracking-tight">Independent Projects</h3>
+      </div>
+
+      {sortedProjects.map(project => (
+        <a href={project.data.url || '#'} target="_blank" class="bento-card interactive md:col-span-6 p-8 flex flex-col justify-between group no-underline block">
+          <div>
+            <div class="flex justify-between items-start mb-3">
+              <h4 class="text-lg font-bold text-primary transition-colors">{project.data.title}</h4>
+              <svg class="w-4 h-4 text-secondary opacity-0 group-hover:opacity-100 transition-opacity transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </div>
+            <p class="text-sm text-secondary leading-relaxed mb-6">{project.data.description}</p>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            {project.data.tags.map(tag => (
+              <span class="px-2.5 py-1 bg-[#2c2c2e] text-secondary text-[11px] font-medium rounded-md border border-[rgba(255,255,255,0.05)]">{tag}</span>
+            ))}
+          </div>
+        </a>
+      ))}
+
+      <!-- Blog Section -->
+      <div class="md:col-span-12 mt-10 mb-2 flex justify-between items-end">
+        <h3 class="text-xl font-semibold text-primary tracking-tight">Recent Writing</h3>
+        <a href="/blog" class="text-sm text-secondary hover:text-primary transition-colors font-medium">View all →</a>
+      </div>
+
+      {sortedPosts.map(post => (
+        <a href={`/blog/${post.id}`} class="bento-card interactive md:col-span-4 p-8 flex flex-col justify-between group no-underline block">
+          <div>
+            <time class="text-xs font-mono text-secondary mb-3 block" datetime={post.data.pubDate.toISOString()}>
+              {post.data.pubDate.toLocaleDateString('en-us', { month: 'short', day: 'numeric', year: 'numeric' })}
+            </time>
+            <h4 class="text-base font-bold text-primary mb-2 leading-snug">{post.data.title}</h4>
+            <p class="text-sm text-secondary line-clamp-3 leading-relaxed">{post.data.description}</p>
+          </div>
+        </a>
+      ))}
+
+    </main>
+  </div>
+
+  <!-- ===============================
+       PRINT VIEW (Hidden on Web) 
+       =============================== -->
+  <div class="hidden print:block">
+    <CVPrintTemplate />
+  </div>
+
+</body>
+</html>

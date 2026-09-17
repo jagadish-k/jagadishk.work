@@ -1,177 +1,32 @@
 ---
-import '../styles/global.css';
 import { siteConfig } from '../config';
-import { getCollection, render } from 'astro:content';
-import type { CollectionEntry } from 'astro:content';
+import MinimalTheme from '../themes/minimal/index.astro';
+import LinearTheme from '../themes/linear/index.astro';
+import KeynoteTheme from '../themes/keynote/index.astro';
+import EditorialTheme from '../themes/editorial/index.astro';
+import SpatialTheme from '../themes/spatial/index.astro';
+import BrutalistTheme from '../themes/brutalist/index.astro';
+import DevThemeSwitcher from '../components/DevThemeSwitcher.astro';
 
-let sortedExperience: CollectionEntry<'experience'>[] = [];
-let sortedProjects: CollectionEntry<'projects'>[] = [];
+// Read the theme strictly from config for the root page
+const requestedTheme = siteConfig.theme;
 
-try {
-  // Fetch Experience
-  const allExperience = await getCollection('experience');
-  sortedExperience = allExperience.sort((a, b) => a.data.order - b.data.order);
-  
-  // Fetch Projects
-  const allProjects = await getCollection('projects');
-  sortedProjects = allProjects.sort((a, b) => a.data.order - b.data.order);
-} catch (e) {
-  console.warn("Ensure src/content/experience and src/content/projects folders exist!");
-}
+const getThemeComponent = (theme: string) => {
+  switch(theme) {
+    case 'keynote': return KeynoteTheme;
+    case 'editorial': return EditorialTheme;
+    case 'spatial': return SpatialTheme;
+    case 'brutalist': return BrutalistTheme;
+    case 'minimal': return MinimalTheme;
+    case 'linear':
+    default:
+      return LinearTheme;
+  }
+};
+
+const Theme = getThemeComponent(requestedTheme);
+const isDev = import.meta.env.DEV;
 ---
 
-<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{siteConfig.name} | {siteConfig.role}</title>
-  <!-- Google Fonts for elevated typography -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <style>
-    .font-serif { font-family: 'Newsreader', serif; }
-    .font-sans { font-family: 'Inter', sans-serif; }
-  </style>
-</head>
-<body class="font-sans antialiased selection:bg-stone-300 selection:text-stone-900 relative min-h-screen z-0">
-
-  <div class="paper-texture"></div>
-  <div class="fixed inset-0 z-[-1] subtle-grid opacity-60"></div>
-
-  <div class="max-w-6xl mx-auto px-6 py-12 md:py-24">
-    
-    <!-- Desktop Split Layout -->
-    <div class="lg:flex lg:justify-between lg:gap-16 print-col">
-      
-      <!-- LEFT COLUMN (Sticky Intro) -->
-      <header class="lg:w-5/12 lg:sticky lg:top-24 lg:max-h-[calc(100vh-6rem)] lg:flex lg:flex-col lg:justify-between pb-16 lg:pb-0 print-col">
-        <div>
-          <h1 class="text-5xl font-serif tracking-tight text-stone-900 mb-3">{siteConfig.name}</h1>
-          <h2 class="text-xl font-medium text-stone-700 mb-6">{siteConfig.role}</h2>
-          <p class="text-stone-600 leading-relaxed mb-8">
-            {siteConfig.summary}
-          </p>
-
-          <!-- Tech Stack (Great for ATS Keywords) -->
-          <div class="mb-10">
-            <h3 class="text-xs font-semibold uppercase tracking-widest text-stone-400 mb-3">Core Stack</h3>
-            <div class="flex flex-wrap gap-2">
-              {siteConfig.skills.map(skill => (
-                <span class="px-3 py-1 bg-stone-200/50 border border-stone-300 text-stone-700 text-xs font-medium rounded-full">{skill}</span>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div class="flex items-center gap-6 mt-auto">
-          <a href={siteConfig.links.github} target="_blank" class="text-stone-500 hover:text-stone-900 transition-colors text-sm font-medium">GitHub</a>
-          <a href={siteConfig.links.linkedin} target="_blank" class="text-stone-500 hover:text-stone-900 transition-colors text-sm font-medium">LinkedIn</a>
-          
-          <!-- Print/PDF Button (Hidden on Print) -->
-          <button onclick="window.print()" class="no-print magnetic-btn ml-auto flex items-center gap-2 bg-stone-900 text-stone-50 px-5 py-2.5 rounded-full text-sm font-medium hover:bg-stone-800 transition-all shadow-sm">
-            <span>Save as PDF</span>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-          </button>
-        </div>
-      </header>
-
-      <!-- RIGHT COLUMN (Scrolling Content) -->
-      <main class="lg:w-7/12 space-y-24 print-col">
-        
-        <!-- Experience Section -->
-        <section>
-          <h3 class="text-xs font-semibold uppercase tracking-widest text-stone-400 mb-8 sticky top-0 bg-[#F7F5F2]/90 backdrop-blur-md py-4 z-10 print-col">Experience</h3>
-          
-          <div class="space-y-12">
-            {sortedExperience.map(async (job) => {
-              const { Content } = await render(job);
-              return (
-                <article class="group relative print-break-inside-avoid print-no-border">
-                  <!-- Subtle timeline indicator for web -->
-                  <div class="absolute -left-6 top-2 h-full w-px bg-stone-200 group-last:bg-transparent no-print"></div>
-                  <div class="absolute -left-6.75 top-2 h-2 w-2 rounded-full border-2 border-stone-400 bg-[#F7F5F2] group-hover:border-stone-900 transition-colors no-print"></div>
-
-                  <div class="mb-2 flex flex-col sm:flex-row sm:items-baseline sm:justify-between">
-                    <h4 class="text-lg font-semibold text-stone-900 font-serif">{job.data.title}</h4>
-                    <span class="text-sm text-stone-500 font-medium font-mono tracking-tight mt-1 sm:mt-0">{job.data.startDate} — {job.data.endDate}</span>
-                  </div>
-                  <div class="text-stone-600 font-medium mb-4">{job.data.company}</div>
-                  
-                  <div class="markdown-content text-sm leading-relaxed">
-                    <Content />
-                  </div>
-                </article>
-              )
-            })}
-          </div>
-        </section>
-        <!-- Independent Projects Section -->
-        <section class="mt-24">
-          <h3 class="text-xs font-semibold uppercase tracking-widest text-stone-400 mb-8 sticky top-0 bg-[#F7F5F2]/90 backdrop-blur-md py-4 z-10 print-col">Independent Projects</h3>
-          
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 print-col">
-            {sortedProjects.length === 0 ? (
-              <p class="text-stone-500 italic bg-white/50 p-6 rounded border border-stone-200">Add markdown files to src/content/projects</p>
-            ) : null}
-
-            {sortedProjects.map(project => (
-              <a href={project.data.url || '#'} target="_blank" class="group flex flex-col justify-between p-6 bg-white/40 border border-stone-200 rounded-xl hover:bg-white/80 hover:border-stone-300 transition-all duration-300 print-no-border print-break-inside-avoid no-underline">
-                <div>
-                  <div class="flex items-center justify-between mb-3">
-                    <h4 class="text-lg font-semibold text-stone-900 font-serif group-hover:text-stone-600 transition-colors">{project.data.title}</h4>
-                    <svg class="w-4 h-4 text-stone-400 group-hover:text-stone-900 transition-all transform group-hover:translate-x-1 group-hover:-translate-y-1 no-print" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                  </div>
-                  <p class="text-sm text-stone-600 leading-relaxed mb-6">{project.data.description}</p>
-                </div>
-                <div class="flex flex-wrap gap-2">
-                  {project.data.tags.map(tag => (
-                    <span class="px-2.5 py-1 bg-stone-200/50 text-stone-600 text-xs font-medium rounded font-mono">{tag}</span>
-                  ))}
-                </div>
-              </a>
-            ))}
-          </div>
-        </section>
-
-        
-      </main>
-    </div>
-  </div>
-
-  <script>
-    // Cast the element as an HTMLElement so TS knows its specific properties
-    const magneticBtn = document.querySelector('.magnetic-btn') as HTMLElement;
-    
-    if (magneticBtn) {
-      // Explicitly type the event 'e' as a MouseEvent
-      magneticBtn.addEventListener('mousemove', (e: MouseEvent) => {
-        const rect = magneticBtn.getBoundingClientRect();
-        const x = (e.clientX - rect.left - rect.width / 2) * 0.3;
-        const y = (e.clientY - rect.top - rect.height / 2) * 0.3;
-        
-        magneticBtn.style.transform = `translate(${x}px, ${y}px)`;
-      });
-
-      magneticBtn.addEventListener('mouseleave', () => {
-        magneticBtn.style.transform = `translate(0px, 0px)`;
-      });
-    }
-
-    // Intersection Observer for the elegant scroll-reveal micro-interaction
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1 });
-
-    document.querySelectorAll('.reveal-on-scroll').forEach(el => {
-      observer.observe(el);
-    });
-  </script>
-</body>
-</html>
+<Theme />
+{isDev && <DevThemeSwitcher />}

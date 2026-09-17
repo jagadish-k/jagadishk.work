@@ -1,0 +1,41 @@
+---
+import MinimalTheme from '../../themes/minimal/index.astro';
+import LinearTheme from '../../themes/linear/index.astro';
+import KeynoteTheme from '../../themes/keynote/index.astro';
+import EditorialTheme from '../../themes/editorial/index.astro';
+import SpatialTheme from '../../themes/spatial/index.astro';
+import BrutalistTheme from '../../themes/brutalist/index.astro';
+import DevThemeSwitcher from '../../components/DevThemeSwitcher.astro';
+
+export function getStaticPaths() {
+  return [
+    { params: { theme: 'keynote' } },
+    { params: { theme: 'editorial' } },
+    { params: { theme: 'spatial' } },
+    { params: { theme: 'brutalist' } },
+    { params: { theme: 'linear' } },
+    { params: { theme: 'minimal' } },
+  ];
+}
+
+const { theme } = Astro.params;
+
+const getThemeComponent = (t: string) => {
+  switch(t) {
+    case 'keynote': return KeynoteTheme;
+    case 'editorial': return EditorialTheme;
+    case 'spatial': return SpatialTheme;
+    case 'brutalist': return BrutalistTheme;
+    case 'minimal': return MinimalTheme;
+    case 'linear':
+    default:
+      return LinearTheme;
+  }
+};
+
+const Theme = getThemeComponent(theme as string);
+const isDev = import.meta.env.DEV;
+---
+
+<Theme />
+{isDev && <DevThemeSwitcher currentTheme={theme} />}

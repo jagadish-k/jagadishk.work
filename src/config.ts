@@ -3,21 +3,16 @@ export const siteConfig = {
 	role: 'Principal Engineer · Frontend Architect',
 	email: 'jagadish.kasi@pm.me',
 	location: 'Bengaluru, India',
-	summary:
-		'Operating an agentic coding workflow to build enterprise platforms. 18 years spanning Node.js BFF architectures, micro-frontends, and full-stack LLM orchestration at scale.',
+	// Available themes:
+	// 'keynote'   - Apple Keynote Kinetic Story (GSAP, Horizontal scroll, high motion)
+	// 'linear'    - Engineering Console (Dark mode, bento grids, ultra-precise)
+	// 'editorial' - Asymmetric Grid (Vignette layout, large serif typography, off-white)
+	// 'spatial'   - Glass & Depth (3D tilts, aurora backgrounds, highly tactile)
+	// 'brutalist' - Developer Terminal (Monospace, neon accents, high contrast)
+	// 'minimal'   - Print minimal (Clean, unstyled layout - matching the PDF output)
+	theme: 'keynote',
 	links: {
 		github: 'https://github.com/jagadish-k',
 		linkedin: 'https://linkedin.com/in/jagadish-kasi',
-	},
-	skills: [
-		'Agentic AI',
-		'MCP',
-		'TypeScript',
-		'Node.js',
-		'React',
-		'Next.js',
-		'Micro-frontends',
-		'AWS / Azure',
-		'System Architecture',
-	],
+	}
 };

@@ -1,0 +1,29 @@
+---
+import '../../styles/global.css';
+import { siteConfig } from '../../config';
+import CVPrintTemplate from '../../components/CVPrintTemplate.astro';
+---
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth bg-zinc-200">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{siteConfig.name} | {siteConfig.role}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    .font-sans { font-family: 'Inter', sans-serif; }
+  </style>
+</head>
+<body class="font-sans antialiased min-h-screen py-12">
+  <!-- Interactive Web View for the Minimal theme looks exactly like a piece of paper -->
+  <div class="max-w-[21cm] mx-auto bg-white p-8 md:p-12 shadow-2xl rounded-sm print:shadow-none print:p-0">
+    <div class="print:hidden mb-8 flex justify-end">
+      <button onclick="window.print()" class="text-xs text-blue-600 hover:underline">Print / Save as PDF</button>
+    </div>
+    <CVPrintTemplate />
+  </div>
+</body>
+</html>

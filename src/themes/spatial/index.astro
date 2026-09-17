@@ -1,0 +1,176 @@
+---
+import '../../styles/global.css';
+import { siteConfig } from '../../config';
+import { getCollection, render } from 'astro:content';
+import CVPrintTemplate from '../../components/CVPrintTemplate.astro';
+
+const basicsList = await getCollection('resume', ({ data }) => data.type === 'basics');
+const summaryList = await getCollection('resume', ({ data }) => data.type === 'summary');
+
+const basics = basicsList[0]?.data;
+const summaryObj = summaryList[0];
+
+const allExperience = await getCollection('experience');
+const sortedExperience = allExperience.sort((a, b) => a.data.order - b.data.order);
+
+const allProjects = await getCollection('projects');
+const sortedProjects = allProjects.sort((a, b) => a.data.order - b.data.order);
+
+const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Content: () => null };
+---
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth bg-[#0a0a0c] text-white">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{basics?.name} | {basics?.role}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    .font-sans { font-family: 'Outfit', sans-serif; }
+    
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .perspective-container {
+      perspective: 1000px;
+      transform-style: preserve-3d;
+    }
+
+    .tilt-card {
+      transition: transform 0.1s ease-out;
+      transform-style: preserve-3d;
+    }
+    
+    .tilt-card > * {
+      transform: translateZ(30px);
+    }
+    
+    /* Ambient Aurora Background */
+    .aurora {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: -1;
+      overflow: hidden;
+      background: #0a0a0c;
+    }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.5;
+      animation: float 20s infinite ease-in-out alternate;
+    }
+    @keyframes float {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(10vw, 10vh) scale(1.5); }
+    }
+  </style>
+</head>
+<body class="font-sans antialiased min-h-screen relative selection:bg-white/20">
+
+  <div class="aurora print:hidden">
+    <div class="orb bg-blue-600/30 w-[60vw] h-[60vw] top-[-10%] left-[-10%]"></div>
+    <div class="orb bg-purple-600/20 w-[50vw] h-[50vw] bottom-[-20%] right-[-10%]" style="animation-delay: -5s;"></div>
+    <div class="orb bg-emerald-600/20 w-[40vw] h-[40vw] top-[40%] left-[30%]" style="animation-delay: -10s;"></div>
+  </div>
+
+  <div class="print:hidden max-w-6xl mx-auto px-6 py-24 relative z-10">
+    
+    <header class="glass-panel rounded-3xl p-10 md:p-16 mb-12 perspective-container">
+      <div class="tilt-card flex flex-col md:flex-row gap-12 items-center md:items-start">
+        <div class="flex-1">
+          <div class="inline-block px-4 py-2 rounded-full glass-panel text-xs font-bold tracking-widest uppercase mb-8 text-blue-300">
+            {basics?.role}
+          </div>
+          <h1 class="text-5xl md:text-7xl font-bold tracking-tighter mb-6">{basics?.name}</h1>
+          <div class="prose prose-invert prose-xl text-white/70 leading-relaxed font-light">
+            <SummaryContent />
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 perspective-container">
+      {sortedProjects.map(project => (
+        <a href={project.data.url || '#'} target="_blank" class="glass-panel rounded-3xl p-10 block tilt-card group no-underline">
+          <h3 class="text-2xl font-bold mb-4 group-hover:text-blue-300 transition-colors">{project.data.title}</h3>
+          <p class="text-white/60 mb-8">{project.data.description}</p>
+          <div class="flex flex-wrap gap-2">
+            {project.data.tags.map(tag => (
+              <span class="glass-panel px-3 py-1 rounded-full text-xs font-medium">{tag}</span>
+            ))}
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <section class="glass-panel rounded-3xl p-10 md:p-16 perspective-container">
+      <div class="tilt-card">
+        <h2 class="text-3xl font-bold mb-12 flex items-center gap-4">
+          <span class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400">⚡</span>
+          Experience
+        </h2>
+        
+        <div class="space-y-12">
+          {sortedExperience.map(async (job) => {
+            const { Content } = await render(job);
+            return (
+              <div class="relative pl-8 md:pl-0 border-l border-white/10 md:border-none">
+                <div class="absolute w-3 h-3 bg-blue-500 rounded-full left-[-6.5px] top-2 md:hidden"></div>
+                <div class="flex flex-col md:flex-row gap-4 md:gap-12">
+                  <div class="md:w-1/3 shrink-0 md:text-right">
+                    <h3 class="text-xl font-bold">{job.data.company}</h3>
+                    <div class="text-blue-300 font-medium my-1">{job.data.title}</div>
+                    <div class="text-white/40 text-sm">{job.data.startDate} — {job.data.endDate}</div>
+                  </div>
+                  <div class="md:w-2/3 prose prose-invert text-white/70">
+                    <Content />
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="hidden print:block bg-white text-black">
+    <CVPrintTemplate />
+  </div>
+
+  <script>
+    // 3D Tilt Effect based on mouse position
+    const cards = document.querySelectorAll('.tilt-card');
+    
+    cards.forEach(card => {
+      card.addEventListener('mousemove', (e: any) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left; // x position within the element
+        const y = e.clientY - rect.top;  // y position within the element
+        
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const rotateX = ((y - centerY) / centerY) * -5; // max rotation 5deg
+        const rotateY = ((x - centerX) / centerX) * 5;
+        
+        (card as HTMLElement).style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      });
+      
+      card.addEventListener('mouseleave', () => {
+        (card as HTMLElement).style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
+      });
+    });
+  </script>
+</body>
+</html>

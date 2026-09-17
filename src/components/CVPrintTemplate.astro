@@ -1,0 +1,136 @@
+---
+import { getCollection, render } from 'astro:content';
+
+const basicsList = await getCollection('resume', ({ data }) => data.type === 'basics');
+const summaryList = await getCollection('resume', ({ data }) => data.type === 'summary');
+const skillsList = await getCollection('resume', ({ data }) => data.type === 'skills');
+const eduList = await getCollection('resume', ({ data }) => data.type === 'education');
+
+const basics = basicsList[0]?.data;
+const summaryObj = summaryList[0];
+const skills = skillsList[0]?.data.categories || {};
+const edu = eduList[0]?.data;
+
+const allExperience = await getCollection('experience');
+const sortedExperience = allExperience.sort((a, b) => a.data.order - b.data.order);
+
+const allProjects = await getCollection('projects');
+const sortedProjects = allProjects.sort((a, b) => a.data.order - b.data.order);
+
+const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Content: () => null };
+---
+
+<div class="print-cv font-sans bg-white text-black text-[10pt] leading-tight max-w-[21cm] mx-auto">
+  
+  <!-- Header -->
+  <header class="border-b-2 border-black pb-3 mb-4">
+    <h1 class="text-2xl font-bold uppercase tracking-wide mb-1">{basics?.name}</h1>
+    <h2 class="text-[11pt] font-semibold text-gray-800 mb-2">{basics?.role}</h2>
+    <div class="flex flex-wrap gap-x-4 text-[9pt] text-gray-700">
+      <span>{basics?.location}</span>
+      <span>|</span>
+      <span class="print-phone-display hidden">{basics?.phone}</span>
+      <span class="print-phone-separator hidden">|</span>
+      <span>{basics?.email}</span>
+      {basics?.links && Object.entries(basics.links).map(([name, url]) => (
+        <>
+          <span>|</span>
+          <a href={`https://${url}`} class="text-blue-600 no-underline hover:underline">{url}</a>
+        </>
+      ))}
+    </div>
+  </header>
+
+  <!-- Summary -->
+  <section class="mb-4">
+    <h3 class="text-[10pt] font-bold uppercase border-b border-gray-300 mb-2 pb-1">Summary</h3>
+    <div class="text-[9.5pt] leading-relaxed text-gray-800">
+      <SummaryContent />
+    </div>
+  </section>
+
+  <!-- Experience -->
+  <section class="mb-4">
+    <h3 class="text-[10pt] font-bold uppercase border-b border-gray-300 mb-2 pb-1">Work Experience</h3>
+    <div class="space-y-4">
+      {sortedExperience.map(async (job) => {
+        const { Content } = await render(job);
+        return (
+          <article class="break-inside-avoid">
+            <div class="flex justify-between items-baseline mb-1">
+              <h4 class="font-bold text-[10pt] text-gray-900">{job.data.company}</h4>
+              <span class="text-[9pt] font-medium text-gray-700">{job.data.startDate} – {job.data.endDate}</span>
+            </div>
+            <div class="italic text-[9.5pt] text-gray-800 mb-1.5">{job.data.title}</div>
+            <div class="prose prose-sm prose-p:my-0.5 prose-li:my-0 text-[9pt] max-w-none text-gray-800 list-disc pl-4 marker:text-gray-500">
+              <Content />
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section class="mb-4">
+    <h3 class="text-[10pt] font-bold uppercase border-b border-gray-300 mb-2 pb-1">Selected Independent Projects</h3>
+    <div class="space-y-3">
+      {sortedProjects.map(async (project) => {
+        const { Content } = await render(project);
+        return (
+          <article class="break-inside-avoid">
+            <div class="flex justify-between items-baseline mb-0.5">
+              <h4 class="font-bold text-[9.5pt] text-gray-900">
+                {project.data.title}
+                {project.data.url && <span class="font-normal text-blue-600 ml-2 text-[8.5pt]">({project.data.url})</span>}
+              </h4>
+            </div>
+            <p class="text-[9pt] italic text-gray-700 mb-1">{project.data.description}</p>
+            <div class="prose prose-sm prose-p:my-0.5 prose-li:my-0 text-[9pt] max-w-none text-gray-800 list-disc pl-4 marker:text-gray-500">
+              <Content />
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section class="mb-4 break-inside-avoid">
+    <h3 class="text-[10pt] font-bold uppercase border-b border-gray-300 mb-2 pb-1">Technical Skills</h3>
+    <div class="text-[9pt] space-y-1">
+      {Object.entries(skills).map(([category, items]) => (
+        <div class="flex">
+          <span class="font-semibold w-1/4 text-gray-900">{category}:</span>
+          <span class="w-3/4 text-gray-800">{(items as string[]).join(', ')}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Education -->
+  <section class="break-inside-avoid">
+    <h3 class="text-[10pt] font-bold uppercase border-b border-gray-300 mb-2 pb-1">Education</h3>
+    <div class="flex justify-between items-baseline text-[9.5pt]">
+      <span class="font-bold text-gray-900">{edu?.degree}</span>
+      <span class="text-gray-700 font-medium">{edu?.year}</span>
+    </div>
+    <div class="flex justify-between items-baseline text-[9pt] text-gray-800 mt-0.5">
+      <span>{edu?.university}</span>
+      <span>CGPA: {edu?.cgpa}</span>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  // Hide phone number in DOM by default, reveal only before print
+  window.addEventListener('beforeprint', () => {
+    document.querySelectorAll('.print-phone-display').forEach(el => el.classList.remove('hidden'));
+    document.querySelectorAll('.print-phone-separator').forEach(el => el.classList.remove('hidden'));
+  });
+  window.addEventListener('afterprint', () => {
+    document.querySelectorAll('.print-phone-display').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('.print-phone-separator').forEach(el => el.classList.add('hidden'));
+  });
+</script>
