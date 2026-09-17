@@ -4,6 +4,7 @@ description: "Exploring how micro-frontends solve organizational scalability and
 pubDate: 2024-03-15
 categories: ["Architecture"]
 tags: ["micro-frontends", "react", "enterprise"]
+draft: true
 ---
 
 # The Evolution of Micro-Frontends
@@ -24,4 +25,4 @@ When designing a micro-frontend architecture, the most critical decision is how 
 - **Run-time integration via iframes**: The oldest but most isolated approach.
 - **Run-time integration via JavaScript**: Using Webpack Module Federation or import maps.
 
-*Module Federation* has emerged as the industry standard, providing dynamic loading with shared dependencies, reducing the overall payload size significantly.
+_Module Federation_ has emerged as the industry standard, providing dynamic loading with shared dependencies, reducing the overall payload size significantly.

@@ -4,6 +4,7 @@ description: "Strategies for achieving 100/100/100 Lighthouse scores in Single P
 pubDate: 2024-05-22
 categories: ["Performance"]
 tags: ["CWV", "SPA", "optimization"]
+draft: true
 ---
 
 # Mastering Core Web Vitals

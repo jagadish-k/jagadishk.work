@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import { siteConfig } from '../config';
 import { ClientRouter } from 'astro:transitions';
+import CurtainTransition from '../components/CurtainTransition.astro';
 
 interface Props {
   title?: string;
@@ -21,19 +22,29 @@ const { title = `${siteConfig.name} | ${siteConfig.role}`, description = siteCon
   
   <ClientRouter />
 
-  <!-- Google Fonts for elevated typography -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <!-- Fontshare for Premium Typography -->
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&f[]=satoshi@300,400,500,700,900&display=swap" rel="stylesheet">
   <style>
-    .font-serif { font-family: 'Newsreader', serif; }
-    .font-sans { font-family: 'Inter', sans-serif; }
+    .font-serif, .font-clash { font-family: 'Clash Display', sans-serif; }
+    .font-sans, .font-satoshi { font-family: 'Satoshi', sans-serif; }
+    
+    /* Reveal Animation Classes */
+    .reveal-on-scroll {
+      opacity: 0;
+      filter: blur(8px);
+      transform: translateY(3rem);
+      transition: all 1s cubic-bezier(0.32, 0.72, 0, 1);
+      will-change: transform, opacity, filter;
+    }
+    .reveal-on-scroll.is-visible {
+      opacity: 1;
+      filter: blur(0px);
+      transform: translateY(0);
+    }
   </style>
 </head>
-<body class="font-sans antialiased selection:bg-stone-300 selection:text-stone-900 relative min-h-screen z-0">
-
-  <div class="paper-texture"></div>
-  <div class="fixed inset-0 z-[-1] subtle-grid opacity-60"></div>
+<body class="font-sans antialiased bg-[#FAFAFA] text-zinc-900 selection:bg-zinc-200 selection:text-zinc-900 relative min-h-screen z-0">
+  <CurtainTransition />
 
   <div class="max-w-6xl mx-auto px-6 py-12 md:py-24">
     <slot />

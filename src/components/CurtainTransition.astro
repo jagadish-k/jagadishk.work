@@ -1,0 +1,97 @@
+---
+---
+
+<div id="fluid-curtain-transition"></div>
+
+<style>
+  #fluid-curtain-transition {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100dvh;
+    background-color: #0f0f11; /* Premium dark shade */
+    z-index: 9999999;
+    pointer-events: none;
+    transform: translateY(100%);
+    will-change: transform;
+  }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+  import { navigate } from 'astro:transitions/client';
+
+  const handleLinkClick = (e: MouseEvent, href: string) => {
+    if (e.ctrlKey || e.metaKey || e.shiftKey || e.button !== 0) return;
+    if (!href || href.startsWith('#')) return;
+
+    e.preventDefault();
+    
+    const curtain = document.getElementById('fluid-curtain-transition');
+
+    if (curtain) {
+      // Entrance animation (The Sweep In)
+      gsap.fromTo(curtain, 
+        { y: "100%" },
+        {
+          y: "0%",
+          duration: 0.7,
+          ease: "power4.inOut",
+          onComplete: () => {
+            sessionStorage.setItem('curtain-transition', 'true');
+            navigate(href);
+          }
+        }
+      );
+    } else {
+      navigate(href);
+    }
+  };
+
+  const initClickInterceptor = () => {
+    const links = document.querySelectorAll('a[href^="/blog/"]');
+    links.forEach(link => {
+      // Prevent double bindings
+      const clone = link.cloneNode(true);
+      if (link.parentNode) {
+        link.parentNode.replaceChild(clone, link);
+        clone.addEventListener('click', (e) => handleLinkClick(e as MouseEvent, clone.getAttribute('href')!));
+      }
+    });
+  };
+
+  const handlePageLoadReveal = () => {
+    const transitionData = sessionStorage.getItem('curtain-transition');
+    const curtain = document.getElementById('fluid-curtain-transition');
+    
+    if (transitionData && curtain) {
+      // Start fully covered
+      gsap.set(curtain, { y: "0%" });
+
+      // Exit animation (The Sweep Out)
+      gsap.to(curtain, {
+        y: "-100%",
+        duration: 0.8,
+        ease: "power4.inOut",
+        onComplete: () => {
+          sessionStorage.removeItem('curtain-transition');
+          gsap.set(curtain, { y: "100%" }); // Reset to bottom for next time
+        }
+      });
+    } else if (curtain) {
+      // Ensure it's hidden if accessed directly
+      gsap.set(curtain, { y: "100%" });
+    }
+  };
+
+  // Run on first load
+  initClickInterceptor();
+  handlePageLoadReveal();
+
+  // Run on subsequent page loads via ViewTransitions
+  document.addEventListener('astro:page-load', () => {
+    initClickInterceptor();
+    handlePageLoadReveal();
+  });
+</script>

@@ -1,0 +1,155 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import { siteConfig } from '../../../../config';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths({ paginate }) {
+  const allPosts = await getCollection('blog');
+  const publishedPosts = allPosts.filter(post => !post.data.draft);
+  const sortedPosts = publishedPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+  
+  const allCategories = [...new Set(publishedPosts.flatMap(post => post.data.categories))];
+  
+  return allCategories.flatMap((category) => {
+    const filteredPosts = sortedPosts.filter(post => post.data.categories.includes(category));
+    return paginate(filteredPosts, {
+      params: { tag: category.toLowerCase().replace(/\s+/g, '-') },
+      pageSize: 6
+    });
+  });
+}
+
+const { page } = Astro.props;
+const { tag } = Astro.params;
+
+// Re-fetch all categories for the filter pill UI
+const allPosts = await getCollection('blog');
+const publishedPosts = allPosts.filter(post => !post.data.draft);
+const categories = [...new Set(publishedPosts.flatMap(post => post.data.categories))].sort();
+
+// Find the original human-readable category name from the slugified tag
+const currentCategory = categories.find(c => c.toLowerCase().replace(/\s+/g, '-') === tag) || tag;
+---
+
+<BaseLayout title={`${currentCategory} Essays | ${siteConfig.name}`} description={`Read essays tagged with ${currentCategory}.`}>
+  
+  <div class="mb-16 md:mb-24 reveal-on-scroll">
+    <a href="/" class="text-zinc-500 hover:text-zinc-900 transition-colors text-sm font-medium inline-flex items-center gap-2 mb-10 group">
+      <div class="w-8 h-8 rounded-full bg-zinc-200/50 flex items-center justify-center group-hover:-translate-x-1 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+      </div>
+      Back to Portfolio
+    </a>
+    <h1 class="text-5xl md:text-7xl font-clash font-semibold tracking-tight text-zinc-900 mb-6">Thoughts &<br/><span class="text-zinc-400">Architecture</span></h1>
+    <p class="text-xl md:text-2xl text-zinc-500 font-satoshi max-w-2xl leading-relaxed mb-10">Essays on UI architecture, scalable design systems, and the future of frontend engineering.</p>
+    
+    <!-- Tag Filter UI -->
+    <div class="flex flex-wrap gap-2 mb-12">
+      <a href="/blog" class="text-xs font-bold uppercase tracking-widest px-4 py-2 bg-zinc-100 text-zinc-600 rounded-full hover:bg-zinc-200 transition-colors">
+        All
+      </a>
+      {categories.map(category => {
+        const categorySlug = category.toLowerCase().replace(/\s+/g, '-');
+        const isActive = categorySlug === tag;
+        return (
+          <a 
+            href={`/blog/tags/${categorySlug}`} 
+            class={`text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full transition-colors ${
+              isActive 
+                ? "bg-zinc-900 text-white hover:bg-zinc-800" 
+                : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200"
+            }`}
+          >
+            {category}
+          </a>
+        );
+      })}
+    </div>
+  </div>
+
+  <!-- Soft Structuralism Cascading Cards -->
+  <div class="relative w-full max-w-4xl mx-auto flex flex-col items-center mb-24">
+    {page.data.map((post, i) => {
+      const rotation = i % 2 === 0 ? '-1.5deg' : '2deg';
+      const translateX = i % 2 === 0 ? '-2%' : '2%';
+      const zIndex = 10 + i;
+      
+      return (
+        <a 
+          href={`/blog/${post.id}`} 
+          class="blog-card bg-white block w-full max-w-3xl no-underline group reveal-on-scroll relative transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:!rotate-0 hover:!translate-x-0 hover:!scale-[1.02] hover:z-50"
+          style={`transform: rotate(${rotation}) translateX(${translateX}); z-index: ${zIndex}; margin-top: ${i > 0 ? '-3rem' : '0'}; border-radius: 2.5rem; padding: 3rem; box-shadow: 0 20px 60px -15px rgba(0,0,0,0.05), 0 0 0 1px rgba(0,0,0,0.03);`}
+        >
+          <div class="flex flex-col md:flex-row justify-between items-start gap-8">
+            <div class="md:w-3/4">
+              <time class="text-sm font-bold uppercase tracking-widest text-zinc-400 mb-4 block" datetime={post.data.pubDate.toISOString()}>
+                {post.data.pubDate.toLocaleDateString('en-us', { month: 'long', day: 'numeric', year: 'numeric' })}
+              </time>
+              <h2 class="text-3xl md:text-4xl font-clash font-semibold text-zinc-900 mb-4 group-hover:text-blue-600 transition-colors leading-tight line-clamp-2">
+                {post.data.title}
+              </h2>
+              <div class="flex flex-wrap gap-2 mt-6">
+                {post.data.categories.map((category: string) => (
+                  <span class="px-3 py-1 bg-zinc-50 text-zinc-500 text-[10px] font-bold uppercase tracking-widest rounded-full border border-zinc-100">
+                    {category}
+                  </span>
+                ))}
+              </div>
+            </div>
+            
+            <div class="md:w-1/4 flex justify-start md:justify-end shrink-0 w-full md:w-auto">
+              <div class="w-14 h-14 rounded-full bg-zinc-50 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors duration-500 group-hover:scale-110 ease-[cubic-bezier(0.32,0.72,0,1)]">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </div>
+            </div>
+          </div>
+        </a>
+      );
+    })}
+    
+    {page.data.length === 0 && (
+      <p class="text-zinc-500 text-lg py-12 text-center">No essays found for this topic.</p>
+    )}
+  </div>
+
+  <!-- Pagination Controls -->
+  {page.lastPage > 1 && (
+    <div class="flex items-center justify-center gap-4 mb-24 font-satoshi">
+      {page.url.prev ? (
+        <a href={page.url.prev} class="px-6 py-3 rounded-full bg-zinc-100 text-zinc-600 font-medium hover:bg-zinc-200 transition-colors">
+          &larr; Previous
+        </a>
+      ) : (
+        <span class="px-6 py-3 rounded-full bg-zinc-50 text-zinc-300 font-medium cursor-not-allowed">
+          &larr; Previous
+        </span>
+      )}
+      
+      <span class="text-zinc-500 font-medium">
+        Page {page.currentPage} of {page.lastPage}
+      </span>
+      
+      {page.url.next ? (
+        <a href={page.url.next} class="px-6 py-3 rounded-full bg-zinc-100 text-zinc-600 font-medium hover:bg-zinc-200 transition-colors">
+          Next &rarr;
+        </a>
+      ) : (
+        <span class="px-6 py-3 rounded-full bg-zinc-50 text-zinc-300 font-medium cursor-not-allowed">
+          Next &rarr;
+        </span>
+      )}
+    </div>
+  )}
+
+</BaseLayout>
+
+<style>
+  @media (max-width: 768px) {
+    .blog-card {
+      padding: 2rem !important;
+      border-radius: 2rem !important;
+      transform: none !important;
+      margin-top: 1.5rem !important;
+    }
+  }
+</style>

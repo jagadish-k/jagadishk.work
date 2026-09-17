@@ -4,6 +4,7 @@ description: "How to structure design tokens and component libraries for long-te
 pubDate: 2024-04-10
 categories: ["Design Systems"]
 tags: ["css", "tokens", "accessibility"]
+draft: true
 ---
 
 # Building Resilient Design Systems
@@ -18,7 +19,7 @@ By storing these decisions in a platform-agnostic format (like JSON), we can gen
 
 ## Semantic Versioning for Components
 
-When building the component library, adhering to semantic versioning (SemVer) is non-negotiable. 
+When building the component library, adhering to semantic versioning (SemVer) is non-negotiable.
 
 - **Major** updates include breaking changes (e.g., altering a component's API).
 - **Minor** updates introduce new features in a backward-compatible way.

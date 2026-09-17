@@ -23,10 +23,41 @@
 }
 
 /* Elegant List Styling */
-.markdown-content ul {
+.markdown-content {
+	/* Force all direct children to a comfortable reading width and center them */
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.markdown-content > * {
+	width: 100%;
+	max-width: 48rem; /* max-w-4xl for text */
+}
+
+/* Allow code blocks and images to stretch wider */
+.markdown-content > pre,
+.markdown-content > figure,
+.markdown-content > img {
+	max-width: 72rem; /* max-w-6xl */
+	width: 100%;
+	border-radius: 1rem;
+	box-shadow: 0 20px 40px -15px rgba(0,0,0,0.05);
+	margin-top: 2rem;
+	margin-bottom: 2rem;
+}
+
+.markdown-content > pre {
+	padding: 1.5rem;
+	border: 1px solid rgba(0,0,0,0.05);
+	background: #18181b !important; /* Enforce a sleek dark block for code in light mode */
+}
+
+.markdown-content ul,
+.markdown-content ol {
 	list-style: none;
 	padding: 0;
-	margin-top: 0.75rem;
+	margin-top: 1rem;
 	display: flex;
 	flex-direction: column;
 	gap: 0.5rem;
@@ -34,21 +65,22 @@
 
 .markdown-content li {
 	position: relative;
-	padding-left: 1.25rem;
-	color: #44403c; /* stone-700 */
+	padding-left: 1.5rem;
+	color: #3f3f46; /* zinc-700 */
 }
 
 .markdown-content li::before {
 	content: '→';
 	position: absolute;
 	left: 0;
-	color: #a8a29e;
-	font-family: monospace;
+	color: #a1a1aa; /* zinc-400 */
+	font-family: 'Satoshi', sans-serif;
+	font-weight: 700;
 }
 
 .markdown-content strong {
-	color: #1c1917;
-	font-weight: 600;
+	color: #18181b; /* zinc-900 */
+	font-weight: 700;
 }
 
 /* =========================================
