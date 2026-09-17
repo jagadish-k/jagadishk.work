@@ -10,6 +10,14 @@ import AnalogTheme from '../../themes/analog/index.astro';
 import TerminalTheme from '../../themes/terminal/index.astro';
 import VelvetTheme from '../../themes/velvet/index.astro';
 import AbsoluteTheme from '../../themes/absolute/index.astro';
+import BrutalChicTheme from '../../themes/brutal-chic/index.astro';
+import ZenTheme from '../../themes/zen/index.astro';
+import CyberTheme from '../../themes/cyber/index.astro';
+import LiquidTheme from '../../themes/liquid/index.astro';
+import PrintTheme from '../../themes/print/index.astro';
+import SynthTheme from '../../themes/synth/index.astro';
+import TactileTheme from '../../themes/tactile/index.astro';
+import HolographicTheme from '../../themes/holographic/index.astro';
 import DevThemeSwitcher from '../../components/DevThemeSwitcher.astro';
 
 export function getStaticPaths() {
@@ -25,6 +33,14 @@ export function getStaticPaths() {
     { params: { theme: 'terminal' } },
     { params: { theme: 'velvet' } },
     { params: { theme: 'absolute' } },
+    { params: { theme: 'brutal-chic' } },
+    { params: { theme: 'zen' } },
+    { params: { theme: 'cyber' } },
+    { params: { theme: 'liquid' } },
+    { params: { theme: 'print' } },
+    { params: { theme: 'synth' } },
+    { params: { theme: 'tactile' } },
+    { params: { theme: 'holographic' } },
   ];
 }
 
@@ -42,6 +58,14 @@ const getThemeComponent = (t: string) => {
     case 'terminal': return TerminalTheme;
     case 'velvet': return VelvetTheme;
     case 'absolute': return AbsoluteTheme;
+    case 'brutal-chic': return BrutalChicTheme;
+    case 'zen': return ZenTheme;
+    case 'cyber': return CyberTheme;
+    case 'liquid': return LiquidTheme;
+    case 'print': return PrintTheme;
+    case 'synth': return SynthTheme;
+    case 'tactile': return TactileTheme;
+    case 'holographic': return HolographicTheme;
     case 'monolith':
     default:
       return MonolithTheme;

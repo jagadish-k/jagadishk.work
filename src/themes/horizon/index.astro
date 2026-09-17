@@ -34,7 +34,7 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
     .font-satoshi { font-family: 'Satoshi', sans-serif; letter-spacing: -0.02em; }
     
     /* GSAP Horizontal Scroll Container */
-    body { overflow-x: hidden; }
+    .horizon-body { overflow-x: hidden; }
     .horizontal-wrapper {
       width: 100%;
       height: 100vh;
@@ -74,7 +74,7 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
     }
   </style>
 </head>
-<body class="font-satoshi antialiased selection:bg-[#EFEFEF] selection:text-[#1C1C1C]">
+<body class="font-satoshi antialiased horizon-body selection:bg-[#EFEFEF] selection:text-[#1C1C1C]">
   
   <TopNav />
 

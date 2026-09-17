@@ -1,0 +1,230 @@
+---
+import '../../styles/global.css';
+import { getCollection, render } from 'astro:content';
+import CVPrintTemplate from '../../components/CVPrintTemplate.astro';
+import TopNav from '../../components/TopNav.astro';
+
+const basicsList = await getCollection('resume', ({ data }) => data.type === 'basics');
+const summaryList = await getCollection('resume', ({ data }) => data.type === 'summary');
+
+const basics = basicsList[0]?.data;
+const summaryObj = summaryList[0];
+
+const allExperience = await getCollection('experience');
+const sortedExperience = allExperience.sort((a, b) => a.data.order - b.data.order);
+
+const allProjects = await getCollection('projects');
+const sortedProjects = allProjects.sort((a, b) => a.data.order - b.data.order);
+
+const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Content: () => null };
+---
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth bg-[#050505] text-[#E0E0E0]">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{basics?.name} | {basics?.role}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --acid: #CCFF00;
+      --cyan: #00FFFF;
+      --magenta: #FF00FF;
+    }
+    .font-cyber { font-family: 'Syncopate', sans-serif; text-transform: uppercase; }
+    .font-sans { font-family: 'Inter', sans-serif; }
+    
+    /* CRT Scanline Overlay */
+    .scanlines {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      pointer-events: none;
+      background: linear-gradient(
+        to bottom,
+        rgba(255,255,255,0),
+        rgba(255,255,255,0) 50%,
+        rgba(0,0,0,0.1) 50%,
+        rgba(0,0,0,0.1)
+      );
+      background-size: 100% 4px;
+      mix-blend-mode: overlay;
+    }
+    
+    /* Chrome Text Effect */
+    .text-chrome {
+      background: linear-gradient(
+        to bottom,
+        #fff 0%,
+        #e0e0e0 45%,
+        #444 50%,
+        #000 55%,
+        #e0e0e0 100%
+      );
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 10px rgba(255,255,255,0.2));
+    }
+
+    /* Glitch Image Hover */
+    .glitch-box {
+      position: relative;
+      overflow: hidden;
+    }
+    .glitch-img {
+      transition: filter 0.2s, transform 0.2s;
+    }
+    .glitch-box:hover .glitch-img {
+      filter: saturate(3) hue-rotate(90deg);
+      transform: scale(1.05) translateX(-5px);
+      animation: glitch-anim 0.3s infinite;
+    }
+    @keyframes glitch-anim {
+      0% { clip-path: inset(20% 0 80% 0); transform: translate(-2px, 2px); }
+      20% { clip-path: inset(60% 0 10% 0); transform: translate(2px, -2px); }
+      40% { clip-path: inset(40% 0 50% 0); transform: translate(2px, 2px); }
+      60% { clip-path: inset(80% 0 5% 0); transform: translate(-2px, -2px); }
+      80% { clip-path: inset(10% 0 70% 0); transform: translate(2px, -2px); }
+      100% { clip-path: inset(30% 0 50% 0); transform: translate(-2px, 2px); }
+    }
+
+    /* Cyber Button */
+    .cyber-btn {
+      position: relative;
+      background: transparent;
+      color: var(--acid);
+      font-family: 'Syncopate', sans-serif;
+      font-weight: 700;
+      padding: 1rem 2rem;
+      border: 2px solid var(--acid);
+      box-shadow: 0 0 15px rgba(204, 255, 0, 0.3), inset 0 0 15px rgba(204, 255, 0, 0.1);
+      transition: all 0.2s;
+      cursor: pointer;
+      overflow: hidden;
+    }
+    .cyber-btn:hover {
+      background: var(--acid);
+      color: #000;
+      box-shadow: 0 0 30px rgba(204, 255, 0, 0.6);
+    }
+    .cyber-btn::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.8), transparent);
+      transform: rotate(45deg) translateY(-100%);
+      transition: transform 0.5s;
+    }
+    .cyber-btn:hover::before {
+      transform: rotate(45deg) translateY(100%);
+    }
+
+    /* Cyber Frame */
+    .cyber-frame {
+      position: relative;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0) 100%);
+      backdrop-filter: blur(10px);
+    }
+    .cyber-frame::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; right: -1px;
+      width: 20px; height: 20px;
+      border-bottom: 2px solid var(--cyan);
+      border-right: 2px solid var(--cyan);
+    }
+
+    .prose-cyber p { color: #A0A0A0; font-size: 1rem; line-height: 1.8; margin-bottom: 1.5rem; }
+  </style>
+</head>
+<body class="font-sans antialiased min-h-[100dvh] relative selection:bg-[var(--acid)] selection:text-black">
+  
+  <div class="scanlines"></div>
+  <TopNav />
+
+  <main class="w-full relative z-10 print:hidden pt-32 px-4 md:px-12 max-w-screen-2xl mx-auto">
+    
+    <!-- Hero -->
+    <header class="py-24 flex flex-col md:flex-row gap-12 items-center">
+      <div class="w-full md:w-1/2">
+        <h2 class="font-cyber text-[var(--acid)] text-sm tracking-[0.5em] mb-4">sys.user // {basics?.role}</h2>
+        <h1 class="text-5xl md:text-7xl lg:text-9xl font-cyber font-bold tracking-tighter leading-[0.8] mb-12 text-chrome">
+          {basics?.name}
+        </h1>
+        <div class="max-w-xl text-lg text-[#E0E0E0] mb-12 opacity-80 leading-relaxed font-sans">
+          <SummaryContent />
+        </div>
+        <button onclick="window.print()" class="cyber-btn">
+          EXECUTE / PRINT
+        </button>
+      </div>
+      <div class="w-full md:w-1/2 flex justify-end">
+        <!-- Abstract Cyber Graphic -->
+        <div class="relative w-full max-w-md aspect-square rounded-full border border-[var(--cyan)] flex items-center justify-center p-8 animate-[spin_20s_linear_infinite]">
+          <div class="w-full h-full border border-[var(--acid)] rounded-full animate-[spin_15s_linear_infinite_reverse]"></div>
+          <div class="absolute inset-0 m-auto w-1/2 h-1/2 border-2 border-[var(--magenta)] rounded-full opacity-50 blur-[2px]"></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Projects -->
+    <section class="py-32 relative">
+      <h2 class="text-3xl md:text-5xl font-cyber font-bold mb-16 text-chrome">DIRECTORY / WORKS</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {sortedProjects.map((project, i) => (
+          <a href={project.data.url || '#'} class="cyber-frame p-6 block group no-underline">
+            <div class="glitch-box w-full aspect-video mb-6 border border-white/10">
+              <img src={`https://picsum.photos/seed/cyber${i}/800/450`} alt="" class="glitch-img w-full h-full object-cover grayscale brightness-75 group-hover:brightness-100" />
+            </div>
+            <div class="flex justify-between items-start mb-4">
+              <h3 class="text-2xl font-cyber font-bold text-white group-hover:text-[var(--cyan)] transition-colors">{project.data.title}</h3>
+              <span class="text-[var(--acid)] font-cyber text-xs tracking-widest">ID:{String(i).padStart(3, '0')}</span>
+            </div>
+            <p class="text-[#A0A0A0] text-sm mb-6">{project.data.description}</p>
+            <div class="flex flex-wrap gap-2">
+              {project.data.tags.map(tag => (
+                <span class="px-2 py-1 border border-white/20 text-[10px] font-cyber text-white/50">{tag}</span>
+              ))}
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Experience -->
+    <section class="py-32 border-t border-white/10 relative">
+      <h2 class="text-3xl md:text-5xl font-cyber font-bold mb-16 text-chrome">LOGS / EXPERIENCE</h2>
+      
+      <div class="flex flex-col gap-12">
+        {sortedExperience.map(async (job) => {
+          const { Content } = await render(job);
+          return (
+            <div class="cyber-frame p-8 md:p-12 flex flex-col md:flex-row gap-8 items-start group hover:border-[var(--acid)] transition-colors">
+              <div class="md:w-1/3">
+                <div class="text-[var(--acid)] font-cyber text-xs tracking-[0.2em] mb-4">[{job.data.startDate} — {job.data.endDate}]</div>
+                <h3 class="text-2xl font-cyber font-bold text-white mb-2">{job.data.company}</h3>
+                <div class="text-[var(--cyan)] font-cyber text-sm tracking-wider">{job.data.title}</div>
+              </div>
+              <div class="md:w-2/3 prose prose-cyber max-w-none opacity-80 group-hover:opacity-100 transition-opacity">
+                <Content />
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    </section>
+
+  </main>
+
+  <div class="hidden print:block bg-white text-black">
+    <CVPrintTemplate />
+  </div>
+
+</body>
+</html>

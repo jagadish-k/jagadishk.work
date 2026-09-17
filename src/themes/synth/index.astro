@@ -1,0 +1,226 @@
+---
+import '../../styles/global.css';
+import { getCollection, render } from 'astro:content';
+import CVPrintTemplate from '../../components/CVPrintTemplate.astro';
+import TopNav from '../../components/TopNav.astro';
+
+const basicsList = await getCollection('resume', ({ data }) => data.type === 'basics');
+const summaryList = await getCollection('resume', ({ data }) => data.type === 'summary');
+
+const basics = basicsList[0]?.data;
+const summaryObj = summaryList[0];
+
+const allExperience = await getCollection('experience');
+const sortedExperience = allExperience.sort((a, b) => a.data.order - b.data.order);
+
+const allProjects = await getCollection('projects');
+const sortedProjects = allProjects.sort((a, b) => a.data.order - b.data.order);
+
+const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Content: () => null };
+---
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth bg-[#0B021A] text-[#E0D4FF]">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{basics?.name} | {basics?.role}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --synth-pink: #FF007F;
+      --synth-cyan: #00F0FF;
+      --synth-purple: #9D00FF;
+    }
+    .font-synth { font-family: 'Space Grotesk', sans-serif; }
+    
+    /* Synthwave Grid Horizon */
+    .synth-grid {
+      position: fixed;
+      bottom: 0; left: 0; right: 0; height: 50vh;
+      background: 
+        linear-gradient(transparent 65%, var(--synth-pink) 100%),
+        linear-gradient(to right, transparent 49px, var(--synth-cyan) 50px) 0 0 / 50px 100%,
+        linear-gradient(to bottom, transparent 49px, var(--synth-cyan) 50px) 0 0 / 100% 50px;
+      transform: perspective(500px) rotateX(60deg) scale(2);
+      transform-origin: bottom center;
+      z-index: 0;
+      opacity: 0.15;
+      pointer-events: none;
+      animation: grid-move 2s linear infinite;
+    }
+    @keyframes grid-move {
+      from { background-position: 0 0, 0 0, 0 0; }
+      to { background-position: 0 0, 0 50px, 0 50px; }
+    }
+
+    /* Sunset Glow */
+    .synth-sun {
+      position: fixed;
+      bottom: 30%; left: 50%;
+      transform: translateX(-50%);
+      width: 40vw; height: 40vw;
+      max-width: 600px; max-height: 600px;
+      background: linear-gradient(to bottom, #FFD700, var(--synth-pink));
+      border-radius: 50%;
+      z-index: -1;
+      opacity: 0.15;
+      filter: blur(40px);
+      pointer-events: none;
+    }
+
+    /* Glowing Text */
+    .glow-text-pink {
+      color: #fff;
+      text-shadow: 0 0 10px var(--synth-pink), 0 0 20px var(--synth-pink), 0 0 40px var(--synth-pink);
+    }
+    .glow-text-cyan {
+      color: #fff;
+      text-shadow: 0 0 10px var(--synth-cyan), 0 0 20px var(--synth-cyan), 0 0 40px var(--synth-cyan);
+    }
+
+    /* Cards */
+    .synth-card {
+      background: rgba(11, 2, 26, 0.7);
+      border: 1px solid var(--synth-purple);
+      border-radius: 8px;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .synth-card:hover {
+      border-color: var(--synth-cyan);
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.2), inset 0 0 15px rgba(0, 240, 255, 0.1);
+      transform: translateY(-5px);
+    }
+    .synth-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%; width: 100%; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--synth-cyan));
+    }
+    .synth-card:hover::before {
+      left: 100%;
+      transition: left 0.8s ease-in-out;
+    }
+
+    /* Synth Button */
+    .synth-btn {
+      background: transparent;
+      color: var(--synth-pink);
+      border: 2px solid var(--synth-pink);
+      border-radius: 4px;
+      padding: 1rem 2rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      transition: all 0.3s;
+      box-shadow: 0 0 10px rgba(255, 0, 127, 0.3), inset 0 0 10px rgba(255, 0, 127, 0.2);
+    }
+    .synth-btn:hover {
+      background: var(--synth-pink);
+      color: #fff;
+      box-shadow: 0 0 20px rgba(255, 0, 127, 0.6), inset 0 0 20px rgba(255, 0, 127, 0.4);
+      text-shadow: 0 0 5px #fff;
+    }
+
+    /* CRT Flicker */
+    @keyframes crt-flicker {
+      0% { opacity: 0.95; }
+      5% { opacity: 0.8; }
+      10% { opacity: 0.95; }
+      15% { opacity: 1; }
+      100% { opacity: 1; }
+    }
+    .synth-body { animation: crt-flicker 5s infinite; }
+
+    .prose-synth p { color: rgba(224, 212, 255, 0.8); font-size: 1.1rem; line-height: 1.7; margin-bottom: 1.5rem; }
+  </style>
+</head>
+<body class="font-synth synth-body antialiased min-h-[100dvh] relative selection:bg-[var(--synth-pink)] selection:text-white">
+  
+  <div class="synth-sun"></div>
+  <div class="synth-grid"></div>
+  
+  <TopNav />
+
+  <main class="w-full relative z-10 print:hidden pt-32 px-4 md:px-12 max-w-screen-xl mx-auto">
+    
+    <!-- Hero -->
+    <header class="py-24 md:py-32 flex flex-col items-center text-center">
+      <div class="text-[var(--synth-cyan)] text-sm tracking-[0.3em] uppercase mb-6 font-bold border-b border-[var(--synth-cyan)]/30 pb-2 inline-block">
+        &gt;&gt; {basics?.role}
+      </div>
+      
+      <h1 class="text-6xl md:text-8xl font-bold tracking-tighter mb-8 glow-text-pink uppercase">
+        {basics?.name}
+      </h1>
+      
+      <div class="max-w-2xl text-xl leading-relaxed mb-12 prose-synth">
+        <SummaryContent />
+      </div>
+      
+      <button onclick="window.print()" class="synth-btn">
+        Initialize Download
+      </button>
+    </header>
+
+    <!-- Projects -->
+    <section class="py-24">
+      <h2 class="text-4xl md:text-5xl font-bold mb-16 glow-text-cyan uppercase">01 / Archives</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {sortedProjects.map((project, i) => (
+          <a href={project.data.url || '#'} class="synth-card p-6 block group no-underline flex flex-col justify-between">
+            <div>
+              <div class="aspect-video w-full mb-6 rounded overflow-hidden relative">
+                <div class="absolute inset-0 bg-gradient-to-t from-[var(--synth-purple)]/50 to-transparent z-10 mix-blend-overlay"></div>
+                <img src={`https://picsum.photos/seed/synth${i}/600/400`} alt="" class="w-full h-full object-cover filter contrast-125 saturate-150" />
+              </div>
+              <h3 class="text-2xl font-bold mb-3 text-white group-hover:text-[var(--synth-cyan)] transition-colors">{project.data.title}</h3>
+              <p class="text-sm text-[#E0D4FF]/70 mb-6">{project.data.description}</p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              {project.data.tags.map(tag => (
+                <span class="px-2 py-1 bg-[var(--synth-purple)]/20 text-[var(--synth-pink)] rounded text-xs font-bold tracking-wider">{tag}</span>
+              ))}
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Experience -->
+    <section class="py-24">
+      <h2 class="text-4xl md:text-5xl font-bold mb-16 glow-text-cyan uppercase">02 / Mission Log</h2>
+      
+      <div class="flex flex-col gap-8">
+        {sortedExperience.map(async (job) => {
+          const { Content } = await render(job);
+          return (
+            <div class="synth-card p-8 md:p-12 flex flex-col md:flex-row gap-8 items-start">
+              <div class="md:w-1/3 shrink-0">
+                <div class="text-[var(--synth-cyan)] font-bold text-sm tracking-[0.2em] uppercase mb-4">{job.data.startDate} — {job.data.endDate}</div>
+                <h3 class="text-2xl font-bold mb-2 text-white">{job.data.company}</h3>
+                <div class="text-[var(--synth-pink)] uppercase text-sm font-bold tracking-widest">{job.data.title}</div>
+              </div>
+              <div class="md:w-2/3 prose prose-synth max-w-none">
+                <Content />
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    </section>
+
+  </main>
+
+  <div class="hidden print:block bg-white text-black">
+    <CVPrintTemplate />
+  </div>
+
+</body>
+</html>

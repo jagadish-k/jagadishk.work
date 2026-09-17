@@ -34,7 +34,7 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
       --lime: #39FF14;
       --cubic-spring: cubic-bezier(0.32, 0.72, 0, 1);
     }
-    body { font-family: 'Space Mono', monospace; }
+    .terminal-body { font-family: 'Space Mono', monospace; }
     
     /* Grid Background */
     .grid-bg {
@@ -97,7 +97,7 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
     .prose-terminal p { font-size: 1rem; color: #A3B8CC; line-height: 1.6; margin-bottom: 1.5em; }
   </style>
 </head>
-<body class="antialiased min-h-[100dvh] relative selection:bg-[var(--cyan)] selection:text-[#0F1115]">
+<body class="antialiased min-h-[100dvh] relative selection:bg-[var(--cyan)] selection:text-[#0F1115] terminal-body">
   
   <div class="grid-bg"></div>
   <TopNav />

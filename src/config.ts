@@ -15,6 +15,14 @@ export const siteConfig = {
 	// 'terminal'      - Space Mono, Data dense, Scramble text
 	// 'velvet'        - Deep crimson, Clash Display, Cursor spotlight
 	// 'absolute'      - Pure white, Manrope, Morphing interactions
+	// 'brutal-chic'   - Luxury Brutalism, Oswald & Playfair, high contrast
+	// 'zen'           - Extreme Minimalism, Cormorant Garamond
+	// 'cyber'         - Y2K Chrome, Syncopate, Glitch effects
+	// 'liquid'        - Fluid Distortion, SVG ripples, Plus Jakarta Sans
+	// 'print'         - Newspaper Editorial, PT Serif, CMYK hover effects
+	// 'synth'         - Retro-Futurism, Space Grotesk, Glowing neon
+	// 'tactile'       - Soft Neumorphic, Nunito, Physical interaction
+	// 'holographic'   - Iridescent Glass, Outfit, Foil gradients
 	theme: 'monolith',
 	links: {
 		github: 'https://github.com/jagadish-k',

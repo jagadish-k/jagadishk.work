@@ -1,0 +1,222 @@
+---
+import '../../styles/global.css';
+import { getCollection, render } from 'astro:content';
+import CVPrintTemplate from '../../components/CVPrintTemplate.astro';
+import TopNav from '../../components/TopNav.astro';
+
+const basicsList = await getCollection('resume', ({ data }) => data.type === 'basics');
+const summaryList = await getCollection('resume', ({ data }) => data.type === 'summary');
+
+const basics = basicsList[0]?.data;
+const summaryObj = summaryList[0];
+
+const allExperience = await getCollection('experience');
+const sortedExperience = allExperience.sort((a, b) => a.data.order - b.data.order);
+
+const allProjects = await getCollection('projects');
+const sortedProjects = allProjects.sort((a, b) => a.data.order - b.data.order);
+
+const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Content: () => null };
+---
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth bg-[#F5F2EB] text-[#2C2B29]">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{basics?.name} | {basics?.role}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ease-zen: cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .font-zen { font-family: 'Cormorant Garamond', serif; }
+    .font-sans { font-family: 'Inter', sans-serif; letter-spacing: 0.05em; }
+    
+    .vertical-text {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+    }
+
+    /* Breathable Hover */
+    .zen-link {
+      position: relative;
+      transition: opacity 1.5s var(--ease-zen), padding 1s var(--ease-zen);
+    }
+    .zen-link:hover {
+      padding-left: 1rem;
+      padding-right: 1rem;
+      opacity: 0.7;
+    }
+
+    /* Extremely slow fade-ins */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 2s var(--ease-zen);
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .zen-btn {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+      padding: 1rem 2rem;
+      border: 1px solid rgba(44,43,41,0.2);
+      border-radius: 2px;
+      transition: all 1s var(--ease-zen);
+    }
+    .zen-btn::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; width: 100%; height: 0%;
+      background: #2C2B29;
+      transition: height 0.8s var(--ease-zen);
+      z-index: -1;
+    }
+    .zen-btn:hover {
+      color: #F5F2EB;
+      border-color: #2C2B29;
+    }
+    .zen-btn:hover::before {
+      height: 100%;
+    }
+
+    .prose-zen p { font-size: 1.1rem; line-height: 2.2; font-weight: 300; color: rgba(44,43,41,0.8); margin-bottom: 2rem; }
+  </style>
+</head>
+<body class="font-sans antialiased min-h-[100dvh] relative selection:bg-[#2C2B29] selection:text-[#F5F2EB]">
+  
+  <TopNav />
+
+  <!-- Vertical Name Accent -->
+  <div class="fixed top-32 left-8 md:left-16 h-[60vh] flex flex-col justify-between hidden md:flex opacity-30">
+    <div class="vertical-text font-zen text-sm tracking-[0.3em] uppercase">{basics?.name}</div>
+    <div class="w-[1px] h-32 bg-current mx-auto opacity-50"></div>
+  </div>
+
+  <main class="w-full relative z-10 print:hidden px-6 md:px-32 lg:px-48 max-w-screen-xl mx-auto">
+    
+    <!-- Hero -->
+    <header class="min-h-[90vh] flex flex-col justify-center pt-20">
+      <div class="fade-up">
+        <h2 class="text-sm tracking-[0.2em] uppercase text-[#2C2B29]/50 mb-12 border-b border-[#2C2B29]/10 inline-block pb-2">{basics?.role}</h2>
+      </div>
+      
+      <h1 class="text-5xl md:text-7xl lg:text-8xl font-zen font-light leading-[1.1] mb-20 fade-up max-w-4xl" style="transition-delay: 0.2s">
+        Clarity through <br/>
+        <span class="italic text-[#2C2B29]/70">reduction.</span>
+      </h1>
+      
+      <div class="flex flex-col md:flex-row gap-12 md:gap-32 items-start fade-up" style="transition-delay: 0.4s">
+        <div class="w-full md:w-1/2 prose prose-zen">
+          <SummaryContent />
+        </div>
+        <div class="w-full md:w-1/2 flex justify-end">
+          <button onclick="window.print()" class="zen-btn text-xs tracking-widest uppercase">
+            <span class="relative z-10">Archive .pdf</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Spacer -->
+    <div class="w-[1px] h-48 bg-[#2C2B29]/10 mx-auto my-32"></div>
+
+    <!-- Projects -->
+    <section class="py-32">
+      <div class="flex justify-between items-end mb-32 border-b border-[#2C2B29]/10 pb-12 fade-up">
+        <h2 class="text-2xl font-zen italic text-[#2C2B29]/60">Selected Works</h2>
+        <span class="text-xs tracking-widest uppercase opacity-40">01</span>
+      </div>
+
+      <div class="flex flex-col gap-48">
+        {sortedProjects.map((project, i) => (
+          <a href={project.data.url || '#'} class="group block no-underline fade-up">
+            <div class="flex flex-col md:flex-row gap-16 md:gap-32 items-center">
+              <div class="w-full md:w-5/12 overflow-hidden bg-[#E8E4D9]">
+                <img src={`https://picsum.photos/seed/zen${i}/600/800`} alt="" class="w-full h-full object-cover mix-blend-multiply opacity-80 grayscale transition-transform duration-[3s] var(--ease-zen) group-hover:scale-105" />
+              </div>
+              <div class="w-full md:w-7/12">
+                <h3 class="text-4xl md:text-5xl font-zen font-light mb-8 zen-link inline-block">{project.data.title}</h3>
+                <p class="text-lg font-light text-[#2C2B29]/60 leading-relaxed mb-12 max-w-md">{project.data.description}</p>
+                <div class="flex flex-col gap-4 text-xs tracking-widest uppercase opacity-40">
+                  {project.data.tags.map(tag => (
+                    <span>— {tag}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Spacer -->
+    <div class="w-[1px] h-48 bg-[#2C2B29]/10 mx-auto my-32"></div>
+
+    <!-- Experience -->
+    <section class="py-32">
+      <div class="flex justify-between items-end mb-32 border-b border-[#2C2B29]/10 pb-12 fade-up">
+        <h2 class="text-2xl font-zen italic text-[#2C2B29]/60">Experience</h2>
+        <span class="text-xs tracking-widest uppercase opacity-40">02</span>
+      </div>
+      
+      <div class="flex flex-col gap-32">
+        {sortedExperience.map(async (job) => {
+          const { Content } = await render(job);
+          return (
+            <div class="flex flex-col md:flex-row gap-16 fade-up">
+              <div class="md:w-1/4">
+                <div class="text-xs tracking-widest uppercase text-[#2C2B29]/40 mb-6">{job.data.startDate} — {job.data.endDate}</div>
+              </div>
+              <div class="md:w-3/4">
+                <h3 class="text-3xl font-zen font-light mb-2">{job.data.company}</h3>
+                <div class="text-sm tracking-wider uppercase text-[#2C2B29]/60 mb-12">{job.data.title}</div>
+                <div class="prose prose-zen max-w-3xl">
+                  <Content />
+                </div>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    </section>
+
+  </main>
+
+  <div class="hidden print:block bg-white text-black">
+    <CVPrintTemplate />
+  </div>
+
+  <script>
+    // Intersection Observer for slow fade-ups
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: "0px 0px -10% 0px" });
+
+    document.querySelectorAll('.fade-up').forEach((el) => {
+      observer.observe(el);
+    });
+    
+    // Trigger visible immediately for hero elements that are already in view on load
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up').forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight) {
+          el.classList.add('visible');
+        }
+      });
+    }, 100);
+  </script>
+</body>
+</html>
