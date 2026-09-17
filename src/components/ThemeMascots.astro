@@ -1,0 +1,150 @@
+---
+import { themes } from '../config';
+import ThemeSwitcher from './ThemeSwitcher.astro';
+---
+
+<div id="theme-mascots-container" class="fixed bottom-4 right-4 z-[9999] print:hidden">
+  
+  <div id="cat-mascot" class="cursor-pointer relative origin-bottom group flex justify-center">
+    <div id="cat-speech-bubble" class="absolute -top-14 right-14 bg-white text-black px-4 py-2 rounded-3xl text-sm font-black shadow-[4px_4px_0px_rgba(0,0,0,1)] opacity-0 pointer-events-none whitespace-nowrap border-[3px] border-black origin-bottom-right z-10 flex items-center justify-center transform scale-50 translate-y-2">
+      <span id="speech-text" class="tracking-tighter uppercase italic pr-1">Switch Theme</span>
+      <div class="absolute -bottom-[6px] right-4 w-3 h-3 bg-white border-b-[3px] border-r-[3px] border-black rotate-45"></div>
+    </div>
+    
+    <img src="/assets/cat.svg" alt="Cat Mascot" class="w-24 h-24 drop-shadow-xl" />
+  </div>
+
+  <ThemeSwitcher />
+</div>
+
+<script>
+  const runMascots = () => {
+    const anime = (window as any).anime;
+
+    const cat = document.getElementById('cat-mascot');
+    const speechBubble = document.getElementById('cat-speech-bubble');
+    const speechText = document.getElementById('speech-text');
+    
+    const messages = [
+      "Nya~ New look?",
+      "Nani?! Switch theme?",
+      "Bored? Transform!",
+      "Meow! Makeover?",
+      "Pick a style!",
+      "This UI is so last season.",
+      "Light mode? *hisses*",
+      "I demand a new color palette!",
+      "Click me for magic!",
+      "Let's spice things up!",
+      "Too bright! Dark mode plz.",
+      "CSS powers, ACTIVATE!",
+      "New theme, who dis?",
+      "Change the vibe?",
+      "Tired of these colors?",
+      "Purr-fect time for a switch!",
+      "Give me cyberpunk!",
+      "Unleash the themes!",
+      "Witness my true form!",
+      "More contrast, human!"
+    ];
+    
+    // Modal
+    const menu = document.getElementById('theme-switcher-menu');
+
+    if(!menu || !cat) return;
+
+    let isMenuOpen = false;
+
+    const toggleMenu = (e: Event) => {
+      e.stopPropagation();
+      isMenuOpen = !isMenuOpen;
+      if (isMenuOpen) {
+        menu.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-4');
+        menu.classList.add('opacity-100', 'pointer-events-auto', 'translate-y-0');
+      } else {
+        menu.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
+        menu.classList.remove('opacity-100', 'pointer-events-auto', 'translate-y-0');
+      }
+    };
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (isMenuOpen && !menu.contains(e.target as Node) && !cat.contains(e.target as Node)) {
+        isMenuOpen = false;
+        menu.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
+        menu.classList.remove('opacity-100', 'pointer-events-auto', 'translate-y-0');
+      }
+    });
+
+    cat.addEventListener('click', toggleMenu);
+
+    // Idle animation for the cat
+    const idleAnim = anime({
+      targets: cat,
+      translateY: [0, -6, 0],
+      rotate: [0, 2, -2, 0],
+      duration: 3500,
+      easing: 'easeInOutSine',
+      loop: true
+    });
+
+    // Hover interaction
+    cat.addEventListener('mouseenter', () => {
+      idleAnim.pause();
+      
+      if(speechText) {
+        speechText.innerText = messages[Math.floor(Math.random() * messages.length)];
+      }
+
+      // Show bubble
+      if(speechBubble) {
+        speechBubble.style.opacity = '1';
+        anime.remove(speechBubble);
+        anime({
+          targets: speechBubble,
+          scale: [0.5, 1.1, 1],
+          rotate: [-10, 5, 0],
+          translateY: [10, -5, 0],
+          duration: 600,
+          easing: 'easeOutElastic(1, .5)'
+        });
+      }
+    });
+
+    cat.addEventListener('mouseleave', () => {
+      idleAnim.play();
+
+      if(speechBubble) {
+        anime.remove(speechBubble);
+        anime({
+          targets: speechBubble,
+          scale: 0.5,
+          opacity: 0,
+          translateY: 10,
+          duration: 300,
+          easing: 'easeInBack'
+        });
+      }
+    });
+  };
+
+  const loadAnimeJs = () => {
+    if ((window as any).anime) {
+      runMascots();
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js';
+    script.onload = () => runMascots();
+    document.body.appendChild(script);
+  };
+
+  // Wait for idle time to load and run
+  if (typeof window !== 'undefined') {
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(loadAnimeJs);
+    } else {
+      setTimeout(loadAnimeJs, 2000);
+    }
+  }
+</script>

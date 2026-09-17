@@ -19,7 +19,7 @@ import PrintTheme from '../themes/print/index.astro';
 import SynthTheme from '../themes/synth/index.astro';
 import TactileTheme from '../themes/tactile/index.astro';
 import HolographicTheme from '../themes/holographic/index.astro';
-import DevThemeSwitcher from '../components/DevThemeSwitcher.astro';
+import ThemeMascots from '../components/ThemeMascots.astro';
 
 // Read the theme strictly from config for the root page
 const requestedTheme = siteConfig.theme;
@@ -55,4 +55,4 @@ const isDev = import.meta.env.DEV;
 ---
 
 <Theme />
-{isDev && <DevThemeSwitcher />}
+<ThemeMascots />
