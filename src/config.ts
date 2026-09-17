@@ -10,6 +10,11 @@ export const siteConfig = {
 	// 'horizon'       - High-fashion horizontal scroll hijack with Satoshi font
 	// 'editorial'     - Editorial Luxury (Light blue background, serif typography)
 	// 'structural'    - Soft Structuralism (Airy, cascading z-axis layers)
+	// 'aura'          - Glassmorphism, Double Bezel, Magnetic buttons
+	// 'analog'        - Warm espresso, Film grain, Playfair Display
+	// 'terminal'      - Space Mono, Data dense, Scramble text
+	// 'velvet'        - Deep crimson, Clash Display, Cursor spotlight
+	// 'absolute'      - Pure white, Manrope, Morphing interactions
 	theme: 'monolith',
 	links: {
 		github: 'https://github.com/jagadish-k',

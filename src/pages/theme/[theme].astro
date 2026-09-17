@@ -5,6 +5,11 @@ import NeoBrutalistTheme from '../../themes/neo-brutalist/index.astro';
 import HorizonTheme from '../../themes/horizon/index.astro';
 import EditorialTheme from '../../themes/editorial/index.astro';
 import StructuralTheme from '../../themes/structural/index.astro';
+import AuraTheme from '../../themes/aura/index.astro';
+import AnalogTheme from '../../themes/analog/index.astro';
+import TerminalTheme from '../../themes/terminal/index.astro';
+import VelvetTheme from '../../themes/velvet/index.astro';
+import AbsoluteTheme from '../../themes/absolute/index.astro';
 import DevThemeSwitcher from '../../components/DevThemeSwitcher.astro';
 
 export function getStaticPaths() {
@@ -15,6 +20,11 @@ export function getStaticPaths() {
     { params: { theme: 'horizon' } },
     { params: { theme: 'editorial' } },
     { params: { theme: 'structural' } },
+    { params: { theme: 'aura' } },
+    { params: { theme: 'analog' } },
+    { params: { theme: 'terminal' } },
+    { params: { theme: 'velvet' } },
+    { params: { theme: 'absolute' } },
   ];
 }
 
@@ -27,6 +37,11 @@ const getThemeComponent = (t: string) => {
     case 'kinetic': return KineticTheme;
     case 'neo-brutalist': return NeoBrutalistTheme;
     case 'horizon': return HorizonTheme;
+    case 'aura': return AuraTheme;
+    case 'analog': return AnalogTheme;
+    case 'terminal': return TerminalTheme;
+    case 'velvet': return VelvetTheme;
+    case 'absolute': return AbsoluteTheme;
     case 'monolith':
     default:
       return MonolithTheme;

@@ -1,0 +1,213 @@
+---
+import '../../styles/global.css';
+import { getCollection, render } from 'astro:content';
+import CVPrintTemplate from '../../components/CVPrintTemplate.astro';
+import TopNav from '../../components/TopNav.astro';
+
+const basicsList = await getCollection('resume', ({ data }) => data.type === 'basics');
+const summaryList = await getCollection('resume', ({ data }) => data.type === 'summary');
+
+const basics = basicsList[0]?.data;
+const summaryObj = summaryList[0];
+
+const allExperience = await getCollection('experience');
+const sortedExperience = allExperience.sort((a, b) => a.data.order - b.data.order);
+
+const allProjects = await getCollection('projects');
+const sortedProjects = allProjects.sort((a, b) => a.data.order - b.data.order);
+
+const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Content: () => null };
+---
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth bg-[#EBE7DF] text-[#2A2420]">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{basics?.name} | {basics?.role}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,800;1,400;1,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cubic-spring: cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .font-serif { font-family: 'Playfair Display', serif; }
+    .font-sans { font-family: 'Inter', sans-serif; letter-spacing: -0.01em; }
+    
+    /* Film Grain Noise */
+    .film-grain {
+      position: fixed; inset: 0; z-index: 50; pointer-events: none; opacity: 0.05;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+
+    /* Staggered Mask Reveal (Microinteractions) */
+    .mask-container {
+      overflow: hidden;
+      display: inline-block;
+      vertical-align: top;
+    }
+    .mask-reveal {
+      display: inline-block;
+      transform: translateY(110%);
+      opacity: 0;
+    }
+
+    /* Button Physics */
+    .analog-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 1rem;
+      background: #2A2420;
+      color: #EBE7DF;
+      padding: 1rem 1.5rem;
+      border-radius: 9999px;
+      transition: transform 400ms var(--cubic-spring);
+    }
+    .analog-btn:active { transform: scale(0.97); }
+    .analog-btn-icon {
+      background: rgba(255,255,255,0.1);
+      width: 2rem; height: 2rem;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 400ms var(--cubic-spring);
+    }
+    .analog-btn:hover .analog-btn-icon {
+      transform: translate(3px, 0) scale(1.1);
+    }
+
+    .prose-analog p { font-size: 1.125rem; font-family: 'Playfair Display', serif; color: rgba(42,36,32,0.8); line-height: 1.8; margin-bottom: 1.5em; }
+    
+    /* Horizontal Interactive Image Pills */
+    .pill-image {
+      border-radius: 9999px;
+      object-fit: cover;
+      filter: sepia(30%) grayscale(40%);
+      transition: all 600ms var(--cubic-spring);
+    }
+    .group:hover .pill-image {
+      filter: sepia(0%) grayscale(0%);
+      border-radius: 1rem; /* Morphs from pill to standard rectangle on hover */
+    }
+  </style>
+</head>
+<body class="font-sans antialiased min-h-[100dvh] relative selection:bg-[#2A2420] selection:text-[#EBE7DF]">
+  
+  <div class="film-grain"></div>
+  <TopNav />
+
+  <main class="w-full max-w-full print:hidden">
+    
+    <!-- Hero (Editorial Split) -->
+    <header class="flex flex-col md:flex-row min-h-[100dvh]">
+      
+      <!-- Left: Typography -->
+      <div class="w-full md:w-1/2 flex flex-col justify-center px-8 md:px-16 pt-32 pb-16">
+        
+        <div class="mb-12">
+          <span class="inline-block px-4 py-1 border border-[#2A2420]/20 rounded-full text-xs font-bold tracking-widest uppercase">
+            {basics?.role}
+          </span>
+        </div>
+
+        <h1 class="text-[clamp(4rem,7vw,8rem)] font-serif font-black leading-[0.9] tracking-tighter mb-12">
+          <div class="mask-container"><span class="mask-reveal">Elegant</span></div><br/>
+          <div class="mask-container"><span class="mask-reveal italic text-[#2A2420]/70">Digital</span></div><br/>
+          <div class="mask-container"><span class="mask-reveal">Narratives.</span></div>
+        </h1>
+        
+        <div class="max-w-md text-lg font-medium text-[#2A2420]/70 leading-relaxed mb-12 mask-container">
+          <div class="mask-reveal delay-300">
+            <SummaryContent />
+          </div>
+        </div>
+        
+        <div class="mask-container">
+          <div class="mask-reveal delay-500">
+            <button onclick="window.print()" class="analog-btn">
+              <span class="font-sans font-semibold text-sm uppercase tracking-widest">Download CV</span>
+              <div class="analog-btn-icon">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Interactive Pills -->
+      <div class="w-full md:w-1/2 bg-[#2A2420] p-8 md:p-16 flex flex-col justify-center gap-8 overflow-hidden relative">
+        {sortedProjects.slice(0, 3).map((project, i) => (
+          <a href={project.data.url || '#'} class="group block relative w-[120%] -ml-[10%]">
+            <div class="w-full h-32 md:h-48 relative">
+              <img src={`https://picsum.photos/seed/analog${i}/1200/400`} alt="" class="pill-image w-full h-full absolute inset-0" />
+              <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-black/40 rounded-xl">
+                <h3 class="text-white font-serif italic text-4xl">{project.data.title}</h3>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </header>
+
+    <!-- Experience (Editorial Flow) -->
+    <section class="py-24 md:py-40 px-8 md:px-16 max-w-6xl mx-auto">
+      <h2 class="text-5xl font-serif font-black italic mb-24 text-center">Experience</h2>
+      
+      <div class="flex flex-col gap-24">
+        {sortedExperience.map(async (job, i) => {
+          const { Content } = await render(job);
+          return (
+            <div class="flex flex-col md:flex-row gap-12 items-start border-t border-[#2A2420]/10 pt-16 mask-trigger">
+              <div class="md:w-1/3">
+                <div class="text-xs font-bold tracking-widest uppercase text-[#2A2420]/40 mb-4">{job.data.startDate} — {job.data.endDate}</div>
+                <h3 class="text-3xl font-serif font-bold mb-2">{job.data.company}</h3>
+                <div class="font-sans font-medium text-[#2A2420]/60">{job.data.title}</div>
+              </div>
+              <div class="md:w-2/3 prose prose-analog">
+                <Content />
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    </section>
+
+  </main>
+
+  <div class="hidden print:block bg-white text-black">
+    <CVPrintTemplate />
+  </div>
+
+  <script>
+    import { gsap } from 'gsap';
+    import { ScrollTrigger } from 'gsap/ScrollTrigger';
+    
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Initial Mask Reveals for Hero
+    gsap.to('.mask-reveal', {
+      y: 0,
+      opacity: 1,
+      duration: 1.2,
+      stagger: 0.15,
+      ease: "power4.out",
+      delay: 0.2
+    });
+
+    // Scroll Mask Reveals for Experience
+    const triggers = document.querySelectorAll('.mask-trigger');
+    triggers.forEach(trigger => {
+      gsap.from(trigger, {
+        opacity: 0,
+        y: 40,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: trigger,
+          start: "top 85%",
+        }
+      });
+    });
+  </script>
+</body>
+</html>
