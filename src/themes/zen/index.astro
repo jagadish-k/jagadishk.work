@@ -1,4 +1,5 @@
 ---
+import '@fontsource/cormorant-garamond';
 import '../../styles/global.css';
 import { getCollection, render } from 'astro:content';
 import CVPrintTemplate from '../../components/CVPrintTemplate.astro';
@@ -25,9 +26,6 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{basics?.name} | {basics?.role}</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
   <style>
     :root {
       --ease-zen: cubic-bezier(0.2, 0.8, 0.2, 1);

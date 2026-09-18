@@ -5,6 +5,7 @@ import { getCollection, render } from 'astro:content';
 import CVPrintTemplate from '../../components/CVPrintTemplate.astro';
 import TopNav from '../../components/TopNav.astro';
 import SEO from '../../components/SEO.astro';
+import '@fontsource/geist';
 
 const basicsList = await getCollection('resume', ({ data }) => data.type === 'basics');
 const summaryList = await getCollection('resume', ({ data }) => data.type === 'summary');
@@ -30,9 +31,6 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
 <head>
   <SEO title={`${basics?.name} | ${basics?.role}`}>
     <link rel="preload" as="image" href="https://picsum.photos/seed/monolith/800/1000" fetchpriority="high">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   </SEO>
   <style>
     :root {

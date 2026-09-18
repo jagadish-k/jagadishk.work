@@ -1,4 +1,5 @@
 ---
+import '@fontsource/plus-jakarta-sans';
 import '../../styles/global.css';
 import { getCollection, render } from 'astro:content';
 import CVPrintTemplate from '../../components/CVPrintTemplate.astro';
@@ -25,9 +26,6 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{basics?.name} | {basics?.role}</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --cubic-spring: cubic-bezier(0.32, 0.72, 0, 1);

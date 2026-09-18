@@ -1,5 +1,7 @@
 ---
 import "../styles/global.css";
+import "@fontsource/bangers";
+import "@fontsource/londrina-sketch";
 import { siteConfig } from "../config";
 import { ClientRouter } from "astro:transitions";
 import CurtainTransition from "../components/CurtainTransition.astro";
@@ -24,23 +26,22 @@ const {
 <!doctype html>
 <html lang="en" class="scroll-smooth">
   <head>
-    <SEO title={title} description={description} image={image} article={article} />
-    
-    <ClientRouter />
-
-    <!-- Fontshare for Premium Typography -->
-    <link
-      href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&f[]=satoshi@300,400,500,700,900&display=swap"
-      rel="stylesheet"
+    <SEO
+      title={title}
+      description={description}
+      image={image}
+      article={article}
     />
+
+    <ClientRouter />
     <style is:global>
       .font-serif,
       .font-clash {
-        font-family: "Clash Display", sans-serif;
+        font-family: "Londrina Sketch", sans-serif;
       }
       .font-sans,
       .font-satoshi {
-        font-family: "Satoshi", sans-serif;
+        font-family: "Bangers", sans-serif;
       }
 
       /* Reveal Animation Classes */
@@ -66,9 +67,11 @@ const {
     <div class="max-w-6xl mx-auto px-6 py-12 md:py-24">
       <slot />
     </div>
-    
-    <PixiePet />
-    
+
+    <div class="print:hidden">
+      <PixiePet />
+    </div>
+
     <section class="pet-showcase">
       <script>
         // Cast the element as an HTMLElement so TS knows its specific properties

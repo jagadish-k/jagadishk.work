@@ -1,4 +1,5 @@
 ---
+import '@fontsource/bangers';
 import '../../styles/global.css';
 import { siteConfig } from '../../config';
 import { getCollection, render } from 'astro:content';
@@ -31,7 +32,7 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
     :root {
       --cubic-spring: cubic-bezier(0.32, 0.72, 0, 1);
     }
-    .font-satoshi { font-family: 'Satoshi', sans-serif; letter-spacing: -0.02em; }
+    .font-satoshi { font-family: 'Bangers', sans-serif; letter-spacing: -0.02em; }
     
     /* GSAP Horizontal Scroll Container */
     .horizon-body { overflow-x: hidden; }

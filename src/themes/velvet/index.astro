@@ -1,193 +1,263 @@
 ---
-import '../../styles/global.css';
-import { getCollection, render } from 'astro:content';
-import CVPrintTemplate from '../../components/CVPrintTemplate.astro';
-import TopNav from '../../components/TopNav.astro';
+import "@fontsource/londrina-sketch";
+import "../../styles/global.css";
+import { getCollection, render } from "astro:content";
+import CVPrintTemplate from "../../components/CVPrintTemplate.astro";
+import TopNav from "../../components/TopNav.astro";
 
-const basicsList = await getCollection('resume', ({ data }) => data.type === 'basics');
-const summaryList = await getCollection('resume', ({ data }) => data.type === 'summary');
+const basicsList = await getCollection(
+  "resume",
+  ({ data }) => data.type === "basics",
+);
+const summaryList = await getCollection(
+  "resume",
+  ({ data }) => data.type === "summary",
+);
 
 const basics = basicsList[0]?.data;
 const summaryObj = summaryList[0];
 
-const allExperience = await getCollection('experience');
-const sortedExperience = allExperience.sort((a, b) => a.data.order - b.data.order);
+const allExperience = await getCollection("experience");
+const sortedExperience = allExperience.sort(
+  (a, b) => a.data.order - b.data.order,
+);
 
-const allProjects = await getCollection('projects');
+const allProjects = await getCollection("projects");
 const sortedProjects = allProjects.sort((a, b) => a.data.order - b.data.order);
 
-const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Content: () => null };
+const { Content: SummaryContent } = summaryObj
+  ? await render(summaryObj)
+  : { Content: () => null };
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" class="scroll-smooth bg-[#1A050B] text-[#F3E8EC]">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{basics?.name} | {basics?.role}</title>
-  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,400,500,600,700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --cubic-spring: cubic-bezier(0.32, 0.72, 0, 1);
-    }
-    .font-clash { font-family: 'Clash Display', sans-serif; }
-    
-    /* Cursor Spotlight */
-    .spotlight {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      background: radial-gradient(circle 800px at var(--mouse-x) var(--mouse-y), rgba(168, 30, 68, 0.15), transparent 80%);
-      opacity: 0;
-      transition: opacity 0.5s ease;
-    }
-    body:hover .spotlight { opacity: 1; }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{basics?.name} | {basics?.role}</title>
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=clash-display@200,400,500,600,700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --cubic-spring: cubic-bezier(0.32, 0.72, 0, 1);
+      }
+      .font-clash {
+        font-family: "Londrina Sketch", sans-serif;
+      }
 
-    /* Double Bezel Architecture (Velvet Edition) */
-    .velvet-bezel-outer {
-      background: rgba(255,255,255,0.01);
-      border: 1px solid rgba(243, 232, 236, 0.05);
-      border-radius: 2rem;
-      padding: 0.5rem;
-      position: relative;
-      z-index: 10;
-    }
-    .velvet-bezel-inner {
-      background: rgba(10, 2, 4, 0.8);
-      border-radius: calc(2rem - 0.5rem);
-      box-shadow: inset 0 1px 1px rgba(255,255,255,0.05);
-      backdrop-filter: blur(20px);
-      padding: 3rem;
-    }
+      /* Cursor Spotlight */
+      .spotlight {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        background: radial-gradient(
+          circle 800px at var(--mouse-x) var(--mouse-y),
+          rgba(168, 30, 68, 0.15),
+          transparent 80%
+        );
+        opacity: 0;
+        transition: opacity 0.5s ease;
+      }
+      body:hover .spotlight {
+        opacity: 1;
+      }
 
-    /* Z-Axis Cascade */
-    .cascade-item {
-      position: relative;
-      transition: all 800ms var(--cubic-spring);
-    }
-    .cascade-item:hover {
-      transform: translateY(-8px) scale(1.02);
-      z-index: 20;
-    }
+      /* Double Bezel Architecture (Velvet Edition) */
+      .velvet-bezel-outer {
+        background: rgba(255, 255, 255, 0.01);
+        border: 1px solid rgba(243, 232, 236, 0.05);
+        border-radius: 2rem;
+        padding: 0.5rem;
+        position: relative;
+        z-index: 10;
+      }
+      .velvet-bezel-inner {
+        background: rgba(10, 2, 4, 0.8);
+        border-radius: calc(2rem - 0.5rem);
+        box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        padding: 3rem;
+      }
 
-    /* Buttons */
-    .velvet-btn {
-      background: #F3E8EC;
-      color: #1A050B;
-      padding: 1.25rem 3rem;
-      border-radius: 9999px;
-      font-weight: 600;
-      font-size: 1.125rem;
-      letter-spacing: 0.05em;
-      transition: transform 300ms var(--cubic-spring);
-    }
-    .velvet-btn:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 20px 40px -10px rgba(168, 30, 68, 0.4);
-    }
-    .velvet-btn:active { transform: translateY(0); }
+      /* Z-Axis Cascade */
+      .cascade-item {
+        position: relative;
+        transition: all 800ms var(--cubic-spring);
+      }
+      .cascade-item:hover {
+        transform: translateY(-8px) scale(1.02);
+        z-index: 20;
+      }
 
-    .prose-velvet p { font-size: 1.25rem; font-weight: 400; color: rgba(243,232,236,0.7); line-height: 1.6; margin-bottom: 1.5em; }
-  </style>
-</head>
-<body class="font-clash antialiased min-h-[100dvh] relative selection:bg-[#A81E44] selection:text-white">
-  
-  <div class="spotlight" id="spotlight"></div>
-  <TopNav />
+      /* Buttons */
+      .velvet-btn {
+        background: #f3e8ec;
+        color: #1a050b;
+        padding: 1.25rem 3rem;
+        border-radius: 9999px;
+        font-weight: 600;
+        font-size: 1.125rem;
+        letter-spacing: 0.05em;
+        transition: transform 300ms var(--cubic-spring);
+      }
+      .velvet-btn:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 40px -10px rgba(168, 30, 68, 0.4);
+      }
+      .velvet-btn:active {
+        transform: translateY(0);
+      }
 
-  <main class="w-full max-w-5xl mx-auto px-4 md:px-8 relative z-10 print:hidden pt-32">
-    
-    <!-- Hero (Cinematic Center) -->
-    <header class="py-32 md:py-48 flex flex-col items-center text-center">
-      <div class="mb-8 border border-white/10 rounded-full px-4 py-2 text-sm font-medium tracking-widest uppercase text-white/50 bg-white/5 backdrop-blur-md">
-        {basics?.role}
-      </div>
-      <h1 class="text-6xl md:text-8xl font-bold tracking-tight leading-[0.9] mb-12">
-        {basics?.name}
-      </h1>
-      <div class="max-w-2xl text-xl md:text-2xl font-normal text-white/60 leading-relaxed mb-16">
-        <SummaryContent />
-      </div>
-      <button onclick="window.print()" class="velvet-btn">
-        View Resumé
-      </button>
-    </header>
+      .prose-velvet p {
+        font-size: 1.25rem;
+        font-weight: 400;
+        color: rgba(243, 232, 236, 0.7);
+        line-height: 1.6;
+        margin-bottom: 1.5em;
+      }
+    </style>
+  </head>
+  <body
+    class="font-clash antialiased min-h-[100dvh] relative selection:bg-[#A81E44] selection:text-white"
+  >
+    <div class="spotlight" id="spotlight"></div>
+    <TopNav />
 
-    <!-- Projects (Z-Axis Cascade) -->
-    <section class="py-32">
-      <h2 class="text-4xl md:text-5xl font-bold text-center mb-24">Selected Works</h2>
-      
-      <div class="flex flex-col gap-8 md:gap-0">
-        {sortedProjects.map((project, i) => {
-          // Negative margin for overlap on desktop
-          const margin = i !== 0 ? 'md:-mt-16' : '';
-          const rotate = i % 2 === 0 ? 'md:rotate-1 md:translate-x-4' : 'md:-rotate-1 md:-translate-x-4';
-          
-          return (
-            <a href={project.data.url || '#'} class={`group block no-underline cascade-item ${margin} ${rotate}`}>
-              <div class="velvet-bezel-outer">
-                <div class="velvet-bezel-inner flex flex-col md:flex-row gap-12 items-center">
-                  <div class="w-full md:w-1/2 aspect-video rounded-2xl overflow-hidden bg-black/50">
-                    <img src={`https://picsum.photos/seed/velvet${i}/800/600`} class="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-1000 ease-[cubic-bezier(0.32,0.72,0,1)]" alt="" />
-                  </div>
-                  <div class="w-full md:w-1/2">
-                    <h3 class="text-4xl font-bold mb-4">{project.data.title}</h3>
-                    <p class="text-xl text-white/50 leading-relaxed mb-8">{project.data.description}</p>
-                    <div class="flex flex-wrap gap-2">
-                      {project.data.tags.map(tag => (
-                        <span class="px-4 py-2 bg-[#A81E44]/20 text-[#F3E8EC] border border-[#A81E44]/30 rounded-full text-xs font-medium tracking-wider uppercase">{tag}</span>
-                      ))}
+    <main
+      class="w-full max-w-5xl mx-auto px-4 md:px-8 relative z-10 print:hidden pt-32"
+    >
+      <!-- Hero (Cinematic Center) -->
+      <header class="py-32 md:py-48 flex flex-col items-center text-center">
+        <div
+          class="mb-8 border border-white/10 rounded-full px-4 py-2 text-sm font-medium tracking-widest uppercase text-white/50 bg-white/5 backdrop-blur-md"
+        >
+          {basics?.role}
+        </div>
+        <h1
+          class="text-6xl md:text-8xl font-bold tracking-tight leading-[0.9] mb-12"
+        >
+          {basics?.name}
+        </h1>
+        <div
+          class="max-w-2xl text-xl md:text-2xl font-normal text-white/60 leading-relaxed mb-16"
+        >
+          <SummaryContent />
+        </div>
+        <button onclick="window.print()" class="velvet-btn">
+          View Resumé
+        </button>
+      </header>
+
+      <!-- Projects (Z-Axis Cascade) -->
+      <section class="py-32">
+        <h2 class="text-4xl md:text-5xl font-bold text-center mb-24">
+          Selected Works
+        </h2>
+
+        <div class="flex flex-col gap-8 md:gap-0">
+          {
+            sortedProjects.map((project, i) => {
+              // Negative margin for overlap on desktop
+              const margin = i !== 0 ? "md:-mt-16" : "";
+              const rotate =
+                i % 2 === 0
+                  ? "md:rotate-1 md:translate-x-4"
+                  : "md:-rotate-1 md:-translate-x-4";
+
+              return (
+                <a
+                  href={project.data.url || "#"}
+                  class={`group block no-underline cascade-item ${margin} ${rotate}`}
+                >
+                  <div class="velvet-bezel-outer">
+                    <div class="velvet-bezel-inner flex flex-col md:flex-row gap-12 items-center">
+                      <div class="w-full md:w-1/2 aspect-video rounded-2xl overflow-hidden bg-black/50">
+                        <img
+                          src={`https://picsum.photos/seed/velvet${i}/800/600`}
+                          class="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-1000 ease-[cubic-bezier(0.32,0.72,0,1)]"
+                          alt=""
+                        />
+                      </div>
+                      <div class="w-full md:w-1/2">
+                        <h3 class="text-4xl font-bold mb-4">
+                          {project.data.title}
+                        </h3>
+                        <p class="text-xl text-white/50 leading-relaxed mb-8">
+                          {project.data.description}
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                          {project.data.tags.map((tag) => (
+                            <span class="px-4 py-2 bg-[#A81E44]/20 text-[#F3E8EC] border border-[#A81E44]/30 rounded-full text-xs font-medium tracking-wider uppercase">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
-            </a>
-          );
-        })}
-      </div>
-    </section>
-
-    <!-- Experience -->
-    <section class="py-32">
-      <h2 class="text-4xl md:text-5xl font-bold text-center mb-24">Experience</h2>
-      
-      <div class="velvet-bezel-outer">
-        <div class="velvet-bezel-inner !p-0">
-          {sortedExperience.map(async (job, i) => {
-            const { Content } = await render(job);
-            const border = i !== sortedExperience.length - 1 ? 'border-b border-white/5' : '';
-            return (
-              <div class={`p-8 md:p-12 ${border} hover:bg-white/[0.02] transition-colors duration-500`}>
-                <div class="text-sm font-medium tracking-widest text-[#A81E44] uppercase mb-2">{job.data.startDate} — {job.data.endDate}</div>
-                <h3 class="text-3xl font-bold mb-2">{job.data.company}</h3>
-                <div class="text-xl text-white/40 mb-8">{job.data.title}</div>
-                <div class="prose prose-velvet max-w-none">
-                  <Content />
-                </div>
-              </div>
-            )
-          })}
+                </a>
+              );
+            })
+          }
         </div>
-      </div>
-    </section>
+      </section>
 
-  </main>
+      <!-- Experience -->
+      <section class="py-32">
+        <h2 class="text-4xl md:text-5xl font-bold text-center mb-24">
+          Experience
+        </h2>
 
-  <div class="hidden print:block bg-white text-black">
-    <CVPrintTemplate />
-  </div>
+        <div class="velvet-bezel-outer">
+          <div class="velvet-bezel-inner !p-0">
+            {
+              sortedExperience.map(async (job, i) => {
+                const { Content } = await render(job);
+                const border =
+                  i !== sortedExperience.length - 1
+                    ? "border-b border-white/5"
+                    : "";
+                return (
+                  <div
+                    class={`p-8 md:p-12 ${border} hover:bg-white/[0.02] transition-colors duration-500`}
+                  >
+                    <div class="text-sm font-medium tracking-widest text-[#A81E44] uppercase mb-2">
+                      {job.data.startDate} — {job.data.endDate}
+                    </div>
+                    <h3 class="text-3xl font-bold mb-2">{job.data.company}</h3>
+                    <div class="text-xl text-white/40 mb-8">
+                      {job.data.title}
+                    </div>
+                    <div class="prose prose-velvet max-w-none">
+                      <Content />
+                    </div>
+                  </div>
+                );
+              })
+            }
+          </div>
+        </div>
+      </section>
+    </main>
 
-  <script>
-    // Cursor Spotlight Tracking
-    const spotlight = document.getElementById('spotlight');
-    
-    document.addEventListener('mousemove', (e) => {
-      if(spotlight) {
-        spotlight.style.setProperty('--mouse-x', `${e.clientX}px`);
-        spotlight.style.setProperty('--mouse-y', `${e.clientY}px`);
-      }
-    });
-  </script>
-</body>
+    <div class="hidden print:block bg-white text-black">
+      <CVPrintTemplate />
+    </div>
+
+    <script>
+      // Cursor Spotlight Tracking
+      const spotlight = document.getElementById("spotlight");
+
+      document.addEventListener("mousemove", (e) => {
+        if (spotlight) {
+          spotlight.style.setProperty("--mouse-x", `${e.clientX}px`);
+          spotlight.style.setProperty("--mouse-y", `${e.clientY}px`);
+        }
+      });
+    </script>
+  </body>
 </html>

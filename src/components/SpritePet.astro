@@ -36,6 +36,7 @@ const configData = JSON.stringify({
   frames,
   activities,
   fps,
+  spriteUrl: spriteSheetUrl,
 });
 ---
 
@@ -45,7 +46,6 @@ const configData = JSON.stringify({
   style={{
     "--pet-transform": transform,
     "--pet-transition": transition,
-    "--pet-sprite-url": `url('${spriteSheetUrl}')`,
   }}
   {...rest}
 >
@@ -107,6 +107,7 @@ const configData = JSON.stringify({
     frames: Record<string, SpriteFrame>;
     activities: Record<string, number[]>;
     fps: number;
+    spriteUrl: string;
   }
 
   class SpritePetElement extends HTMLElement {
@@ -117,6 +118,7 @@ const configData = JSON.stringify({
     private frames: Record<string, SpriteFrame> = {};
     private activities: Record<string, number[]> = {};
     private fps: number = 5;
+    private spriteUrl: string = "";
 
     private currentActivityKey: string | null = null;
     private currentSequence: number[] = [];
@@ -129,7 +131,15 @@ const configData = JSON.stringify({
     connectedCallback() {
       console.log("[SpritePet] connectedCallback fired on instance", this);
       
-      // Elements are lazily fetched later to avoid null issues when created via innerHTML
+      // Delay initialization to prevent render blocking
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => this.initPet());
+      } else {
+        setTimeout(() => this.initPet(), 1);
+      }
+    }
+    
+    private initPet() {
       const rawConfig = this.getAttribute("data-config");
       if (!rawConfig) return;
 
@@ -138,6 +148,10 @@ const configData = JSON.stringify({
         this.frames = parsed.frames;
         this.activities = parsed.activities;
         this.fps = parsed.fps || 5;
+        this.spriteUrl = parsed.spriteUrl;
+        
+        // Lazy-load the sprite image
+        this.style.setProperty("--pet-sprite-url", `url('${this.spriteUrl}')`);
 
         const activityKeys = Object.keys(this.activities);
         if (activityKeys.length > 0) {
