@@ -124,9 +124,51 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
         </div>
       </div>
       
-      <!-- Overlapping Artistic Image -->
-      <div class="absolute bottom-12 md:bottom-24 right-6 md:right-12 w-3/4 md:w-1/2 max-w-lg aspect-[3/4] overflow-hidden -z-0 opacity-15 mix-blend-multiply pointer-events-none">
-        <img src="https://picsum.photos/seed/monolith/800/1000" alt="Monolithic Vibe" class="w-full h-full object-cover grayscale-img" fetchpriority="high" loading="eager" decoding="sync" width="800" height="1000" />
+      <!-- Overlapping Artistic Line Art -->
+      <div class="absolute bottom-12 md:bottom-24 right-6 md:right-12 w-3/4 md:w-1/2 max-w-lg aspect-[5/7] -z-0 pointer-events-none opacity-90">
+        <svg viewBox="0 0 500 700" xmlns="http://www.w3.org/2000/svg" class="w-full h-full" fill="none">
+          <!-- Corporate Blue Hoodie Fill (abstract shape) -->
+          <path d="M140 200 C 100 350, 120 500, 160 620 C 250 650, 360 630, 420 500 C 450 350, 390 200, 320 180 C 250 160, 180 150, 140 200 Z" fill="#2563eb" fill-opacity="0.1" />
+          
+          <g stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-900">
+            <!-- The Wall -->
+            <line x1="50" y1="50" x2="50" y2="650" stroke-width="2" opacity="0.3" stroke-dasharray="12 18" />
+            
+            <!-- Person Outline (Continuous-esque Line) -->
+            <!-- Left shoulder to bottom -->
+            <path d="M 280 120 C 220 90, 160 130, 170 200 C 175 240, 190 280, 140 340 C 100 390, 110 500, 130 600" />
+            <!-- Right shoulder to bottom -->
+            <path d="M 280 120 C 320 150, 350 200, 360 280 C 370 360, 420 420, 380 500 C 360 540, 340 580, 320 600" />
+            <!-- Bottom closure -->
+            <path d="M 130 600 C 200 620, 250 620, 320 600" />
+
+            <!-- Face opening in hood (3/4 angle) -->
+            <path d="M 190 190 C 200 170, 240 160, 260 190 C 280 220, 260 250, 220 250 C 190 250, 180 220, 190 190" stroke-width="3" />
+            
+            <!-- Glasses (slightly tilted) -->
+            <path d="M 195 205 L 220 200 L 220 215 L 190 220 Z" />
+            <path d="M 235 200 L 255 195 L 260 210 L 235 215 Z" />
+            <path d="M 220 205 L 235 205" stroke-width="2.5"/>
+            <path d="M 255 200 L 275 190" stroke-width="2.5"/>
+            <path d="M 180 215 L 195 210" stroke-width="2.5"/>
+
+            <!-- Crossed Arms -->
+            <path d="M 130 400 C 180 460, 280 470, 360 380" />
+            <path d="M 380 390 C 300 480, 180 480, 100 410" />
+            
+            <!-- Hands tucked -->
+            <path d="M 180 450 C 200 480, 250 480, 270 445" />
+
+            <!-- Hoodie details (strings, pocket) -->
+            <path d="M 230 250 Q 240 280, 220 310" stroke-width="2.5" />
+            <path d="M 250 260 Q 260 290, 240 320" stroke-width="2.5" />
+            <path d="M 190 520 C 220 500, 280 500, 310 520 C 310 550, 280 580, 250 580 C 220 580, 190 550, 190 520 Z" stroke-width="2.5" />
+            
+            <!-- Wrinkles/Folds -->
+            <path d="M 160 320 C 170 340, 190 350, 210 340" stroke-width="2" opacity="0.6"/>
+            <path d="M 340 330 C 320 340, 300 350, 290 330" stroke-width="2" opacity="0.6"/>
+          </g>
+        </svg>
       </div>
     </header>
 
