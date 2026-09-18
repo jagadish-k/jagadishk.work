@@ -53,7 +53,7 @@
     const links = document.querySelectorAll('a[href^="/blog/"]');
     links.forEach(link => {
       // Prevent double bindings
-      const clone = link.cloneNode(true);
+      const clone = link.cloneNode(true) as HTMLAnchorElement;
       if (link.parentNode) {
         link.parentNode.replaceChild(clone, link);
         clone.addEventListener('click', (e) => handleLinkClick(e as MouseEvent, clone.getAttribute('href')!));

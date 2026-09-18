@@ -1,0 +1,288 @@
+---
+// src/components/SpritePet.astro
+
+export interface SpriteFrame {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+export interface Props {
+  spriteSheetUrl: string;
+  // Map of frame indices (or names) to their pixel coordinates
+  frames: Record<number | string, SpriteFrame>;
+  // Map of activity names to frame sequences (e.g., { walk: [0, 1, 2], idle: [3, 4] })
+  activities: Record<string, number[]>;
+  fps?: number; // Frames per second
+  transform?: string;
+  transition?: string; // Outer transition (for interactions only)
+  class?: string;
+}
+
+const {
+  spriteSheetUrl,
+  frames,
+  activities,
+  fps = 5,
+  transform = "scale(1)",
+  transition = "transform 0.2s ease-in-out", // Default outer transition
+  class: className = "",
+  ...rest
+} = Astro.props;
+
+// Configuration data to pass to the custom element
+const configData = JSON.stringify({
+  frames,
+  activities,
+  fps,
+});
+---
+
+<sprite-pet
+  class:list={["sprite-pet-host", className]}
+  data-config={configData}
+  style={{
+    "--pet-transform": transform,
+    "--pet-transition": transition,
+    "--pet-sprite-url": `url('${spriteSheetUrl}')`,
+  }}
+  {...rest}
+>
+  <div class="sprite-pet-container">
+    <div class="sprite-display"></div>
+  </div>
+</sprite-pet>
+
+<style>
+  .sprite-pet-host {
+    display: inline-block;
+    vertical-align: bottom;
+  }
+
+  .sprite-pet-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end; /* Character grounded when heights change */
+    cursor: pointer;
+
+    /* 
+       This transition smooths the 'squish' effect when clicked. 
+       It does NOT affect the sprite sheet animation within the child element.
+    */
+    transform: var(--pet-transform);
+    transition: var(--pet-transition);
+  }
+
+  .sprite-display {
+    background-image: var(--pet-sprite-url);
+    background-repeat: no-repeat;
+    filter: drop-shadow(0px 8px 6px rgba(0, 0, 0, 0.15));
+
+    /* --- THE FIX: KILL PANNING & FORCE JUMPING --- */
+    /* 
+       To achieve discrete sprite sheet frames, we must disable transitions.
+       This explicitly overrides any global transitions on '*' or transitions
+       applied to 'all' or 'background-position' by Astro's styling system.
+    */
+    transition: none !important;
+    animation: none !important; /* Also disable rogue animations */
+    transform-style: flat; /* Optimization for complex transforms */
+
+    /* Hint to the browser for performance */
+    will-change: background-position, width, height;
+  }
+</style>
+
+<script>
+  // (All Typescript and Script logic remains identical to Image 6, as the JS was correct)
+  interface SpriteFrame {
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+  }
+
+  interface PetConfig {
+    frames: Record<string, SpriteFrame>;
+    activities: Record<string, number[]>;
+    fps: number;
+  }
+
+  class SpritePetElement extends HTMLElement {
+    private rafId: number | null = null;
+    private container: HTMLElement | null = null;
+    private display: HTMLElement | null = null;
+
+    private frames: Record<string, SpriteFrame> = {};
+    private activities: Record<string, number[]> = {};
+    private fps: number = 5;
+
+    private currentActivityKey: string | null = null;
+    private currentSequence: number[] = [];
+    private frameIndex: number = 0;
+    private lastTime: number = 0;
+    private isWaiting: boolean = false;
+    private waitEndTime: number = 0;
+    private squishTimeout: number | null = null;
+
+    connectedCallback() {
+      console.log("[SpritePet] connectedCallback fired on instance", this);
+      
+      // Elements are lazily fetched later to avoid null issues when created via innerHTML
+      const rawConfig = this.getAttribute("data-config");
+      if (!rawConfig) return;
+
+      try {
+        const parsed: PetConfig = JSON.parse(rawConfig);
+        this.frames = parsed.frames;
+        this.activities = parsed.activities;
+        this.fps = parsed.fps || 5;
+
+        const activityKeys = Object.keys(this.activities);
+        if (activityKeys.length > 0) {
+          // Attempt to restore from sessionStorage in case of a full page reload
+          const savedState = sessionStorage.getItem("pixie-pet-state");
+          if (savedState) {
+            try {
+              const { activity, frame } = JSON.parse(savedState);
+              if (this.activities[activity]) {
+                this.currentActivityKey = activity;
+                this.currentSequence = this.activities[activity];
+                this.frameIndex = Math.min(frame, this.currentSequence.length - 1);
+              }
+            } catch (e) {}
+          }
+
+          // Only initialize sequence if it's empty (preserves state across View Transitions or first load)
+          if (this.currentSequence.length === 0) {
+            this.currentActivityKey = activityKeys[0];
+            this.currentSequence = this.activities[this.currentActivityKey];
+            this.frameIndex = 0;
+            console.log(`[SpritePet] initialized new sequence with first activity.`);
+          }
+          
+          // Ensure current frame is displayed immediately to prevent 0x0 size FOUC
+          // and to seamlessly resume persisted state
+          if (this.currentSequence.length > 0) {
+            const validIndex = Math.min(this.frameIndex, this.currentSequence.length - 1);
+            this.updateFrame(this.currentSequence[validIndex]);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to parse sprite config", err);
+        return;
+      }
+
+      this.addEventListener("click", this.handleClick);
+      window.addEventListener("beforeunload", this.saveState);
+      this.rafId = requestAnimationFrame(this.animate);
+    }
+
+    private saveState = () => {
+      if (this.currentActivityKey) {
+        sessionStorage.setItem("pixie-pet-state", JSON.stringify({
+          activity: this.currentActivityKey,
+          frame: this.frameIndex
+        }));
+      }
+    };
+
+    disconnectedCallback() {
+      console.log("[SpritePet] disconnectedCallback fired on instance", this);
+      if (this.rafId) {
+        cancelAnimationFrame(this.rafId);
+      }
+      this.removeEventListener("click", this.handleClick);
+      window.removeEventListener("beforeunload", this.saveState);
+    }
+
+    private updateFrame(frameId: number) {
+      if (!this.display) {
+        this.display = this.querySelector(".sprite-display");
+      }
+      if (!this.display) return;
+      
+      const frame = this.frames[frameId];
+      if (!frame) return;
+
+      this.display.style.width = `${frame.w}px`;
+      this.display.style.height = `${frame.h}px`;
+
+      /* 
+         Apply direct pixel offsets instantly.
+         Without transitions (see CSS fix), this causes the required "jumping" effect.
+      */
+      this.display.style.backgroundPosition = `-${frame.x}px -${frame.y}px`;
+    }
+
+    private pickRandomActivity() {
+      const keys = Object.keys(this.activities);
+      if (keys.length === 0) return;
+      const randomKey = keys[Math.floor(Math.random() * keys.length)];
+      console.log(`[SpritePet] pickRandomActivity selected: ${randomKey}`);
+      this.currentActivityKey = randomKey;
+      this.currentSequence = this.activities[randomKey];
+      this.frameIndex = 0;
+    }
+
+    private animate = (time: number) => {
+      const frameInterval = 1000 / this.fps;
+
+      if (this.isWaiting) {
+        if (time > this.waitEndTime) {
+          this.isWaiting = false;
+          this.pickRandomActivity();
+        }
+      } else {
+        if (time - this.lastTime >= frameInterval) {
+          this.lastTime = time;
+
+          if (this.currentSequence.length > 0) {
+            const frameId = this.currentSequence[this.frameIndex];
+            this.updateFrame(frameId);
+
+            this.frameIndex++;
+
+            if (this.frameIndex >= this.currentSequence.length) {
+              this.isWaiting = true;
+              // Pause randomly between 1 to 3.5 seconds
+              this.waitEndTime = time + (Math.random() * 2500 + 1000);
+            }
+          }
+        }
+      }
+
+      this.rafId = requestAnimationFrame(this.animate);
+    };
+
+    private handleClick = () => {
+      this.isWaiting = false;
+      this.pickRandomActivity();
+      this.lastTime = 0; // Force immediate update
+
+      if (!this.container) {
+        this.container = this.querySelector(".sprite-pet-container");
+      }
+
+      // Brief click feedback (squish) using outer container's transition var
+      if (this.container) {
+        this.container.style.transition = "transform 0.15s ease-out";
+        this.container.style.transform = "scale(0.85)";
+
+        if (this.squishTimeout) clearTimeout(this.squishTimeout);
+
+        this.squishTimeout = window.setTimeout(() => {
+          if (this.container) {
+            this.container.style.transform = ""; // Restore CSS rule control
+            this.container.style.transition = ""; // Restore CSS rule control
+          }
+        }, 150);
+      }
+    };
+  }
+
+  if (!customElements.get("sprite-pet")) {
+    customElements.define("sprite-pet", SpritePetElement);
+  }
+</script>

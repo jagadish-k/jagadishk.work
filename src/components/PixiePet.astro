@@ -1,0 +1,97 @@
+---
+import SpritePet from "./SpritePet.astro";
+import { generateGridFrames } from "../utils/sprite-utils";
+
+const catFrames = generateGridFrames(10, 19, 76.8, 72.42);
+
+const catActivities = {
+  // Row 1 (0-9): Basic Idle & Yarn
+  idleBlink: [
+    0, 1, 2, 1, 0, 0, 1, 2, 1, 0, 1, 2, 1, 0, 1, 2, 1, 0, 1, 2, 1, 0, 1, 2, 1,
+  ],
+  yarnPlay: [
+    3, 4, 5, 6, 5, 4, 3, 4, 5, 6, 5, 4, 3, 4, 5, 6, 5, 4, 3, 4, 5, 6, 5, 4, 3,
+    4, 5, 6, 5, 4, 3, 4, 5, 6, 5, 4,
+  ],
+  groomingPaw: [
+    7, 8, 9, 8, 7, 8, 9, 8, 7, 8, 9, 8, 7, 8, 9, 8, 7, 8, 9, 8, 7, 8, 9, 8, 7,
+    8, 9, 8, 7, 8, 9, 8, 7, 8, 9, 8, 7, 8, 9, 8, 7, 8, 9, 8, 7, 8, 9, 8, 7, 8,
+    9, 8,
+  ],
+
+  // Row 2 (10-19): Mischief & Napping
+  peekingAndStartle: [10, 11, 10, 11],
+  vaseCrash: [
+    12, 13, 14, 7, 8, 9, 8, 7, 8, 9, 8, 7, 8, 9, 8, 7, 8, 9, 8, 7, 8, 9, 8, 7,
+    8, 9, 8, 7, 8, 9, 8, 7, 8, 9,
+  ],
+  laptopNap: [
+    15, 16, 17, 18, 19, 18, 17, 15, 16, 17, 18, 19, 18, 17, 15, 16, 17, 18, 19,
+    18, 17, 15, 16, 17, 18, 19, 18, 17, 15, 16, 17, 18, 19, 18, 17, 15, 16, 17,
+    18, 19, 18, 17,
+  ],
+
+  // Row 3 (20-29): Laundry & Dress Up
+  slipperInvestigate: [
+    20, 21, 22, 21, 20, 21, 22, 21, 20, 21, 22, 21, 20, 21, 22, 21, 20, 21, 22,
+    21, 20, 21, 22, 21, 20, 21, 22, 21, 20, 21, 22, 21, 20, 21, 22, 21, 20, 21,
+    22, 21, 20, 21, 22, 21, 20, 21, 22, 21, 20, 21, 22, 21, 20, 21, 22, 21,
+  ],
+  fancyDress: [23, 24, 25, 24],
+  bugCatching: [26, 27, 28, 29, 28],
+
+  // Row 4 (30-39): Plants & Posing
+  plantSniffing: [30, 31, 32, 31],
+  majesticLook: [33, 34, 35, 34],
+  doughnutPose: [36, 37, 38, 39],
+
+  // Row 5 (40-49): Toys & Chasing
+  facepalm: [40, 41, 42],
+  toyCarChase: [43, 44, 45, 44],
+  featherWand: [46, 47, 48, 49, 48],
+
+  // Row 6 (50-59): Water & Splooting
+  waterBowlSplash: [50, 51, 52],
+  sweaterStuck: [53, 54, 55, 54],
+  splootExtension: [56, 57, 58, 59, 58, 57],
+
+  // Row 7 (60-69): Hiding & Victory
+  blanketHide: [60, 61, 62, 61],
+  boxPlay: [63, 64, 65, 64],
+  victoryPose: [66, 67, 68, 69, 68],
+
+  // Row 8 (70-79): Treats & Scratching
+  treatTime: [70, 71, 72, 73, 72],
+  guiltyLook: [74, 75, 76],
+  sofaScratch: [77, 78, 79, 78],
+
+  // Row 9 (80-89): Sinks & Head Rubs
+  sinkCurl: [80, 81, 82],
+  mousePounce: [83, 84, 85, 84],
+  headRub: [86, 87, 88, 89, 88, 87],
+
+  // Row 10 (90-99): Tunnels & Sprinting
+  yarnDoughnut: [90, 91, 92, 91],
+  tunnelDash: [93, 94, 95, 94],
+  paperBagSprint: [96, 97, 98, 99, 98],
+};
+---
+
+<style is:global>
+  .corner-pet {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    z-index: 50;
+    transform-origin: bottom center;
+  }
+</style>
+
+<SpritePet
+  spriteSheetUrl="/assets/pixie-sprite.png"
+  frames={catFrames}
+  activities={catActivities}
+  fps={6}
+  class="corner-pet print:hidden"
+  transition:persist="pixie-pet"
+/>
