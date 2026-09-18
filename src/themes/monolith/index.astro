@@ -4,6 +4,7 @@ import { siteConfig } from '../../config';
 import { getCollection, render } from 'astro:content';
 import CVPrintTemplate from '../../components/CVPrintTemplate.astro';
 import TopNav from '../../components/TopNav.astro';
+import SEO from '../../components/SEO.astro';
 
 const basicsList = await getCollection('resume', ({ data }) => data.type === 'basics');
 const summaryList = await getCollection('resume', ({ data }) => data.type === 'summary');
@@ -27,12 +28,12 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth bg-[#020202] text-[#f1f1f1]">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{basics?.name} | {basics?.role}</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <SEO title={`${basics?.name} | ${basics?.role}`}>
+    <link rel="preload" as="image" href="https://picsum.photos/seed/monolith/800/1000" fetchpriority="high">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  </SEO>
   <style>
     :root {
       --cubic-spring: cubic-bezier(0.32, 0.72, 0, 1);
@@ -63,8 +64,8 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
     }
 
     /* Scrub Text Effect */
-    .scrub-text { color: rgba(255, 255, 255, 0.1); background-clip: text; }
-    .scrub-word { opacity: 0.1; transition: opacity 0.1s; }
+    .scrub-text { color: rgba(255, 255, 255, 0.4); background-clip: text; }
+    .scrub-word { opacity: 0.4; transition: opacity 0.1s; }
     
     /* Image Styles */
     .grayscale-img {
@@ -121,14 +122,14 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
       
       <!-- Overlapping Artistic Image -->
       <div class="absolute bottom-12 md:bottom-24 right-6 md:right-12 w-3/4 md:w-1/2 max-w-lg aspect-[3/4] overflow-hidden -z-0 opacity-40 mix-blend-screen pointer-events-none">
-        <img src="https://picsum.photos/seed/monolith/800/1000" alt="Monolithic Vibe" class="w-full h-full object-cover grayscale-img" />
+        <img src="https://picsum.photos/seed/monolith/800/1000" alt="Monolithic Vibe" class="w-full h-full object-cover grayscale-img" fetchpriority="high" loading="eager" decoding="sync" width="800" height="1000" />
       </div>
     </header>
 
     <!-- Gapless Bento Grid -->
     <section class="py-24 md:py-48 border-t border-white/5 relative z-10 bg-[#020202]">
       <div class="max-w-7xl mx-auto px-6 md:px-12 mb-24 flex items-end justify-between">
-        <h2 class="text-[clamp(3rem,5vw,5rem)] font-extrabold tracking-tighter leading-none text-white/20">Selected<br/>Works</h2>
+        <h2 class="text-[clamp(3rem,5vw,5rem)] font-extrabold tracking-tighter leading-none text-white/50">Selected<br/>Works</h2>
       </div>
       
       <div class="w-full bento-grid max-w-[1440px] mx-auto border border-white/5">
@@ -149,14 +150,14 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
                 <p class="text-lg text-white/50 leading-relaxed mb-8 max-w-md">{project.data.description}</p>
                 <div class="flex flex-wrap gap-2">
                   {project.data.tags.map(tag => (
-                    <span class="px-3 py-1 bg-white/5 text-[10px] font-bold tracking-[0.1em] uppercase text-white/40">{tag}</span>
+                    <span class="px-3 py-1 bg-white/5 text-[10px] font-bold tracking-[0.1em] uppercase text-white/70">{tag}</span>
                   ))}
                 </div>
               </div>
               
               <!-- Subtle Hover Image Injection -->
               <div class="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-700 pointer-events-none">
-                <img src={`https://picsum.photos/seed/proj${i}/800/800`} alt="" class="w-full h-full object-cover grayscale-img" />
+                <img src={`https://picsum.photos/seed/proj${i}/800/800`} alt="" class="w-full h-full object-cover grayscale-img" loading="lazy" decoding="async" width="800" height="800" />
               </div>
             </a>
           );
@@ -167,7 +168,7 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
     <!-- Experience Accordion -->
     <section class="py-24 md:py-48 border-t border-white/5">
       <div class="max-w-7xl mx-auto px-6 md:px-12">
-        <h2 class="text-[clamp(3rem,5vw,5rem)] font-extrabold tracking-tighter leading-none text-white/20 mb-24">Experience</h2>
+        <h2 class="text-[clamp(3rem,5vw,5rem)] font-extrabold tracking-tighter leading-none text-white/50 mb-24">Experience</h2>
         
         <div class="flex flex-col border-t border-white/5">
           {sortedExperience.map(async (job) => {
@@ -175,7 +176,7 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
             return (
               <div class="group border-b border-white/5 flex flex-col md:flex-row py-12 md:py-16 hover:bg-white/[0.02] transition-colors duration-500 px-6 -mx-6">
                 <div class="md:w-1/3 shrink-0 mb-8 md:mb-0">
-                  <div class="text-[10px] font-mono text-white/40 mb-4">{job.data.startDate} — {job.data.endDate}</div>
+                  <div class="text-[10px] font-mono text-white/70 mb-4">{job.data.startDate} — {job.data.endDate}</div>
                   <h3 class="text-3xl font-extrabold tracking-tight text-white mb-2">{job.data.company}</h3>
                   <div class="text-sm font-semibold tracking-wide text-white/50">{job.data.title}</div>
                 </div>
