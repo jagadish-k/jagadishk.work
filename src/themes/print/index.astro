@@ -1,212 +1,298 @@
 ---
-import '../../styles/global.css';
-import { getCollection, render } from 'astro:content';
-import CVPrintTemplate from '../../components/CVPrintTemplate.astro';
-import TopNav from '../../components/TopNav.astro';
+import "../../styles/global.css";
+import { getCollection, render } from "astro:content";
+import CVPrintTemplate from "../../components/CVPrintTemplate.astro";
+import TopNav from "../../components/TopNav.astro";
 
-const basicsList = await getCollection('resume', ({ data }) => data.type === 'basics');
-const summaryList = await getCollection('resume', ({ data }) => data.type === 'summary');
+const basicsList = await getCollection(
+  "resume",
+  ({ data }) => data.type === "basics",
+);
+const summaryList = await getCollection(
+  "resume",
+  ({ data }) => data.type === "summary",
+);
 
 const basics = basicsList[0]?.data;
 const summaryObj = summaryList[0];
 
-const allExperience = await getCollection('experience');
-const sortedExperience = allExperience.sort((a, b) => a.data.order - b.data.order);
+const allExperience = await getCollection("experience");
+const sortedExperience = allExperience.sort(
+  (a, b) => a.data.order - b.data.order,
+);
 
-const allProjects = await getCollection('projects');
+const allProjects = await getCollection("projects");
 const sortedProjects = allProjects.sort((a, b) => a.data.order - b.data.order);
 
-const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Content: () => null };
+const { Content: SummaryContent } = summaryObj
+  ? await render(summaryObj)
+  : { Content: () => null };
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" class="scroll-smooth bg-[#F2F0EB] text-[#1A1A1A]">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{basics?.name} | {basics?.role}</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Archivo+Narrow:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --cyan: #00FFFF;
-      --magenta: #FF00FF;
-      --yellow: #FFFF00;
-    }
-    .font-print-serif { font-family: 'PT Serif', serif; }
-    .font-print-sans { font-family: 'Archivo Narrow', sans-serif; text-transform: uppercase; }
-    
-    /* Paper Texture */
-    .paper-texture {
-      position: fixed; inset: 0; z-index: 100; pointer-events: none; opacity: 0.4;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-      mix-blend-mode: multiply;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{basics?.name} | {basics?.role}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Archivo+Narrow:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --cyan: #00ffff;
+        --magenta: #ff00ff;
+        --yellow: #ffff00;
+      }
+      .font-print-serif {
+        font-family: "PT Serif", serif;
+      }
+      .font-print-sans {
+        font-family: "Archivo Narrow", sans-serif;
+        text-transform: uppercase;
+      }
 
-    /* CMYK Offset Print Effect */
-    .cmyk-hover {
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
-    }
-    .cmyk-hover:hover {
-      text-shadow: 
-        -2px 0 0 rgba(0, 255, 255, 0.7), 
-        2px 0 0 rgba(255, 0, 255, 0.7), 
-        0 2px 0 rgba(255, 255, 0, 0.7);
-      transform: translate(-1px, -1px);
-    }
+      /* Paper Texture */
+      .paper-texture {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        pointer-events: none;
+        opacity: 0.4;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        mix-blend-mode: multiply;
+      }
 
-    /* Halftone Image Hover */
-    .halftone-container {
-      position: relative;
-      overflow: hidden;
-      background: #1A1A1A;
-    }
-    .halftone-img {
-      mix-blend-mode: luminosity;
-      transition: opacity 0.3s;
-      opacity: 0.8;
-    }
-    .halftone-container::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image: radial-gradient(#1A1A1A 20%, transparent 20%);
-      background-size: 4px 4px;
-      mix-blend-mode: screen;
-      opacity: 0;
-      transition: opacity 0.3s;
-      pointer-events: none;
-    }
-    .halftone-container:hover .halftone-img { opacity: 1; filter: contrast(1.5); }
-    .halftone-container:hover::after { opacity: 0.6; }
+      /* CMYK Offset Print Effect */
+      .cmyk-hover {
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+      }
+      .cmyk-hover:hover {
+        text-shadow:
+          -2px 0 0 rgba(0, 255, 255, 0.7),
+          2px 0 0 rgba(255, 0, 255, 0.7),
+          0 2px 0 rgba(255, 255, 0, 0.7);
+        transform: translate(-1px, -1px);
+      }
 
-    /* Columns for text */
-    .print-columns {
-      column-count: 1;
-      column-gap: 2rem;
-    }
-    @media (min-width: 768px) {
-      .print-columns { column-count: 2; }
-    }
-    
-    .print-btn {
-      display: inline-block;
-      border: 2px solid #1A1A1A;
-      padding: 0.5rem 1rem;
-      font-family: 'Archivo Narrow', sans-serif;
-      font-weight: 700;
-      text-transform: uppercase;
-      background: transparent;
-      color: #1A1A1A;
-      position: relative;
-      transition: all 0.2s;
-    }
-    .print-btn::before {
-      content: '';
-      position: absolute;
-      top: 4px; left: 4px; width: 100%; height: 100%;
-      background: #1A1A1A;
-      z-index: -1;
-      transition: all 0.2s;
-    }
-    .print-btn:hover { background: #1A1A1A; color: #F2F0EB; }
-    .print-btn:hover::before { top: 0; left: 0; }
+      /* Halftone Image Hover */
+      .halftone-container {
+        position: relative;
+        overflow: hidden;
+        background: #1a1a1a;
+      }
+      .halftone-img {
+        mix-blend-mode: luminosity;
+        transition: opacity 0.3s;
+        opacity: 0.8;
+      }
+      .halftone-container::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(#1a1a1a 20%, transparent 20%);
+        background-size: 4px 4px;
+        mix-blend-mode: screen;
+        opacity: 0;
+        transition: opacity 0.3s;
+        pointer-events: none;
+      }
+      .halftone-container:hover .halftone-img {
+        opacity: 1;
+        filter: contrast(1.5);
+      }
+      .halftone-container:hover::after {
+        opacity: 0.6;
+      }
 
-    .prose-print p { font-size: 1rem; line-height: 1.5; color: #1A1A1A; margin-bottom: 1rem; text-align: justify; }
-    
-    /* Layout Borders */
-    .newspaper-border { border: 1px solid #1A1A1A; }
-    .newspaper-border-t { border-top: 4px solid #1A1A1A; border-bottom: 1px solid #1A1A1A; }
-  </style>
-</head>
-<body class="font-print-serif antialiased min-h-[100dvh] relative selection:bg-black selection:text-white">
-  
-  <div class="paper-texture"></div>
-  <TopNav />
+      /* Columns for text */
+      .print-columns {
+        column-count: 1;
+        column-gap: 2rem;
+      }
+      @media (min-width: 768px) {
+        .print-columns {
+          column-count: 2;
+        }
+      }
 
-  <main class="w-full relative z-10 print:hidden pt-32 px-4 md:px-8 max-w-screen-xl mx-auto">
-    
-    <!-- Masthead -->
-    <header class="newspaper-border-t py-8 mb-8 text-center flex flex-col items-center">
-      <div class="font-print-sans text-xs tracking-widest border-b border-black/20 pb-4 mb-8 w-full flex justify-between">
-        <span>VOL. I — NO. 1</span>
-        <span>THE PORTFOLIO EDITION</span>
-        <span>PRICE: FREE</span>
-      </div>
-      
-      <h1 class="text-[clamp(4rem,10vw,8rem)] font-bold tracking-tighter leading-none mb-6 cmyk-hover cursor-default">
-        THE {basics?.name.split(' ')[1] || 'CHRONICLE'}.
-      </h1>
-      
-      <div class="font-print-sans text-xl font-bold border-t border-b border-black py-2 w-full">
-        {basics?.role} — {basics?.location}
-      </div>
-    </header>
+      .print-btn {
+        display: inline-block;
+        border: 2px solid #1a1a1a;
+        padding: 0.5rem 1rem;
+        font-family: "Archivo Narrow", sans-serif;
+        font-weight: 700;
+        text-transform: uppercase;
+        background: transparent;
+        color: #1a1a1a;
+        position: relative;
+        transition: all 0.2s;
+      }
+      .print-btn::before {
+        content: "";
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        width: 100%;
+        height: 100%;
+        background: #1a1a1a;
+        z-index: -1;
+        transition: all 0.2s;
+      }
+      .print-btn:hover {
+        background: #1a1a1a;
+        color: #f2f0eb;
+      }
+      .print-btn:hover::before {
+        top: 0;
+        left: 0;
+      }
 
-    <!-- Content Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16">
-      
-      <!-- Left Column (Summary) -->
-      <div class="lg:col-span-4">
-        <h2 class="font-print-sans text-2xl font-bold mb-4 border-b-2 border-black pb-2">Editorial</h2>
-        <div class="prose prose-print first-letter:text-5xl first-letter:font-bold first-letter:float-left first-letter:mr-2 first-letter:mt-1">
-          <SummaryContent />
+      .prose-print p {
+        font-size: 1rem;
+        line-height: 1.5;
+        color: #1a1a1a;
+        margin-bottom: 1rem;
+        text-align: justify;
+      }
+
+      /* Layout Borders */
+      .newspaper-border {
+        border: 1px solid #1a1a1a;
+      }
+      .newspaper-border-t {
+        border-top: 4px solid #1a1a1a;
+        border-bottom: 1px solid #1a1a1a;
+      }
+    </style>
+  </head>
+  <body
+    class="font-print-serif antialiased min-h-[100dvh] relative selection:bg-black selection:text-white"
+  >
+    <div class="paper-texture"></div>
+    <TopNav />
+
+    <main
+      class="w-full relative z-10 print:hidden pt-32 px-4 md:px-8 max-w-screen-xl mx-auto"
+    >
+      <!-- Masthead -->
+      <header
+        class="newspaper-border-t py-8 mb-8 text-center flex flex-col items-center"
+      >
+        <div
+          class="font-print-sans text-xs tracking-widest border-b border-black/20 pb-4 mb-8 w-full flex justify-between"
+        >
+          <span>VOL. I — NO. 1</span>
+          <span>THE PORTFOLIO EDITION</span>
+          <span>PRICE: FREE</span>
         </div>
-        <div class="mt-8 text-center">
-           <button onclick="window.print()" class="print-btn w-full">Subscribe (Print CV)</button>
+
+        <h1
+          class="text-[clamp(4rem,10vw,8rem)] font-bold tracking-tighter leading-none mb-6 cmyk-hover cursor-default"
+        >
+          THE {basics?.name.split(" ")[1] || "CHRONICLE"}.
+        </h1>
+
+        <div
+          class="font-print-sans text-xl font-bold border-t border-b border-black py-2 w-full"
+        >
+          {basics?.role} — {basics?.location}
+        </div>
+      </header>
+
+      <!-- Content Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16">
+        <!-- Left Column (Summary) -->
+        <div class="lg:col-span-4">
+          <h2
+            class="font-print-sans text-2xl font-bold mb-4 border-b-2 border-black pb-2"
+          >
+            Editorial
+          </h2>
+          <div
+            class="prose prose-print first-letter:text-5xl first-letter:font-bold first-letter:float-left first-letter:mr-2 first-letter:mt-1"
+          >
+            <SummaryContent />
+          </div>
+          <div class="mt-8 text-center">
+            <button onclick="window.print()" class="print-btn w-full"
+              >Subscribe (Print CV)</button
+            >
+          </div>
+        </div>
+
+        <!-- Right Column (Projects) -->
+        <div class="lg:col-span-8 newspaper-border p-6">
+          <h2
+            class="font-print-sans text-4xl font-bold mb-8 text-center uppercase tracking-wide border-b border-black/20 pb-4"
+          >
+            Headlines: Selected Works
+          </h2>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {
+              sortedProjects.map((project, i) => (
+                <a
+                  href={project.data.url || "#"}
+                  class="block group no-underline"
+                >
+                  <div class="halftone-container aspect-square w-full mb-4 border border-black">
+                    <img
+                      src={`https://picsum.photos/seed/print${i}/600/600`}
+                      alt=""
+                      class="halftone-img w-full h-full object-cover grayscale"
+                    />
+                  </div>
+                  <h3 class="text-2xl font-bold mb-2 leading-tight group-hover:underline">
+                    {project.data.title}
+                  </h3>
+                  <p class="font-print-sans text-xs text-black/60 mb-2">
+                    {project.data.tags.join(" / ")}
+                  </p>
+                  <p class="text-sm line-clamp-3">{project.data.description}</p>
+                </a>
+              ))
+            }
+          </div>
         </div>
       </div>
 
-      <!-- Right Column (Projects) -->
-      <div class="lg:col-span-8 newspaper-border p-6">
-        <h2 class="font-print-sans text-4xl font-bold mb-8 text-center uppercase tracking-wide border-b border-black/20 pb-4">Headlines: Selected Works</h2>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {sortedProjects.map((project, i) => (
-            <a href={project.data.url || '#'} class="block group no-underline">
-              <div class="halftone-container aspect-square w-full mb-4 border border-black">
-                <img src={`https://picsum.photos/seed/print${i}/600/600`} alt="" class="halftone-img w-full h-full object-cover grayscale" />
-              </div>
-              <h3 class="text-2xl font-bold mb-2 leading-tight group-hover:underline">{project.data.title}</h3>
-              <p class="font-print-sans text-xs text-black/60 mb-2">{project.data.tags.join(' / ')}</p>
-              <p class="text-sm line-clamp-3">{project.data.description}</p>
-            </a>
-          ))}
+      <!-- Experience (Classifieds / Log) -->
+      <section class="newspaper-border-t py-8 mb-16">
+        <h2 class="font-print-sans text-3xl font-bold mb-8 text-center">
+          Work History
+        </h2>
+
+        <div class="print-columns">
+          {
+            sortedExperience.map(async (job) => {
+              const { Content } = await render(job);
+              return (
+                <div class="mb-8 break-inside-avoid border-b border-black/20 pb-4">
+                  <div class="font-print-sans font-bold flex justify-between items-baseline mb-2">
+                    <span class="text-xl">{job.data.company}</span>
+                    <span class="text-xs">
+                      {job.data.startDate} — {job.data.endDate}
+                    </span>
+                  </div>
+                  <div class="italic text-lg mb-4">{job.data.title}</div>
+                  <div class="prose prose-print">
+                    <Content />
+                  </div>
+                </div>
+              );
+            })
+          }
         </div>
-      </div>
-      
+      </section>
+    </main>
+
+    <div class="hidden print:block bg-white text-black">
+      <CVPrintTemplate />
     </div>
-
-    <!-- Experience (Classifieds / Log) -->
-    <section class="newspaper-border-t py-8 mb-16">
-      <h2 class="font-print-sans text-3xl font-bold mb-8 text-center">Professional History</h2>
-      
-      <div class="print-columns">
-        {sortedExperience.map(async (job) => {
-          const { Content } = await render(job);
-          return (
-            <div class="mb-8 break-inside-avoid border-b border-black/20 pb-4">
-              <div class="font-print-sans font-bold flex justify-between items-baseline mb-2">
-                <span class="text-xl">{job.data.company}</span>
-                <span class="text-xs">{job.data.startDate} — {job.data.endDate}</span>
-              </div>
-              <div class="italic text-lg mb-4">{job.data.title}</div>
-              <div class="prose prose-print">
-                <Content />
-              </div>
-            </div>
-          )
-        })}
-      </div>
-    </section>
-
-  </main>
-
-  <div class="hidden print:block bg-white text-black">
-    <CVPrintTemplate />
-  </div>
-
-</body>
+  </body>
 </html>

@@ -1,215 +1,309 @@
 ---
-import '../../styles/global.css';
-import { siteConfig } from '../../config';
-import { getCollection, render } from 'astro:content';
-import CVPrintTemplate from '../../components/CVPrintTemplate.astro';
-import TopNav from '../../components/TopNav.astro';
+import "../../styles/global.css";
+import { siteConfig } from "../../config";
+import { getCollection, render } from "astro:content";
+import CVPrintTemplate from "../../components/CVPrintTemplate.astro";
+import TopNav from "../../components/TopNav.astro";
 
-const basicsList = await getCollection('resume', ({ data }) => data.type === 'basics');
-const summaryList = await getCollection('resume', ({ data }) => data.type === 'summary');
+const basicsList = await getCollection(
+  "resume",
+  ({ data }) => data.type === "basics",
+);
+const summaryList = await getCollection(
+  "resume",
+  ({ data }) => data.type === "summary",
+);
 
 const basics = basicsList[0]?.data;
 const summaryObj = summaryList[0];
 
-const allExperience = await getCollection('experience');
-const sortedExperience = allExperience.sort((a, b) => a.data.order - b.data.order);
+const allExperience = await getCollection("experience");
+const sortedExperience = allExperience.sort(
+  (a, b) => a.data.order - b.data.order,
+);
 
-const allProjects = await getCollection('projects');
+const allProjects = await getCollection("projects");
 const sortedProjects = allProjects.sort((a, b) => a.data.order - b.data.order);
 
-const allPosts = await getCollection('blog');
-const publishedPosts = allPosts.filter(post => !post.data.draft);
-const sortedPosts = publishedPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()).slice(0, 3);
+const allPosts = await getCollection("blog");
+const publishedPosts = allPosts.filter((post) => !post.data.draft);
+const sortedPosts = publishedPosts
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
 
-const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Content: () => null };
+const { Content: SummaryContent } = summaryObj
+  ? await render(summaryObj)
+  : { Content: () => null };
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" class="scroll-smooth bg-white text-black">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{basics?.name} | {basics?.role}</title>
-  <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,900,400,500,700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --cubic-spring: cubic-bezier(0.32, 0.72, 0, 1);
-    }
-    .font-cabinet { font-family: 'Cabinet Grotesk', sans-serif; }
-    
-    /* Radial Wash Background for Hero */
-    .radial-hero {
-      background: radial-gradient(circle at center, #ffffff 0%, #f0f0f0 100%);
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{basics?.name} | {basics?.role}</title>
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,900,400,500,700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --cubic-spring: cubic-bezier(0.32, 0.72, 0, 1);
+      }
+      .font-cabinet {
+        font-family: "Cabinet Grotesk", sans-serif;
+      }
 
-    /* GSAP Pinning Layout */
-    .pin-container {
-      display: flex;
-      align-items: flex-start;
-      gap: 4rem;
-    }
-    .pin-left {
-      width: 40%;
-      position: sticky;
-      top: 30vh;
-    }
-    .pin-right {
-      width: 60%;
-    }
+      /* Radial Wash Background for Hero */
+      .radial-hero {
+        background: radial-gradient(circle at center, #ffffff 0%, #f0f0f0 100%);
+      }
 
-    @media (max-width: 768px) {
-      .pin-container { flex-direction: column; gap: 2rem; }
-      .pin-left { width: 100%; position: relative; top: 0; }
-      .pin-right { width: 100%; }
-    }
-    
-    /* Inline Typography Image */
-    .inline-image {
-      display: inline-block;
-      width: clamp(4rem, 10vw, 8rem);
-      height: clamp(2.5rem, 5vw, 4rem);
-      border-radius: 999px;
-      vertical-align: middle;
-      margin: 0 0.5rem;
-      background-size: cover;
-      background-position: center;
-      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);
-      transform: translateY(-0.1em);
-    }
+      /* GSAP Pinning Layout */
+      .pin-container {
+        display: flex;
+        align-items: flex-start;
+        gap: 4rem;
+      }
+      .pin-left {
+        width: 40%;
+        position: sticky;
+        top: 30vh;
+      }
+      .pin-right {
+        width: 60%;
+      }
 
-    /* Buttons */
-    .kinetic-btn {
-      background: black;
-      color: white;
-      padding: 1rem 2.5rem;
-      border-radius: 9999px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      transition: transform 300ms var(--cubic-spring), box-shadow 300ms var(--cubic-spring);
-    }
-    .kinetic-btn:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3);
-    }
-    .kinetic-btn:active {
-      transform: translateY(0);
-    }
+      @media (max-width: 768px) {
+        .pin-container {
+          flex-direction: column;
+          gap: 2rem;
+        }
+        .pin-left {
+          width: 100%;
+          position: relative;
+          top: 0;
+        }
+        .pin-right {
+          width: 100%;
+        }
+      }
 
-    .prose-kinetic p { font-size: 1.25rem; line-height: 1.6; margin-bottom: 1.5em; font-weight: 500; color: rgba(0,0,0,0.7); }
-    .prose-kinetic h3 { font-family: 'Cabinet Grotesk', sans-serif; font-size: 2rem; font-weight: 800; margin-bottom: 0.5em; }
-  </style>
-</head>
-<body class="font-cabinet antialiased relative selection:bg-black selection:text-white">
-  
-  <TopNav />
+      /* Inline Typography Image */
+      .inline-image {
+        display: inline-block;
+        width: clamp(4rem, 10vw, 8rem);
+        height: clamp(2.5rem, 5vw, 4rem);
+        border-radius: 999px;
+        vertical-align: middle;
+        margin: 0 0.5rem;
+        background-size: cover;
+        background-position: center;
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+        transform: translateY(-0.1em);
+      }
 
-  <main class="w-full max-w-full print:hidden">
-    
-    <!-- Hero (Cinematic Center) -->
-    <header class="radial-hero w-full min-h-[100dvh] flex flex-col items-center justify-center text-center px-4 md:px-8 relative overflow-hidden">
-      <div class="relative z-10 w-full max-w-6xl flex flex-col items-center mt-20">
-        
-        <div class="mb-12 inline-flex border-2 border-black rounded-full px-4 py-2 font-bold tracking-widest uppercase text-sm">
-          {basics?.role}
+      /* Buttons */
+      .kinetic-btn {
+        background: black;
+        color: white;
+        padding: 1rem 2.5rem;
+        border-radius: 9999px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        transition:
+          transform 300ms var(--cubic-spring),
+          box-shadow 300ms var(--cubic-spring);
+      }
+      .kinetic-btn:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
+      }
+      .kinetic-btn:active {
+        transform: translateY(0);
+      }
+
+      .prose-kinetic p {
+        font-size: 1.25rem;
+        line-height: 1.6;
+        margin-bottom: 1.5em;
+        font-weight: 500;
+        color: rgba(0, 0, 0, 0.7);
+      }
+      .prose-kinetic h3 {
+        font-family: "Cabinet Grotesk", sans-serif;
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 0.5em;
+      }
+    </style>
+  </head>
+  <body
+    class="font-cabinet antialiased relative selection:bg-black selection:text-white"
+  >
+    <TopNav />
+
+    <main class="w-full max-w-full print:hidden">
+      <!-- Hero (Cinematic Center) -->
+      <header
+        class="radial-hero w-full min-h-[100dvh] flex flex-col items-center justify-center text-center px-4 md:px-8 relative overflow-hidden"
+      >
+        <div
+          class="relative z-10 w-full max-w-6xl flex flex-col items-center mt-20"
+        >
+          <div
+            class="mb-12 inline-flex border-2 border-black rounded-full px-4 py-2 font-bold tracking-widest uppercase text-sm"
+          >
+            {basics?.role}
+          </div>
+
+          <h1
+            class="text-[clamp(3.5rem,8vw,8rem)] font-black leading-[0.9] tracking-tight text-black mb-12 uppercase max-w-6xl"
+          >
+            Crafting <span
+              class="inline-image"
+              style="background-image: url('https://picsum.photos/seed/k1/400/200')"
+            ></span> Digital Experiences that
+            <span
+              class="inline-image"
+              style="background-image: url('https://picsum.photos/seed/k2/400/200')"
+            ></span> Move.
+          </h1>
+
+          <div
+            class="max-w-2xl text-xl md:text-2xl font-medium text-black/70 leading-relaxed mb-16"
+          >
+            <SummaryContent />
+          </div>
+
+          <div class="flex gap-4">
+            <button
+              onclick="window.print()"
+              class="kinetic-btn border-2 border-black"
+            >
+              Download Resumé
+            </button>
+          </div>
         </div>
+      </header>
 
-        <h1 class="text-[clamp(3.5rem,8vw,8rem)] font-black leading-[0.9] tracking-tight text-black mb-12 uppercase max-w-6xl">
-          Crafting <span class="inline-image" style="background-image: url('https://picsum.photos/seed/k1/400/200')"></span> Digital Experiences that 
-          <span class="inline-image" style="background-image: url('https://picsum.photos/seed/k2/400/200')"></span> Move.
-        </h1>
-        
-        <div class="max-w-2xl text-xl md:text-2xl font-medium text-black/70 leading-relaxed mb-16">
-          <SummaryContent />
+      <!-- Pinned GSAP Section (Experience) -->
+      <section
+        class="py-32 md:py-64 px-6 md:px-12 bg-black text-white relative z-10"
+        id="experience-section"
+      >
+        <div class="max-w-7xl mx-auto pin-container">
+          <!-- Left Side: Pinned Title -->
+          <div class="pin-left">
+            <h2
+              class="text-[clamp(4rem,8vw,8rem)] font-black uppercase leading-none tracking-tight"
+            >
+              Work <br /> Record
+            </h2>
+            <p class="mt-8 text-xl font-medium text-white/50 max-w-sm">
+              A timeline of engineering leadership and architectural decisions.
+            </p>
+          </div>
+
+          <!-- Right Side: Scrolling Content -->
+          <div class="pin-right flex flex-col gap-32">
+            {
+              sortedExperience.map(async (job) => {
+                const { Content } = await render(job);
+                return (
+                  <div class="border-t-2 border-white/20 pt-12 hover:border-white transition-colors duration-500">
+                    <div class="flex flex-wrap items-baseline gap-4 mb-6">
+                      <h3 class="text-4xl md:text-6xl font-black uppercase tracking-tight">
+                        {job.data.company}
+                      </h3>
+                      <span class="text-xl font-bold text-white/40 tracking-widest">
+                        {job.data.startDate} — {job.data.endDate}
+                      </span>
+                    </div>
+                    <div class="text-2xl font-bold uppercase tracking-wider mb-8 text-white/80">
+                      {job.data.title}
+                    </div>
+                    <div class="prose prose-invert prose-kinetic">
+                      <Content />
+                    </div>
+                  </div>
+                );
+              })
+            }
+          </div>
         </div>
-        
-        <div class="flex gap-4">
-          <button onclick="window.print()" class="kinetic-btn border-2 border-black">
-            Download Resumé
-          </button>
+      </section>
+
+      <!-- Projects (Inline Typographic Media Grid) -->
+      <section
+        class="py-32 md:py-64 px-6 md:px-12 bg-white text-black relative z-10 border-t-2 border-black"
+      >
+        <div class="max-w-7xl mx-auto">
+          <h2
+            class="text-[clamp(4rem,8vw,8rem)] font-black uppercase leading-none tracking-tight mb-32 text-center"
+          >
+            Selected Works
+          </h2>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-32">
+            {
+              sortedProjects.map((project, i) => (
+                <a
+                  href={project.data.url || "#"}
+                  class="group block no-underline border-b-2 border-black pb-12 hover:-translate-y-4 transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]"
+                >
+                  <div class="aspect-video bg-black mb-8 overflow-hidden rounded-3xl relative">
+                    <img
+                      src={`https://picsum.photos/seed/kproj${i}/1200/800`}
+                      alt={project.data.title}
+                      class="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
+                    />
+                    <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
+                  </div>
+                  <h3 class="text-4xl md:text-5xl font-black uppercase tracking-tight mb-6">
+                    {project.data.title}
+                  </h3>
+                  <p class="text-xl font-medium text-black/60 leading-relaxed mb-8">
+                    {project.data.description}
+                  </p>
+                  <div class="flex flex-wrap gap-2">
+                    {project.data.tags.map((tag) => (
+                      <span class="px-4 py-2 border-2 border-black rounded-full text-xs font-bold uppercase tracking-widest">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </a>
+              ))
+            }
+          </div>
         </div>
-      </div>
-    </header>
+      </section>
+    </main>
 
-    <!-- Pinned GSAP Section (Experience) -->
-    <section class="py-32 md:py-64 px-6 md:px-12 bg-black text-white relative z-10" id="experience-section">
-      <div class="max-w-7xl mx-auto pin-container">
-        <!-- Left Side: Pinned Title -->
-        <div class="pin-left">
-          <h2 class="text-[clamp(4rem,8vw,8rem)] font-black uppercase leading-none tracking-tight">Professional <br/> Record</h2>
-          <p class="mt-8 text-xl font-medium text-white/50 max-w-sm">A timeline of engineering leadership and architectural decisions.</p>
-        </div>
-        
-        <!-- Right Side: Scrolling Content -->
-        <div class="pin-right flex flex-col gap-32">
-          {sortedExperience.map(async (job) => {
-            const { Content } = await render(job);
-            return (
-              <div class="border-t-2 border-white/20 pt-12 hover:border-white transition-colors duration-500">
-                <div class="flex flex-wrap items-baseline gap-4 mb-6">
-                  <h3 class="text-4xl md:text-6xl font-black uppercase tracking-tight">{job.data.company}</h3>
-                  <span class="text-xl font-bold text-white/40 tracking-widest">{job.data.startDate} — {job.data.endDate}</span>
-                </div>
-                <div class="text-2xl font-bold uppercase tracking-wider mb-8 text-white/80">{job.data.title}</div>
-                <div class="prose prose-invert prose-kinetic">
-                  <Content />
-                </div>
-              </div>
-            )
-          })}
-        </div>
-      </div>
-    </section>
+    <div class="hidden print:block bg-white text-black">
+      <CVPrintTemplate />
+    </div>
 
-    <!-- Projects (Inline Typographic Media Grid) -->
-    <section class="py-32 md:py-64 px-6 md:px-12 bg-white text-black relative z-10 border-t-2 border-black">
-      <div class="max-w-7xl mx-auto">
-        <h2 class="text-[clamp(4rem,8vw,8rem)] font-black uppercase leading-none tracking-tight mb-32 text-center">Selected Works</h2>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-32">
-          {sortedProjects.map((project, i) => (
-            <a href={project.data.url || '#'} class="group block no-underline border-b-2 border-black pb-12 hover:-translate-y-4 transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]">
-              <div class="aspect-video bg-black mb-8 overflow-hidden rounded-3xl relative">
-                <img src={`https://picsum.photos/seed/kproj${i}/1200/800`} alt={project.data.title} class="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" />
-                <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500"></div>
-              </div>
-              <h3 class="text-4xl md:text-5xl font-black uppercase tracking-tight mb-6">{project.data.title}</h3>
-              <p class="text-xl font-medium text-black/60 leading-relaxed mb-8">{project.data.description}</p>
-              <div class="flex flex-wrap gap-2">
-                {project.data.tags.map(tag => (
-                  <span class="px-4 py-2 border-2 border-black rounded-full text-xs font-bold uppercase tracking-widest">{tag}</span>
-                ))}
-              </div>
-            </a>
-          ))}
-        </div>
-      </div>
-    </section>
+    <script>
+      import { gsap } from "gsap";
+      import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-  </main>
+      gsap.registerPlugin(ScrollTrigger);
 
-  <div class="hidden print:block bg-white text-black">
-    <CVPrintTemplate />
-  </div>
+      // Use MatchMedia to only pin on desktop (min-width 768px)
+      let mm = gsap.matchMedia();
 
-  <script>
-    import { gsap } from 'gsap';
-    import { ScrollTrigger } from 'gsap/ScrollTrigger';
-    
-    gsap.registerPlugin(ScrollTrigger);
-
-    // Use MatchMedia to only pin on desktop (min-width 768px)
-    let mm = gsap.matchMedia();
-
-    mm.add("(min-width: 768px)", () => {
-      ScrollTrigger.create({
-        trigger: "#experience-section",
-        start: "top top",
-        end: "bottom bottom",
-        pin: ".pin-left",
-        pinSpacing: false
+      mm.add("(min-width: 768px)", () => {
+        ScrollTrigger.create({
+          trigger: "#experience-section",
+          start: "top top",
+          end: "bottom bottom",
+          pin: ".pin-left",
+          pinSpacing: false,
+        });
       });
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>
