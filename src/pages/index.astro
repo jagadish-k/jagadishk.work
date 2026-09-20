@@ -1,51 +1,69 @@
 ---
-import { siteConfig } from '../config';
-import MonolithTheme from '../themes/monolith/index.astro';
-import KineticTheme from '../themes/kinetic/index.astro';
-import NeoBrutalistTheme from '../themes/neo-brutalist/index.astro';
-import HorizonTheme from '../themes/horizon/index.astro';
-import EditorialTheme from '../themes/editorial/index.astro';
-import StructuralTheme from '../themes/structural/index.astro';
-import AuraTheme from '../themes/aura/index.astro';
-import AnalogTheme from '../themes/analog/index.astro';
-import TerminalTheme from '../themes/terminal/index.astro';
-import VelvetTheme from '../themes/velvet/index.astro';
-import AbsoluteTheme from '../themes/absolute/index.astro';
-import BrutalChicTheme from '../themes/brutal-chic/index.astro';
-import ZenTheme from '../themes/zen/index.astro';
-import CyberTheme from '../themes/cyber/index.astro';
-import LiquidTheme from '../themes/liquid/index.astro';
-import PrintTheme from '../themes/print/index.astro';
-import SynthTheme from '../themes/synth/index.astro';
-import TactileTheme from '../themes/tactile/index.astro';
-import HolographicTheme from '../themes/holographic/index.astro';
-import ThemeMascots from '../components/ThemeMascots.astro';
-import PixiePet from '../components/PixiePet.astro';
+import { siteConfig } from "../config";
+import MonolithTheme from "../themes/monolith/index.astro";
+import KineticTheme from "../themes/kinetic/index.astro";
+import NeoBrutalistTheme from "../themes/neo-brutalist/index.astro";
+import HorizonTheme from "../themes/horizon/index.astro";
+import EditorialTheme from "../themes/editorial/index.astro";
+import StructuralTheme from "../themes/structural/index.astro";
+import AuraTheme from "../themes/aura/index.astro";
+import AnalogTheme from "../themes/analog/index.astro";
+import TerminalTheme from "../themes/terminal/index.astro";
+import VelvetTheme from "../themes/velvet/index.astro";
+import AbsoluteTheme from "../themes/absolute/index.astro";
+import BrutalChicTheme from "../themes/brutal-chic/index.astro";
+import ZenTheme from "../themes/zen/index.astro";
+import CyberTheme from "../themes/cyber/index.astro";
+import LiquidTheme from "../themes/liquid/index.astro";
+import PrintTheme from "../themes/print/index.astro";
+import SynthTheme from "../themes/synth/index.astro";
+import TactileTheme from "../themes/tactile/index.astro";
+import HolographicTheme from "../themes/holographic/index.astro";
+import ThemeMascots from "../components/ThemeMascots.astro";
+// import PixiePet from "../components/PixiePet.astro";
 
 // Read the theme strictly from config for the root page
 const requestedTheme = siteConfig.theme;
 
 const getThemeComponent = (theme: string) => {
-  switch(theme) {
-    case 'editorial': return EditorialTheme;
-    case 'structural': return StructuralTheme;
-    case 'kinetic': return KineticTheme;
-    case 'neo-brutalist': return NeoBrutalistTheme;
-    case 'horizon': return HorizonTheme;
-    case 'aura': return AuraTheme;
-    case 'analog': return AnalogTheme;
-    case 'terminal': return TerminalTheme;
-    case 'velvet': return VelvetTheme;
-    case 'absolute': return AbsoluteTheme;
-    case 'brutal-chic': return BrutalChicTheme;
-    case 'zen': return ZenTheme;
-    case 'cyber': return CyberTheme;
-    case 'liquid': return LiquidTheme;
-    case 'print': return PrintTheme;
-    case 'synth': return SynthTheme;
-    case 'tactile': return TactileTheme;
-    case 'holographic': return HolographicTheme;
-    case 'monolith':
+  switch (theme) {
+    case "editorial":
+      return EditorialTheme;
+    case "structural":
+      return StructuralTheme;
+    case "kinetic":
+      return KineticTheme;
+    case "neo-brutalist":
+      return NeoBrutalistTheme;
+    case "horizon":
+      return HorizonTheme;
+    case "aura":
+      return AuraTheme;
+    case "analog":
+      return AnalogTheme;
+    case "terminal":
+      return TerminalTheme;
+    case "velvet":
+      return VelvetTheme;
+    case "absolute":
+      return AbsoluteTheme;
+    case "brutal-chic":
+      return BrutalChicTheme;
+    case "zen":
+      return ZenTheme;
+    case "cyber":
+      return CyberTheme;
+    case "liquid":
+      return LiquidTheme;
+    case "print":
+      return PrintTheme;
+    case "synth":
+      return SynthTheme;
+    case "tactile":
+      return TactileTheme;
+    case "holographic":
+      return HolographicTheme;
+    case "monolith":
     default:
       return MonolithTheme;
   }
@@ -57,4 +75,4 @@ const isDev = import.meta.env.DEV;
 
 <Theme />
 <ThemeMascots />
-<PixiePet />
+<!-- <PixiePet /> -->

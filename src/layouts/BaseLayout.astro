@@ -5,7 +5,7 @@ import "@fontsource/londrina-sketch";
 import { siteConfig } from "../config";
 import { ClientRouter } from "astro:transitions";
 import CurtainTransition from "../components/CurtainTransition.astro";
-import PixiePet from "../components/PixiePet.astro";
+// import PixiePet from "../components/PixiePet.astro";
 import SEO from "../components/SEO.astro";
 
 interface Props {
@@ -68,9 +68,9 @@ const {
       <slot />
     </div>
 
-    <div class="print:hidden">
+    <!-- <div class="print:hidden">
       <PixiePet />
-    </div>
+    </div> -->
 
     <section class="pet-showcase">
       <script>
