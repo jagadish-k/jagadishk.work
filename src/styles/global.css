@@ -2,6 +2,17 @@
 
 @layer base {
 	/* Global base styles removed to allow theme-specific backgrounds to work */
+	
+	/* Ensure Markdown formatting (bold, italics) is honored globally across all themes */
+	strong, b {
+		font-weight: 700 !important;
+		/* Fallback to make it thicker even if the 700 weight font isn't loaded */
+		-webkit-text-stroke: 0.04em currentColor;
+	}
+	
+	em, i {
+		font-style: italic !important;
+	}
 }
 
 /* Texture & Grid */
