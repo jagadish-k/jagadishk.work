@@ -1,10 +1,11 @@
 ---
 type: "skills"
 categories:
-  "AI & Agentic Engineering": ["Agentic coding operating model", "Claude Code", "OpenCode", "Cursor", "Model Context Protocol (MCP)", "multi-provider LLM orchestration", "Claude", "GPT", "Gemini", "GLM", "Azure OpenAI Service", "OpenAI Whisper", "LLM summarization and triage pipelines", "ML model evaluation platforms", "NLP document ingestion"]
-  "Languages & Runtimes": ["JavaScript (ES6+)", "TypeScript", "Python", "Node.js", "Express.js", "FastAPI", "Flask"]
-  "Frontend Architecture": ["React", "Next.js", "Angular", "micro-frontends (Webpack Module Federation)", "design systems and component libraries", "Material UI", "Ant Design", "Tailwind", "Storybook", "Redux", "TanStack Query", "data visualization at scale", "D3.js", "Three.js", "Canvas"]
-  "Distributed Systems & APIs": ["Microservices", "BFF (Backend-For-Frontend)", "GraphQL", "REST", "WebSockets", "OpenAPI/Swagger contract-first design", "event-driven architecture and message brokers", "Kafka", "SwiftMQ", "real-time APIs", "protobuf", "grpc", "SSE"]
-  "Data & Cloud": ["PostgreSQL", "MySQL", "MongoDB", "Redis", "Elasticsearch", "Apache Solr", "AWS", "S3", "CloudFront", "API Gateway", "Azure", "Front Door", "OpenAI Service", "Google Cloud", "Docker", "GitHub Actions", "Azure Pipelines", "Auth0", "ABAC", "RBAC", "JWT"]
-  "Quality & Delivery": ["Jest", "React Testing Library", "Playwright", "Cypress", "TDD", "CI/CD quality gating", "code review governance", "technical mentorship"]
+  "Architecture & Systems": ["Software Architecture","Distributed Systems","Platform Engineering","System Design","Microservices","Micro-Frontends","Backend-for-Frontend (BFF)","Multi-Tenancy","Event-Driven Architecture","Real-Time Systems","Performance Engineering"]
+  "AI & Intelligent Systems": ["LLM Integration","Agentic Software Development","Model Context Protocol (MCP)","Azure OpenAI","OpenAI Whisper","Gemini","ML Model Evaluation","NLP","AI-Assisted Engineering"]
+  "Languages & Runtime": ["TypeScript","JavaScript","Python","Go","Node.js"]
+  "Application & Platform Engineering": ["React","Next.js","Angular","Webpack Module Federation","Design Systems","Storybook","Material UI","TailwindCSS","TanStack Query","D3.js","Three.js"]
+  "APIs, Data & Messaging": ["GraphQL","REST","OpenAPI","WebSockets","Server-Sent Events (SSE)","Kafka","Redis","PostgreSQL","MySQL","MongoDB","Elasticsearch","Apache Solr"]
+  "Cloud & Infrastructure": ["Azure","AWS","Google Cloud","Docker","CI/CD","GitHub Actions","Azure Front Door","PM2"]
+  "Engineering Excellence": ["Automated Testing","Jest","React Testing Library","Playwright","Cypress","TDD","Code Review","Architecture Governance","Technical Mentorship","Developer Productivity","Technical Strategy"]
 ---

@@ -1,10 +1,13 @@
 ---
-title: "Senior Software Engineer – IN4"
+title: "Senior Software Engineer, Bengaluru"
 company: "Walmart"
 startDate: "May 2016"
 endDate: "May 2019"
 order: 6
 ---
-- **Built the UI for Smart Forecasting, Walmart's demand forecasting platform:** Architected the interface giving demand managers visibility and manual override across roughly 500 million store-item forecasts, surfacing a metrics space of tens of billions of historical and forward-looking data points; the platform materially reduced forecast misses against the legacy tool it replaced.
-- **Founding member, Sam's Club Frontend Chapter:** Architected an early shell-based container hosting 6 independent business applications communicating over an in-browser event bus — predating modern micro-frontend tooling — backed by Node.js BFF services aggregating supply chain backend data.
-- **Data platform tooling and migration standards:** Built the web interface for an in-house Data Lake with configurable visualization components and interactive ETL pipeline builders; authored the technical standards for migrating AngularJS 1.6 applications to React, and mentored returning-to-work women engineers in building end-to-end Cypress suites.
+_Large-scale forecasting · Platform architecture · Data applications_
+
+- Architected the BFF and UI for Walmart's Smart Forecasting platform, giving demand managers visibility and manual override capabilities across approximately 500 million store-item forecasts and tens of billions of historical and projected data points.
+- Established an early micro-frontend architecture for business applications of Sam’s Club, designing a shell-based platform hosting 6 independent business applications communicating through an in-browser event bus, backed by Node.js BFF services aggregating supply-chain data.
+- Established frontend modernization standards for AngularJS-to-React migration, providing architectural patterns for teams transitioning large legacy applications to React.
+- Built interfaces for Walmart's internal Data Lake platform, including configurable data visualization and interactive ETL pipeline builders, and mentored engineers in end-to-end Cypress testing practices.

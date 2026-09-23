@@ -1,107 +1,150 @@
-Jagadish, K.
-Principal / Staff Engineer · Frontend Architect · Tech Lead · Agentic AI & Platform Architecture
+# Jagadish, K.
+
+**Principal Engineer · Software Architecture · AI Systems · Platform Engineering**
 Bengaluru, Karnataka, India | +91-9916128366 | jagadish.kasi@pm.me | linkedin.com/in/jagadish-kasi | github.com/jagadish-k
-SUMMARY
-Principal Engineer and hands-on technical leader with 18 years building web platforms at Cleartax, LinkedIn, Walmart, and Flipkart. Currently co-founder and CTO of Tryft, building Traceflow, an enterprise supply-chain intelligence platform recoverable revenue, delivered by a 6-engineer team running an agentic AI development practice end to end. Previously, Principal Frontend Engineer at Uberall leading a 30+ engineer chapter across 8 countries, and builder of ML evaluation and API discovery platforms adopted across LinkedIn's engineering organization.
-Agentic Coding & MCP · LLM Integration · Node.js & BFF Architecture · Micro-Frontends · Distributed Systems · AWS / Azure · Rapid Prototyping · Engineering Leadership · Scalable Frontends
 
-### WORK EXPERIENCE
+Principal Engineer and hands-on technical leader with 18 years of experience designing, building, and evolving complex software platforms across LinkedIn, Walmart, Cleartax, Uberall, and startups.
 
-Tryft
-CTO & Co-founder, Remote May 2024 - Present
-PRODUCT IMPACT & TECHNICAL LEADERSHIP
-Surfaced $2–3M per quarter in recoverable revenue: Built and scaled Traceflow, a subscription supply-chain intelligence platform deployed across an enterprise customer's global manufacturing sites — each an isolated tenant with distinct processes — serving ~300 users and tracing revenue leakage across datasets exceeding 30,000 materials.
-Leads a 6-engineer team while shipping daily: Directs 3 backend, 2 frontend, and 1 QA engineer as founding technical leader — architecting APIs and system approaches, running code reviews and deployments, and personally building screens and workflow logic rather than managing from a distance.
-Created R&D cost attribution where none existed: Delivered a drug experimentation module letting research scientists build material lineages across revisions and phases, converting discovery spend previously lost in email threads into cost visibility for finance and senior leadership — a capability with no direct off-the-shelf equivalent, built as a customer feature request.
-AGENTIC AI DEVELOPMENT & LLM INTEGRATION
-Agentic coding operating model: Runs a production agentic development workflow orchestrating Claude Code, OpenCode, and Cursor against multiple LLM providers (Claude, GPT, GLM), with Model Context Protocol (MCP) servers — Context7, Figma, Playwright, Sentry — supplying live documentation, design specs, browser automation, and production error telemetry; feeds agents graph-based codebase context and rigorous specifications to make generated work verifiable rather than merely fast.
-LLM triage across 30,000+ materials daily: Integrated Azure OpenAI Service into daily inventory operations to classify risk, demand, and staleness, producing actionable operator inputs and executive risk summaries from data volumes no team could review manually.
-Cut API integration from weeks to one day: Architected a contract-first pipeline converting GraphQL and OpenAPI specifications into auto-generated mock services, Zod schemas, TypeScript types, and React Query hooks, unblocking UI development ahead of backend delivery.
-ARCHITECTURE & INFRASTRUCTURE
-60 FPS across 800+ node graphs: Engineered a spatial virtualization engine on ReactFlow to break past native rendering limits at ~1,000 nodes, using a 9-grid viewport algorithm with predictive pre-loading; extended it with an interactive Bill of Materials module computing real-time multi-level yields across upstream and downstream nodes.
-Zero-downtime delivery and multi-tenant security: Designed full-stack infrastructure on a Node.js/Next.js BFF, Docker, PM2 hot-cold instances, and automated Azure Front Door traffic swapping, gated by CI/CD suites (Jest, RTL, Cypress, Playwright); engineered client- side ABAC resolving Auth0 JWT claims to gate routes, actions, and permissions across tenant roles.
+I operate across software architecture, distributed systems, platform engineering, developer infrastructure, and AI systems, with a track record of turning ambiguous technical problems into scalable platforms and measurable business outcomes.
 
-Uberall
-Principal Frontend Engineer, FTE - Contract (Remote) August 2022 - April 2024
-Sole Principal Frontend Engineer; led a 30+ engineer chapter across 8 countries: Held company-wide frontend technical authority, directing a remote-first chapter spanning Australia, Germany, Spain, Italy, France, the US, Egypt, and India, defining technical debt roadmaps and automating PR and pre-commit quality gates across every team.
-Moved contract failures from runtime to compile time: Drove organisation-wide TypeScript adoption and automated code generation from OpenAPI specifications so frontend–backend mismatches surfaced at compile time and built Node.js BFF services consolidating fragmented API surfaces into UI-shaped contracts.
-Deployed as a delivery unblocker: Embedded into high-priority teams to break bottlenecks, govern code reviews, and set architecture patterns; co-led engineering execution for a full platform navigation overhaul with Product and UX.
-Unified application patterns via a Backbone-to-React migration: Systematically deprecated Backbone.js and its adapter layers into a shared React component library, converging fragmented UI and design patterns onto one system, and isolated legacy assets from a monolithic backend through a modular configuration architecture.
+Currently CTO and co-founder of Tryft, leading a 6-engineer team building an enterprise supply-chain intelligence platform that has surfaced $2–3M per quarter in recoverable revenue across global manufacturing operations.
 
-Cleartax
-Associate Architect, Bengaluru March 2021 - August 2022
-Unified 8 SaaS applications: Re-engineered eight subdomain-isolated products into a single micro-frontend architecture using Webpack Module Federation, routing them under clean sub-paths beneath a central shell container.
-Set the frontend standard for 60 developers: Architected the enterprise component library and boilerplate framework (React, TypeScript, Ant Design, Storybook) adopted across the org, giving the platform consistent widgets and patterns and letting engineers move between teams without relearning a team-specific paradigm.
-Lighthouse scores to 90+: Raised responsiveness across the platform through faster time-to-first-byte, reduced layout shift, and deliberate loading states; re-architected API routing through internal gateways rather than public endpoints to cut cross-service latency.
-Eliminated duplicated platform logic: Centralized user sessions, permissions, dynamic configuration, and plan entitlements in the shell, removing redundant API calls across every module; ran the Frontend Platform team on a rotating inner-source contribution model.
+Previously led frontend architecture across a 30+ engineer organization spanning 8 countries at Uberall and built ML evaluation and API discovery platforms used across LinkedIn engineering.
 
-OptimeeringAqua
-Consultant, Contract(Remote) October 2020 – January 2021
-Built the core frontend for bioplan.ai, an AI-driven aquaculture production planning platform used by fish farming operations across Norway, designing data-dense dashboards that translate optimization model outputs into actionable telemetry — biomass growth predictions, feed consumption curves, and environmental metrics.
+## SELECTED IMPACT
 
-LinkedIn
-Senior Software Engineer, Bengaluru May 2019 – September 2020
-Built LinkedIn's ML model evaluation platform: Engineered a system (Ember.js, Python/Flask), adopted by data science teams across LinkedIn engineering, letting them measure model efficacy across revisions and track historic progression of serialized model artifacts, and letting downstream consumers connect sample data from production pipelines to validate whether a model fit their use case before adopting it.
-Shipped the API discovery platform used across LinkedIn engineering: Built a cross-team API catalog with an interactive playground and a rich faceted search module — tags, autocomplete, and facets — surfacing APIs published by every development team to improve collaboration and cut duplicated integration effort.
-Extended code review and CI/CD tooling: Augmented LinkedIn's internal code review board, integrating automated code health metrics and review validations into the pull request pipeline.
+- **$2–3M / quarter** - Recoverable revenue surfaced through an enterprise supply-chain intelligence platform.
+- **30,000+ materials / tenant** - AI-assisted inventory analysis across large-scale manufacturing datasets.
+- **30+ engineers · 8 countries** - Technical leadership and frontend architecture across a globally distributed engineering organization.
+- **500M store-item forecasts** - Data-intensive forecasting platform built for Walmart demand-management operations.
+- **800+ node graphs · 60 FPS** - Spatial virtualization architecture enabling interactive large-scale material lineage-based workflows.
 
-Walmart
-Senior Software Engineer – IN4, Bengaluru May 2016 – May 2019
-Built the UI for Smart Forecasting, Walmart's demand forecasting platform: Architected the interface giving demand managers visibility and manual override across roughly 500 million store-item forecasts, surfacing a metrics space of tens of billions of historical and forward-looking data points; the platform materially reduced forecast misses against the legacy tool it replaced.
-Founding member, Sam's Club Frontend Chapter: Architected an early shell-based container hosting 6 independent business applications communicating over an in-browser event bus — predating modern micro-frontend tooling — backed by Node.js BFF services aggregating supply chain backend data.
-Data platform tooling and migration standards: Built the web interface for an in-house Data Lake with configurable visualization components and interactive ETL pipeline builders; authored the technical standards for migrating AngularJS 1.6 applications to React, and mentored returning-to-work women engineers in building end-to-end Cypress suites.
+## EXPERIENCE
 
-Snapwiz
-Lead Software Engineer, Bengaluru February 2015 – May 2016
-Led the team that built Glider.ai, a real-time data-science-driven candidate evaluation SaaS platform (Meteor.js, Node.js, MongoDB) with Python NLP engines powering job-matching recommendations; modernized the Edulastic EdTech interface for responsiveness and accessibility.
+### Tryft
 
-Tribune Digital Ventures
-Senior UI Developer, Bengaluru December 2013 – February 2015
-Rebuilt zap2it.com in a 5-member core team, integrating Apache Solr for site-wide search and a reusable analytics and ad-monetization framework across sponsored channels.
+**CTO & Co-founder, Remote** | _May 2024 - Present_
+_Enterprise supply-chain intelligence · AI systems · Platform architecture_
 
-Flipkart
-UI Developer, Bengaluru February 2013 – November 2013
-Engineered high-concurrency Node.js services for the seller onboarding platform behind Flipkart's third-party marketplace pivot and built the Order Management UI over a Node.js BFF orchestrating SwiftMQ, catalog, pricing, and delivery services through peak festive traffic.
+**Product & Technical Leadership**
 
-Dell International Services
-Javascript Developer, Bengaluru April 2012 – February 2013
-Built sub-100ms DOM-injected JavaScript campaigns via Adobe Test & Target across global Dell domains, promoting winning personalization and checkout experiments into production.
+- Surfaced $2–3M per quarter in recoverable revenue by architecting, developing and scaling Traceflow - an enterprise supply-chain intelligence platform deployed across global manufacturing operations, supporting ~300 business users and datasets exceeding 30,000 materials per tenant.
+- Lead a 6-engineer product team across backend, frontend, and QA, while remaining hands-on across system architecture, implementation, technical decisions, code reviews, and production delivery.
+- Created R&D cost attribution where none previously existed by designing a project-tracking and material-lineage system connecting revisions, research phases, experimentation, and discovery costs previously scattered across emails and unstructured notes.
 
-Wipro
-Frontend Developer, Bengaluru August 2008 – April 2012
-Co-developed mobile UI components and OS-level interface features for Toshiba's TG01W Windows Mobile platform and delivered frontend modules for Dish.com under strict cross-browser constraints. 
+**Architecture & Engineering**
 
-### SELECTED INDEPENDENT PROJECTS
+- Reduced API integration lead time from weeks to a day by designing a contract-first pipeline that converts GraphQL and OpenAPI specifications into mock services, Zod schemas, TypeScript types, and React Query hooks.
+- Enabled interactive performance across graphs exceeding 800 nodes by engineering a spatial virtualization layer using 9-grid viewport partitioning and predictive preloading for complex material lineage and Bill of Materials workflows.
+- Enabled zero-downtime production delivery by designing a Node.js/Next.js BFF platform with Docker, PM2 hot/cold deployments, Azure Front Door traffic switching, and automated Jest, React Testing Library, Cypress, and Playwright quality gates.
+- Designed tenant-aware authorization architecture using JWT claims and ABAC to enforce route, action, and capability boundaries across differentiated tenant roles.
 
-Products built end-to-end through agentic development workflows, exploring delivery velocity on non-trivial problem domains.
+**AI & Agentic Engineering**
 
-Stad-Ops: AI-Assisted Incident Command Platform for Live Venues (pre-launch)
-Real-time nerve-center operations platform for stadium and large-venue incident management, targeting high-tension environments where triage latency affects safety outcomes.
-Engineered dual-channel intake — structured mobile reporting and voice notes transcribed via OpenAI Whisper — with the Gemini API performing categorization, resolution assignment, and dispatch recommendation surfaced to a human operator for confirmation.
-Built a multi-level canvas map visualizer with venue drawing tools and Google Maps integration, plus roster-based staff assignment, multi-role permissions, real-time state synchronization, and audit logging; generalizes to mall operations and factory floors.
+- Established an agentic software-development workflow supporting Claude Code, OpenCode, Cursor, multiple LLM providers, and Model Context Protocol (MCP) servers connected to documentation, design systems, browser automation, and production telemetry.
+- Integrated LLM-based analysis into daily inventory operations across 30,000+ materials, using Azure OpenAI to classify demand, risk, and staleness and convert large datasets into actionable operator signals and executive summaries.
 
-Casa-Craft: 2D-to-3D Interior Design Quoting Visualizer (pre-launch)
-Browser-based tool converting 2D floor layouts into interactive 3D visualizations with component selection and live quoting, built on React Router and Three.js with a Docker-first development strategy.
-Engineered with React Router and Three.js on a Docker-first development strategy for reproducible environments and straightforward containerized deployment.
+### Uberall
 
-Remove-BG: Client-Side Image Background Removal
-github.com/jagadish-k/remove-bg | jagadish-k.github.io/remove-bg
-Built a browser-based tool removing checkered transparency patterns, solid backgrounds, and shadows from images using OpenCV.js compiled to WebAssembly, keeping all processing local so images never leave the client.
-Engineered tolerance-tuned pattern detection with manual color picking and magnified preview, exporting transparent PNGs; React 19, TypeScript, Vite, TailwindCSS, deployed via GitHub Actions.
-Developed end-to-end through an agentic coding workflow, with the full AI development transcript and agent instruction context committed to the public repository.
+**Principal Frontend Engineer, Remote** | _August 2022 - April 2024_
+_Global SaaS platform · Technical leadership · Application architecture_
 
-### TECHNICAL SKILLS
+- Provided technical leadership to a 30+ engineer frontend organization across 8 countries, defining architecture standards, technical-debt priorities, engineering practices, and quality gates across distributed teams.
+- Moved frontend/backend contract failures from runtime to compile time by driving organization-wide TypeScript adoption and automated client generation from OpenAPI specifications.
+- Reduced API complexity at the application boundary by designing Node.js BFF services that consolidated fragmented backend APIs into contracts shaped around application requirements.
+- Accelerated delivery of high-priority initiatives by embedding directly with engineering teams to resolve architectural bottlenecks, guide technical decisions, govern code reviews, and establish reusable patterns.
+- Modernized a fragmented frontend architecture by leading the migration from Backbone.js and its adapter layers toward a shared React component architecture and standardized application patterns.
 
-- _AI & Agentic Engineering_: Agentic coding operating model,Claude Code, OpenCode, Cursor · Model Context Protocol (MCP) · multi-provider LLM orchestration, Claude, GPT, Gemini, GLM · Azure OpenAI Service · OpenAI Whisper · LLM summarization and triage pipelines · ML model evaluation platforms · NLP document ingestion
-- _Languages & Runtimes_: JavaScript (ES6+) · TypeScript · Python · Node.js · Express.js · FastAPI, Flask
-- \*Frontend Architecture: React, Next.js, Angular · micro-frontends (Webpack Module Federation) · design systems and component libraries ,Material UI, Ant Design, Tailwind, Storybook · Redux, TanStack Query · data visualization at scale ,D3.js, Three.js, Canvas,
-- _Distributed Systems & APIs_: Microservices · BFF (Backend-For-Frontend) · GraphQL, REST, WebSockets · OpenAPI/Swagger contract-first design · event-driven architecture and message brokers, Kafka, SwiftMQ · real-time APIs, protobuf, grpc, SSE
-- _Data & Cloud_: PostgreSQL, MySQL · MongoDB, Redis · Elasticsearch, Apache Solr · AWS ,S3, CloudFront, API Gateway)· Azure ,Front Door, OpenAI Service · Google Cloud · Docker, GitHub Actions, Azure Pipelines · Auth0 ,ABAC,RBAC, JWT
-  Quality & Delivery: Jest, React Testing Library, Playwright, Cypress · TDD · CI/CD quality gating · code review governance · technical mentorship
+### Cleartax
 
-### CERTIFICATIONS
+**Associate Architect, Bengaluru** | _March 2021 - August 2022_
+_Enterprise SaaS · Platform architecture · Micro-frontends_
 
-### EDUCATION
+- Unified 8 SaaS applications into a single application platform by architecting a micro-frontend system using Webpack Module Federation and a central application shell.
+- Established frontend architecture standards for 60+ developers by designing the enterprise component library and application boilerplate around React, TypeScript, Ant Design, and Storybook.
+- Improved platform responsiveness to 90+ Lighthouse scores by addressing API routing, network latency, rendering behavior, layout stability, and loading strategies.
+- Eliminated duplicated platform capabilities across applications by centralizing authentication sessions, permissions, dynamic configuration, and plan entitlements within the application shell.
+- Established an inner-source contribution model for the Frontend Platform team, enabling engineers across product teams to contribute and consume shared platform capabilities.
 
-Bachelor of Technology, Computer Science & Engineering
-Biju Patnaik University of Technology, Odisha, India | 2004 – 2008 | CGPA – 7.22
+### OptimeeringAqua
+
+**Freelance, Remote** | _October 2020 – January 2021_
+
+- Built the core frontend for bioplan.ai, an AI-driven aquaculture production planning platform used by fish farming operations across Norway, designing data-dense dashboards that translate optimization model outputs into actionable telemetry.
+
+### LinkedIn
+
+**Senior Software Engineer, Bengaluru** | _May 2019 – September 2020_
+_ML platforms · Developer infrastructure · Internal engineering systems_
+
+- Built LinkedIn's ML model evaluation platform, enabling data science teams across the engineering organization to evaluate model effectiveness across revisions, track historical progression of serialized model artifacts, and validate candidate models against representative production data.
+- Built an organization-wide API discovery platform with searchable catalog, interactive playground, autocomplete, tagging, and faceted search, making internal APIs easier to discover and integrate across engineering teams.
+- Extended internal code-review and CI/CD infrastructure with automated code-health metrics and review validations integrated directly into pull-request workflows.
+
+### Walmart
+
+**Senior Software Engineer, Bengaluru** | _May 2016 – May 2019_
+_Large-scale forecasting · Platform architecture · Data applications_
+
+- Architected the BFF and UI for Walmart's Smart Forecasting platform, giving demand managers visibility and manual override capabilities across approximately 500 million store-item forecasts and tens of billions of historical and projected data points.
+- Established an early micro-frontend architecture for business applications of Sam’s Club, designing a shell-based platform hosting 6 independent business applications communicating through an in-browser event bus, backed by Node.js BFF services aggregating supply-chain data.
+- Established frontend modernization standards for AngularJS-to-React migration, providing architectural patterns for teams transitioning large legacy applications to React.
+- Built interfaces for Walmart's internal Data Lake platform, including configurable data visualization and interactive ETL pipeline builders, and mentored engineers in end-to-end Cypress testing practices.
+
+## EARLY CAREER
+
+- **Snapwiz (Lead Software Engineer, Bengaluru)** | _February 2015 – May 2016_
+  Led engineering for Glider.ai, a real-time candidate-evaluation SaaS platform combining Node.js, MongoDB, Meteor.js, and Python NLP.
+- **Tribune Digital Ventures (Senior UI Developer, Bengaluru)** | _December 2013 – February 2015_
+  Rebuilt zap2it.com with Lucene based search and advertising infrastructure tuned for performance and SEO to meet high traffic spikes.
+- **Flipkart (UI Developer, Bengaluru)** | _February 2013 – November 2013_
+  Built high-concurrency Node.js services and a BFF-powered Order Management platform integrating catalog, pricing, delivery, and messaging systems.
+- **Dell International Services (Javascript Developer, Bengaluru)** | _April 2012 – February 2013_
+  Built sub-100ms client-side experimentation and personalization experiences across global Dell domains.
+- **Wipro (Frontend Developer, Bengaluru)** | _August 2008 – April 2012_
+  Built mobile UI and OS-level interface components for Toshiba's Windows Mobile platform and frontend modules for Dish.com.
+
+## SELECTED PROJECTS
+
+Hands-on projects exploring AI systems, platform architecture, developer tooling, and advanced browser-based applications.
+
+### Dhando — AI-Assisted CRM for Small Businesses (work-in-progress)
+
+_Building a conversation-first CRM for owner-operated Indian SMBs._
+
+- Designed and building a 160+ component React/TypeScript design system with Storybook and automated WCAG 2.1 AA validation.
+- Designed runtime white-label theming with derived design tokens and contrast validation, eliminating per-tenant builds.
+- Designed a Go/PostgreSQL API with row-level-security multi-tenancy, using OpenAPI 3.1 to generate the typed TypeScript client.
+- Built responsive abstractions across 25 list surfaces for a mobile-first PWA spanning a 80-screen product.
+- Developing through an agentic software-development workflow integrating Figma, MCP, and coding agents.
+
+### Stad-Ops — AI-Assisted Incident Command Platform (pre-launch)
+
+_Real-time incident-management platform for stadiums and large venues._
+
+- Designed dual-channel incident intake combining structured mobile reporting with voice transcription using OpenAI Whisper.
+- Integrated Gemini-based categorization, resolution assignment, and dispatch recommendations with human confirmation in the loop.
+- Built venue visualization, staff assignment, multi-role permissions, real-time state synchronization, and audit logging.
+
+### Casa-Craft: 2D-to-3D Interior Design Quoting Visualizer (pre-launch)
+
+_A platform for converting floorplans and visualizing interiors_
+
+- Browser-based tool converting 2D floor layouts into interactive 3D visualizations with component selection and live quoting, built on React Router and Three.js with a Docker-first development strategy.
+
+### Remove-BG: Client-Side Image Background Removal
+
+_github.com/jagadish-k/remove-bg | jagadish-k.github.io/remove-bg_
+
+- Built a browser-based tool removing checkered transparency patterns, solid backgrounds, and shadows from images using OpenCV.js compiled to WebAssembly, keeping all processing local so images never leave the client.
+- Implemented tolerance-based detection, manual color selection, magnified preview, and transparent PNG export.
+
+## TECHNICAL EXPERTISE
+
+- **Architecture & Systems:** Software Architecture · Distributed Systems · Platform Engineering · System Design · Microservices · Micro-Frontends · Backend-for-Frontend (BFF) · Multi-Tenancy · Event-Driven Architecture · Real-Time Systems · Performance Engineering
+- **AI & Intelligent Systems:** LLM Integration · Agentic Software Development · Model Context Protocol (MCP) · Azure OpenAI · OpenAI Whisper · Gemini · ML Model Evaluation · NLP · AI-Assisted Engineering
+- **Languages & Runtime:** TypeScript · JavaScript · Python · Go · Node.js
+- **Application & Platform Engineering:** React · Next.js · Angular · Webpack Module Federation · Design Systems · Storybook · Material UI · TailwindCSS · TanStack Query · D3.js · Three.js
+- **APIs, Data & Messaging:** GraphQL · REST · OpenAPI · WebSockets · Server-Sent Events (SSE) · Kafka · Redis · PostgreSQL · MySQL · MongoDB · Elasticsearch · Apache Solr
+- **Cloud & Infrastructure:** Azure · AWS · Google Cloud · Docker · CI/CD · GitHub Actions · Azure Front Door · PM2
+- **Engineering Excellence:** Automated Testing · Jest · React Testing Library · Playwright · Cypress · TDD · Code Review · Architecture Governance · Technical Mentorship · Developer Productivity · Technical Strategy

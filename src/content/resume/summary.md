@@ -1,6 +1,10 @@
 ---
 type: "summary"
 ---
-Principal Engineer and hands-on technical leader with 18 years building web platforms at Cleartax, LinkedIn, Walmart, and Flipkart. Currently co-founder and CTO of Tryft, building Traceflow, an enterprise supply-chain intelligence platform recoverable revenue, delivered by a 6-engineer team running an agentic AI development practice end to end. Previously, Principal Frontend Engineer at Uberall leading a 30+ engineer chapter across 8 countries, and builder of ML evaluation and API discovery platforms adopted across LinkedIn's engineering organization.
+Principal Engineer and hands-on technical leader with 18 years of experience designing, building, and evolving complex software platforms across LinkedIn, Walmart, Cleartax, Uberall, and startups.
 
-Agentic Coding & MCP · LLM Integration · Node.js & BFF Architecture · Micro-Frontends · Distributed Systems · AWS / Azure · Rapid Prototyping · Engineering Leadership · Scalable Frontends
+I operate across software architecture, distributed systems, platform engineering, developer infrastructure, and AI systems, with a track record of turning ambiguous technical problems into scalable platforms and measurable business outcomes.
+
+Currently CTO and co-founder of Tryft, leading a 6-engineer team building an enterprise supply-chain intelligence platform that has surfaced $2–3M per quarter in recoverable revenue across global manufacturing operations.
+
+Previously led frontend architecture across a 30+ engineer organization spanning 8 countries at Uberall and built ML evaluation and API discovery platforms used across LinkedIn engineering.

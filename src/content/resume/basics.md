@@ -1,7 +1,7 @@
 ---
 type: "basics"
 name: "Jagadish, K."
-role: "Principal / Staff Engineer · Frontend Architect · Tech Lead · Agentic AI & Platform Architecture"
+role: "Principal Engineer · Software Architecture · AI Systems · Platform Engineering"
 location: "Bengaluru, Karnataka, India"
 email: "jagadish.kasi@pm.me"
 phone: "+91-9916128366"
