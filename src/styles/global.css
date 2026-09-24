@@ -5,8 +5,7 @@
 	
 	/* Ensure Markdown formatting (bold, italics) is honored globally across all themes */
 	strong, b {
-		font-weight: 700 !important;
-		/* Fallback to make it thicker even if the 700 weight font isn't loaded */
+		font-weight: 300;
 		-webkit-text-stroke: 0.04em currentColor;
 	}
 	
@@ -91,7 +90,6 @@
 
 .markdown-content strong {
 	color: #18181b; /* zinc-900 */
-	font-weight: 700;
 }
 
 /* =========================================

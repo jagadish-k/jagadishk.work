@@ -1,5 +1,6 @@
 ---
-import "@fontsource/londrina-sketch";
+import "@fontsource/cormorant-garamond";
+import "@fontsource/inter";
 import "../../styles/global.css";
 import { getCollection, render } from "astro:content";
 import CVPrintTemplate from "../../components/CVPrintTemplate.astro";
@@ -36,16 +37,15 @@ const { Content: SummaryContent } = summaryObj
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{basics?.name} | {basics?.role}</title>
-    <link
-      href="https://api.fontshare.com/v2/css?f[]=clash-display@200,400,500,600,700&display=swap"
-      rel="stylesheet"
-    />
     <style>
       :root {
         --cubic-spring: cubic-bezier(0.32, 0.72, 0, 1);
       }
-      .font-clash {
-        font-family: "Londrina Sketch", sans-serif;
+      .font-serif {
+        font-family: "Cormorant Garamond", serif;
+      }
+      .font-sans {
+        font-family: "Inter", sans-serif;
       }
 
       /* Cursor Spotlight */
@@ -122,7 +122,7 @@ const { Content: SummaryContent } = summaryObj
     </style>
   </head>
   <body
-    class="font-clash antialiased min-h-[100dvh] relative selection:bg-[#A81E44] selection:text-white"
+    class="font-serif antialiased min-h-[100dvh] relative selection:bg-[#A81E44] selection:text-white"
   >
     <div class="spotlight" id="spotlight"></div>
     <TopNav />

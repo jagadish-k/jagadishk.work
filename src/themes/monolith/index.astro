@@ -60,10 +60,6 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
       .bento-grid { display: flex; flex-direction: column; gap: 0; }
       .bento-cell { padding: 2rem; border-left: none; border-right: none; margin: 0; margin-bottom: -1px; }
     }
-
-    /* Scrub Text Effect */
-    .scrub-text { color: rgba(0, 0, 0, 0.4); background-clip: text; }
-    .scrub-word { opacity: 0.4; transition: opacity 0.1s; }
     
     /* Image Styles */
     .grayscale-img {
@@ -112,7 +108,7 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
         <h1 class="text-[4rem] md:text-[clamp(5rem,9vw,9rem)] font-extrabold leading-[0.9] tracking-tighter text-zinc-900 mb-12">
           {basics?.name}
         </h1>
-        <div class="max-w-2xl text-xl md:text-3xl font-medium text-zinc-500 leading-relaxed scrub-container" id="hero-summary">
+        <div class="max-w-2xl text-xl md:text-3xl font-medium text-zinc-500 leading-relaxed" id="hero-summary">
           <SummaryContent />
         </div>
         
@@ -205,47 +201,6 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
     import { ScrollTrigger } from 'gsap/ScrollTrigger';
     
     gsap.registerPlugin(ScrollTrigger);
-
-    // GSAP Text Scrubbing Logic
-    // We target paragraphs inside .scrub-container and wrap words in spans
-    const scrubContainers = document.querySelectorAll('.scrub-container p');
-    scrubContainers.forEach(p => {
-      function wrapWords(node) {
-        if (node.nodeType === 3) { // Text node
-          const text = node.textContent;
-          if (!text.trim()) return;
-          const words = text.split(/(\s+)/);
-          const fragment = document.createDocumentFragment();
-          words.forEach(word => {
-            if (word.trim()) {
-              const span = document.createElement('span');
-              span.textContent = word;
-              span.className = 'scrub-word';
-              fragment.appendChild(span);
-            } else {
-              fragment.appendChild(document.createTextNode(word));
-            }
-          });
-          node.parentNode.replaceChild(fragment, node);
-        } else if (node.nodeType === 1) { // Element node
-          Array.from(node.childNodes).forEach(wrapWords);
-        }
-      }
-      
-      Array.from(p.childNodes).forEach(wrapWords);
-      
-      const spans = p.querySelectorAll('.scrub-word');
-      gsap.to(spans, {
-        opacity: 1,
-        stagger: 0.1,
-        scrollTrigger: {
-          trigger: p,
-          start: 'top 80%',
-          end: 'bottom 40%',
-          scrub: true
-        }
-      });
-    });
   </script>
 </body>
 </html>
