@@ -1,10 +1,9 @@
 ---
 import '@fontsource/jetbrains-mono';
-import '../../styles/global.css';
-import { siteConfig } from '../../config';
+import '@portfolio/styles/global.css';
 import { getCollection, render } from 'astro:content';
-import CVPrintTemplate from '../../components/CVPrintTemplate.astro';
-import TopNav from '../../components/TopNav.astro';
+import CVPrintTemplate from '@portfolio/components/CVPrintTemplate.astro';
+import LightboxCarousel from '@portfolio/components/LightboxCarousel.astro';
 
 const basicsList = await getCollection('resume', ({ data }) => data.type === 'basics');
 const summaryList = await getCollection('resume', ({ data }) => data.type === 'summary');
@@ -18,9 +17,6 @@ const sortedExperience = allExperience.sort((a, b) => a.data.order - b.data.orde
 const allProjects = await getCollection('projects');
 const sortedProjects = allProjects.sort((a, b) => a.data.order - b.data.order);
 
-const allPosts = await getCollection('blog');
-const publishedPosts = allPosts.filter(post => !post.data.draft);
-const sortedPosts = publishedPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()).slice(0, 3);
 
 const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Content: () => null };
 ---
@@ -168,12 +164,15 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
           <h2 class="text-[6rem] font-bold uppercase tracking-tighter">Projects</h2>
         </div>
         
-        {sortedProjects.map((project, i) => (
+        {sortedProjects.map((project: any, i: number) => (
           <a href={project.data.url || '#'} class={`group block p-8 md:p-16 border-b-4 border-black hover:bg-[#ffff00] transition-colors ${i % 2 === 0 ? 'md:border-r-4' : ''}`}>
+            <div class="brutal-box w-full aspect-video mb-8 overflow-hidden relative bg-black">
+              <LightboxCarousel images={project.data.images} imageClass="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" containerClass="absolute inset-0 w-full h-full" />
+            </div>
             <h3 class="text-5xl font-bold uppercase tracking-tight mb-6">{project.data.title}</h3>
             <p class="font-mono text-lg font-bold mb-8 max-w-md">{project.data.description}</p>
             <div class="flex flex-wrap gap-3">
-              {project.data.tags.map(tag => (
+              {project.data.tags.map((tag: string) => (
                 <span class="border-2 border-black bg-white px-3 py-1 font-mono font-bold text-sm uppercase">{tag}</span>
               ))}
             </div>

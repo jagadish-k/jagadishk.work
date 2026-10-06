@@ -1,9 +1,10 @@
 ---
 import '@fontsource/nunito';
-import '../../styles/global.css';
+import '@portfolio/styles/global.css';
 import { getCollection, render } from 'astro:content';
-import CVPrintTemplate from '../../components/CVPrintTemplate.astro';
-import TopNav from '../../components/TopNav.astro';
+import LightboxCarousel from '@portfolio/components/LightboxCarousel.astro';
+import CVPrintTemplate from '@portfolio/components/CVPrintTemplate.astro';
+import TopNav from '@portfolio/components/TopNav.astro';
 
 const basicsList = await getCollection('resume', ({ data }) => data.type === 'basics');
 const summaryList = await getCollection('resume', ({ data }) => data.type === 'summary');
@@ -138,10 +139,10 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
       <h2 class="text-4xl font-extrabold mb-16 text-center text-[#4A5568]">Selected Projects</h2>
       
       <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-        {sortedProjects.map((project, i) => (
+        {sortedProjects.map((project) => (
           <a href={project.data.url || '#'} class="neu-outset neu-card block group no-underline">
             <div class="neu-inset aspect-video w-full mb-8 p-3 rounded-2xl">
-              <img src={`https://picsum.photos/seed/tactile${i}/800/450`} alt="" class="w-full h-full object-cover rounded-xl opacity-90 group-hover:opacity-100 transition-opacity" />
+              <LightboxCarousel images={project.data.images} imageClass="w-full h-full object-cover rounded-xl opacity-90 group-hover:opacity-100 transition-opacity" containerClass="absolute inset-0 w-full h-full" />
             </div>
             <h3 class="text-2xl font-bold mb-3 text-[#2D3748]">{project.data.title}</h3>
             <p class="text-[#718096] mb-8 font-medium">{project.data.description}</p>

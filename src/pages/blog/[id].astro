@@ -1,6 +1,7 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import BaseLayout from '@portfolio/layouts/BaseLayout.astro';
 import { getCollection, render } from 'astro:content';
+import LightboxCarousel from '@portfolio/components/LightboxCarousel.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -14,7 +15,7 @@ const { post } = Astro.props;
 const { Content } = await render(post);
 ---
 
-<BaseLayout title={post.data.title} description={post.data.description} image={post.data.image} article={true}>
+<BaseLayout title={post.data.title} description={post.data.description} image={post.data.images?.[0]?.src} article={true}>
   
   <article class="w-full max-w-6xl mx-auto py-12 md:py-24 reveal-on-scroll">
     
@@ -38,13 +39,19 @@ const { Content } = await render(post);
         {post.data.title}
       </h1>
       
-      <time class="text-zinc-400 font-medium font-satoshi" datetime={post.data.pubDate.toISOString()}>
+      <time class="text-zinc-400 font-medium font-satoshi mb-12" datetime={post.data.pubDate.toISOString()}>
         {post.data.pubDate.toLocaleDateString('en-us', {
           year: 'numeric',
           month: 'long',
           day: 'numeric',
         })}
       </time>
+
+      {post.data.images && post.data.images.length > 0 && (
+        <div class="w-full aspect-video md:aspect-[21/9] rounded-2xl overflow-hidden mt-8">
+          <LightboxCarousel images={post.data.images} containerClass="w-full h-full" imageClass="w-full h-full object-cover" />
+        </div>
+      )}
     </header>
 
     <div class="prose prose-zinc prose-lg max-w-none prose-headings:font-clash prose-headings:font-medium prose-p:font-satoshi prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-a:underline-offset-4 markdown-content">

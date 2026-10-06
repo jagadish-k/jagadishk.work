@@ -1,10 +1,10 @@
 ---
-import '../../styles/global.css';
-import { siteConfig } from '../../config';
+import '@portfolio/styles/global.css';
 import { getCollection, render } from 'astro:content';
-import CVPrintTemplate from '../../components/CVPrintTemplate.astro';
-import TopNav from '../../components/TopNav.astro';
-import SEO from '../../components/SEO.astro';
+import LightboxCarousel from '@portfolio/components/LightboxCarousel.astro';
+import CVPrintTemplate from '@portfolio/components/CVPrintTemplate.astro';
+import TopNav from '@portfolio/components/TopNav.astro';
+import SEO from '@portfolio/components/SEO.astro';
 import '@fontsource/geist';
 
 const basicsList = await getCollection('resume', ({ data }) => data.type === 'basics');
@@ -19,9 +19,6 @@ const sortedExperience = allExperience.sort((a, b) => a.data.order - b.data.orde
 const allProjects = await getCollection('projects');
 const sortedProjects = allProjects.sort((a, b) => a.data.order - b.data.order);
 
-const allPosts = await getCollection('blog');
-const publishedPosts = allPosts.filter(post => !post.data.draft);
-const sortedPosts = publishedPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()).slice(0, 3);
 
 const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Content: () => null };
 ---
@@ -30,8 +27,7 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
 <html lang="en" class="scroll-smooth bg-white text-zinc-900">
 <head>
   <SEO title={`${basics?.name} | ${basics?.role}`}>
-    <link rel="preload" as="image" href="https://picsum.photos/seed/monolith/800/1000" fetchpriority="high">
-  </SEO>
+    </SEO>
   <style>
     :root {
       --cubic-spring: cubic-bezier(0.32, 0.72, 0, 1);
@@ -140,24 +136,26 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
           else if (i === 2) spanClass = 'md:col-span-4';
           
           return (
-            <a href={project.data.url || '#'} class={`group bento-cell no-underline flex flex-col justify-between min-h-[400px] ${spanClass}`}>
-              <div class="flex justify-between items-start mb-16 relative z-10">
+            <a href={project.data.url || '#'} class={`group bento-cell no-underline flex flex-col min-h-[400px] ${spanClass}`}>
+              <div class="flex justify-between items-start mb-12 relative z-10">
                 <h3 class="text-3xl md:text-5xl font-extrabold tracking-tight text-zinc-800 group-hover:text-blue-600 transition-colors duration-300">{project.data.title}</h3>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-300 group-hover:text-blue-600 transition-colors duration-500 shrink-0"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
               </div>
               
-              <div class="relative z-10">
-                <p class="text-lg text-zinc-500 leading-relaxed mb-8 max-w-md">{project.data.description}</p>
-                <div class="flex flex-wrap gap-2">
-                  {project.data.tags.map(tag => (
-                    <span class="px-3 py-1 bg-zinc-100 text-[10px] font-bold tracking-[0.1em] uppercase text-zinc-600">{tag}</span>
-                  ))}
+              <div class="flex flex-col gap-8 relative z-10 mt-auto h-full w-full">
+                {project.data.images && project.data.images.length > 0 && (
+                  <div class="w-full aspect-video md:aspect-[4/3] rounded-[1.5rem] overflow-hidden relative shrink-0">
+                    <LightboxCarousel images={project.data.images} imageClass="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" containerClass="absolute inset-0 w-full h-full" />
+                  </div>
+                )}
+                <div class="flex flex-col justify-end w-full">
+                  <p class="text-lg text-zinc-500 leading-relaxed mb-8 max-w-md">{project.data.description}</p>
+                  <div class="flex flex-wrap gap-2">
+                    {project.data.tags.map((tag: string) => (
+                      <span class="px-3 py-1 bg-zinc-100 text-[10px] font-bold tracking-[0.1em] uppercase text-zinc-600">{tag}</span>
+                    ))}
+                  </div>
                 </div>
-              </div>
-              
-              <!-- Subtle Hover Image Injection -->
-              <div class="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-700 pointer-events-none">
-                <img src={`https://picsum.photos/seed/proj${i}/800/800`} alt="" class="w-full h-full object-cover grayscale-img" loading="lazy" decoding="async" width="800" height="800" />
               </div>
             </a>
           );

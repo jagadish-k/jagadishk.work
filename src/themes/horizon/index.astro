@@ -1,10 +1,10 @@
 ---
 import '@fontsource/bangers';
-import '../../styles/global.css';
-import { siteConfig } from '../../config';
+import '@portfolio/styles/global.css';
 import { getCollection, render } from 'astro:content';
-import CVPrintTemplate from '../../components/CVPrintTemplate.astro';
-import TopNav from '../../components/TopNav.astro';
+import LightboxCarousel from '@portfolio/components/LightboxCarousel.astro';
+import CVPrintTemplate from '@portfolio/components/CVPrintTemplate.astro';
+import TopNav from '@portfolio/components/TopNav.astro';
 
 const basicsList = await getCollection('resume', ({ data }) => data.type === 'basics');
 const summaryList = await getCollection('resume', ({ data }) => data.type === 'summary');
@@ -102,9 +102,9 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
           <p class="text-white/50 text-xl leading-relaxed">A curated exhibition of digital products and structural engineering.</p>
         </div>
         
-        {sortedProjects.map((project, i) => (
+        {sortedProjects.map((project) => (
           <a href={project.data.url || '#'} class="group shrink-0 flex flex-col gap-6 no-underline w-[35vw] min-w-[400px]">
-            <img src={`https://picsum.photos/seed/hz${i}/800/1000`} alt={project.title} class="carousel-image w-full" />
+            <LightboxCarousel images={project.data.images} imageClass="carousel-image w-full" containerClass="absolute inset-0 w-full h-full" />
             <div>
               <h3 class="text-4xl font-bold mb-3 group-hover:text-[#C5A880] transition-colors">{project.data.title}</h3>
               <p class="text-white/50 text-lg leading-relaxed">{project.data.description}</p>

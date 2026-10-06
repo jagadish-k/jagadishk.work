@@ -1,9 +1,10 @@
 ---
 import '@fontsource/playfair-display';
-import '../../styles/global.css';
+import '@portfolio/styles/global.css';
 import { getCollection, render } from 'astro:content';
-import CVPrintTemplate from '../../components/CVPrintTemplate.astro';
-import TopNav from '../../components/TopNav.astro';
+import LightboxCarousel from '@portfolio/components/LightboxCarousel.astro';
+import CVPrintTemplate from '@portfolio/components/CVPrintTemplate.astro';
+import TopNav from '@portfolio/components/TopNav.astro';
 
 const basicsList = await getCollection('resume', ({ data }) => data.type === 'basics');
 const summaryList = await getCollection('resume', ({ data }) => data.type === 'summary');
@@ -134,10 +135,10 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
 
       <!-- Right: Interactive Pills -->
       <div class="w-full md:w-1/2 bg-[#2A2420] p-8 md:p-16 flex flex-col justify-center gap-8 overflow-hidden relative">
-        {sortedProjects.slice(0, 3).map((project, i) => (
+        {sortedProjects.slice(0, 3).map((project) => (
           <a href={project.data.url || '#'} class="group block relative w-[120%] -ml-[10%]">
             <div class="w-full h-32 md:h-48 relative">
-              <img src={`https://picsum.photos/seed/analog${i}/1200/400`} alt="" class="pill-image w-full h-full absolute inset-0" />
+              <LightboxCarousel images={project.data.images} imageClass="pill-image w-full h-full absolute inset-0" containerClass="absolute inset-0 w-full h-full" />
               <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-black/40 rounded-xl">
                 <h3 class="text-white font-serif italic text-4xl">{project.data.title}</h3>
               </div>
@@ -152,7 +153,7 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
       <h2 class="text-5xl font-serif font-black italic mb-24 text-center">Experience</h2>
       
       <div class="flex flex-col gap-24">
-        {sortedExperience.map(async (job, i) => {
+        {sortedExperience.map(async (job) => {
           const { Content } = await render(job);
           return (
             <div class="flex flex-col md:flex-row gap-12 items-start border-t border-[#2A2420]/10 pt-16 mask-trigger">

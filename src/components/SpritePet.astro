@@ -190,7 +190,7 @@ const configData = JSON.stringify({
 
       this.addEventListener("click", this.handleClick);
       window.addEventListener("beforeunload", this.saveState);
-      this.rafId = requestAnimationFrame(this.animate);
+      this.rafId = requestAnimationFrame(this.playAnimation);
     }
 
     private saveState = () => {
@@ -240,7 +240,7 @@ const configData = JSON.stringify({
       this.frameIndex = 0;
     }
 
-    private animate = (time: number) => {
+    private playAnimation = (time: number) => {
       const frameInterval = 1000 / this.fps;
 
       if (this.isWaiting) {
@@ -267,7 +267,7 @@ const configData = JSON.stringify({
         }
       }
 
-      this.rafId = requestAnimationFrame(this.animate);
+      this.rafId = requestAnimationFrame(this.playAnimation);
     };
 
     private handleClick = () => {

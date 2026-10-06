@@ -1,6 +1,6 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import { siteConfig } from '../../config';
+import BaseLayout from '@portfolio/layouts/BaseLayout.astro';
+import { siteConfig } from '@portfolio/config';
 import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -21,7 +21,6 @@ export async function getStaticPaths() {
   });
 }
 
-const { category } = Astro.params;
 const { posts, categoryName } = Astro.props;
 const getBentoClasses = (index: number) => {
   const pattern = index % 5;

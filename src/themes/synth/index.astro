@@ -1,9 +1,10 @@
 ---
 import '@fontsource/space-grotesk';
-import '../../styles/global.css';
+import '@portfolio/styles/global.css';
 import { getCollection, render } from 'astro:content';
-import CVPrintTemplate from '../../components/CVPrintTemplate.astro';
-import TopNav from '../../components/TopNav.astro';
+import LightboxCarousel from '@portfolio/components/LightboxCarousel.astro';
+import CVPrintTemplate from '@portfolio/components/CVPrintTemplate.astro';
+import TopNav from '@portfolio/components/TopNav.astro';
 
 const basicsList = await getCollection('resume', ({ data }) => data.type === 'basics');
 const summaryList = await getCollection('resume', ({ data }) => data.type === 'summary');
@@ -171,12 +172,12 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
       <h2 class="text-4xl md:text-5xl font-bold mb-16 glow-text-cyan uppercase">01 / Archives</h2>
       
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {sortedProjects.map((project, i) => (
+        {sortedProjects.map((project) => (
           <a href={project.data.url || '#'} class="synth-card p-6 block group no-underline flex flex-col justify-between">
             <div>
               <div class="aspect-video w-full mb-6 rounded overflow-hidden relative">
                 <div class="absolute inset-0 bg-gradient-to-t from-[var(--synth-purple)]/50 to-transparent z-10 mix-blend-overlay"></div>
-                <img src={`https://picsum.photos/seed/synth${i}/600/400`} alt="" class="w-full h-full object-cover filter contrast-125 saturate-150" />
+                <LightboxCarousel images={project.data.images} imageClass="w-full h-full object-cover filter contrast-125 saturate-150" containerClass="absolute inset-0 w-full h-full" />
               </div>
               <h3 class="text-2xl font-bold mb-3 text-white group-hover:text-[var(--synth-cyan)] transition-colors">{project.data.title}</h3>
               <p class="text-sm text-[#E0D4FF]/70 mb-6">{project.data.description}</p>

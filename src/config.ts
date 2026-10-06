@@ -25,6 +25,7 @@ export const siteConfig = {
 	role: 'Principal Engineer · Frontend Architect',
 	email: 'jagadish.kasi@pm.me',
 	location: 'Bengaluru, India',
+	site: import.meta.env.SITE || 'https://jagadishk.dev',
 	theme: import.meta.env.DEFAULT_THEME || 'monolith',
 	links: {
 		github: 'https://github.com/jagadish-k',

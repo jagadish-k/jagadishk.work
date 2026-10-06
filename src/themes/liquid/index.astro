@@ -1,9 +1,10 @@
 ---
 import '@fontsource/plus-jakarta-sans';
-import '../../styles/global.css';
+import '@portfolio/styles/global.css';
 import { getCollection, render } from 'astro:content';
-import CVPrintTemplate from '../../components/CVPrintTemplate.astro';
-import TopNav from '../../components/TopNav.astro';
+import LightboxCarousel from '@portfolio/components/LightboxCarousel.astro';
+import CVPrintTemplate from '@portfolio/components/CVPrintTemplate.astro';
+import TopNav from '@portfolio/components/TopNav.astro';
 
 const basicsList = await getCollection('resume', ({ data }) => data.type === 'basics');
 const summaryList = await getCollection('resume', ({ data }) => data.type === 'summary');
@@ -148,10 +149,10 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
       <h2 class="text-4xl md:text-5xl font-bold mb-16 text-center text-[#1A2C38]/90">Fluid Works</h2>
       
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-        {sortedProjects.map((project, i) => (
+        {sortedProjects.map((project) => (
           <a href={project.data.url || '#'} class="liquid-card p-4 block group no-underline liquid-trigger">
             <div class="fluid-img-container aspect-[4/3] w-full mb-8">
-              <img src={`https://picsum.photos/seed/liquid${i}/800/600`} alt="" class="fluid-img w-full h-full object-cover" />
+              <LightboxCarousel images={project.data.images} imageClass="fluid-img w-full h-full object-cover" containerClass="absolute inset-0 w-full h-full" />
             </div>
             <div class="px-4 pb-4">
               <h3 class="text-3xl font-bold mb-4">{project.data.title}</h3>
@@ -201,7 +202,7 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
 
     // SVG Ripple Effect on Hover
     const cards = document.querySelectorAll('.liquid-trigger');
-    const turbulences = document.querySelectorAll('.water-turb'); // Only one filter shared, but let's animate it globally on any card hover for simplicity, or create separate filters if needed.
+    // const turbulences = document.querySelectorAll('.water-turb'); // Only one filter shared, but let's animate it globally on any card hover for simplicity, or create separate filters if needed.
     // For simplicity, animating the single global filter when any card is hovered.
     
     cards.forEach(card => {

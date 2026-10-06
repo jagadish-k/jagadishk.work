@@ -1,9 +1,11 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import { siteConfig } from '../../config';
+import BaseLayout from '@portfolio/layouts/BaseLayout.astro';
+import { siteConfig } from '@portfolio/config';
 import { getCollection } from 'astro:content';
 
-export async function getStaticPaths({ paginate }) {
+import type { Page } from "astro";
+import type { CollectionEntry } from "astro:content";
+export async function getStaticPaths({ paginate }: any) {
   const allPosts = await getCollection('blog');
   const publishedPosts = allPosts.filter(post => !post.data.draft);
   const sortedPosts = publishedPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
@@ -11,7 +13,7 @@ export async function getStaticPaths({ paginate }) {
   return paginate(sortedPosts, { pageSize: 6 });
 }
 
-const { page } = Astro.props;
+const { page } = Astro.props as { page: Page<CollectionEntry<"blog">> };
 
 // Extract all unique categories for the filter pill UI
 const allPosts = await getCollection('blog');
@@ -46,7 +48,7 @@ const categories = [...new Set(publishedPosts.flatMap(post => post.data.categori
 
   <!-- Soft Structuralism Cascading Cards -->
   <div class="relative w-full max-w-4xl mx-auto flex flex-col items-center mb-24">
-    {page.data.map((post, i) => {
+    {page.data.map((post: any, i: number) => {
       const rotation = i % 2 === 0 ? '-1.5deg' : '2deg';
       const translateX = i % 2 === 0 ? '-2%' : '2%';
       const zIndex = 10 + i;

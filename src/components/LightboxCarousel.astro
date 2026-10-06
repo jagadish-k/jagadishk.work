@@ -1,0 +1,200 @@
+---
+interface Props {
+  images?: { src: string; highResSrc?: string; alt?: string }[];
+  imageClass?: string;
+  containerClass?: string;
+}
+
+const { images = [], imageClass = "", containerClass = "w-full h-full relative" } = Astro.props;
+---
+
+{images && images.length > 0 && (
+  <lightbox-carousel class={`block overflow-hidden relative group cursor-pointer ${containerClass}`} data-images={JSON.stringify(images)}>
+    <div class="carousel-track flex h-full w-full transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
+      {images.map((img, i) => (
+        <div class="carousel-slide flex-shrink-0 w-full h-full relative">
+          <img src={img.src} alt={img.alt || ""} class={`${imageClass} w-full h-full object-cover`} data-index={i} loading={i === 0 ? "eager" : "lazy"} />
+        </div>
+      ))}
+    </div>
+    
+    {images.length > 1 && (
+      <>
+        <button type="button" class="carousel-prev absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 text-white rounded-full w-10 h-10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:bg-black/80" aria-label="Previous image">
+          <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        </button>
+        <button type="button" class="carousel-next absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 text-white rounded-full w-10 h-10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:bg-black/80" aria-label="Next image">
+          <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </button>
+        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+          {images.map((_, i) => (
+            <div class={`carousel-dot w-2 h-2 rounded-full transition-colors ${i === 0 ? 'bg-white' : 'bg-white/50'}`}></div>
+          ))}
+        </div>
+      </>
+    )}
+  </lightbox-carousel>
+)}
+
+<script>
+// @ts-nocheck
+class LightboxCarousel extends HTMLElement {
+  images: any;
+  currentIndex: any;
+  track: any;
+  slides: any;
+  prevBtn: any;
+  nextBtn: any;
+  dots: any;
+  connectedCallback() {
+    this.images = JSON.parse(this.dataset.images || '[]');
+    this.currentIndex = 0;
+    this.track = this.querySelector('.carousel-track');
+    this.slides = this.querySelectorAll('.carousel-slide');
+    this.prevBtn = this.querySelector('.carousel-prev');
+    this.nextBtn = this.querySelector('.carousel-next');
+    this.dots = this.querySelectorAll('.carousel-dot');
+    
+    if (this.images.length > 1) {
+      this.prevBtn?.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); this.prev(); });
+      this.nextBtn?.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); this.next(); });
+    }
+    
+    // Swipe support
+    let startX = 0;
+    let isDragging = false;
+    
+    this.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+      isDragging = true;
+    }, {passive: true});
+    
+    this.addEventListener('touchend', (e) => {
+      if (!isDragging) return;
+      const endX = e.changedTouches[0].clientX;
+      const diffX = startX - endX;
+      if (Math.abs(diffX) > 50) {
+        if (diffX > 0) this.next();
+        else this.prev();
+      }
+      isDragging = false;
+    });
+
+    this.addEventListener('click', (e) => {
+      // If clicking the track/slide, open lightbox
+      const target = e.target as HTMLElement;
+      if (target.closest('.carousel-slide') || target.closest('img')) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.openLightbox(this.currentIndex);
+      }
+    });
+  }
+  
+  prev() {
+    this.currentIndex = (this.currentIndex - 1 + this.images.length) % this.images.length;
+    this.update();
+  }
+  
+  next() {
+    this.currentIndex = (this.currentIndex + 1) % this.images.length;
+    this.update();
+  }
+  
+  update() {
+    if (this.track) {
+      this.track.style.transform = `translateX(-${this.currentIndex * 100}%)`;
+    }
+    this.dots.forEach((dot, i) => {
+      if (i === this.currentIndex) {
+        dot.classList.remove('bg-white/50');
+        dot.classList.add('bg-white');
+      } else {
+        dot.classList.add('bg-white/50');
+        dot.classList.remove('bg-white');
+      }
+    });
+  }
+  
+  openLightbox(index) {
+    let lightbox = document.getElementById('global-lightbox');
+    if (!lightbox) {
+      lightbox = document.createElement('div');
+      lightbox.id = 'global-lightbox';
+      lightbox.className = 'fixed inset-0 z-[9999] bg-black/95 opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center';
+      
+      lightbox.innerHTML = `
+        <button id="lb-close" class="absolute top-6 right-6 text-white/70 hover:text-white z-50">
+          <svg width="32" height="32" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+        <button id="lb-prev" class="absolute left-6 top-1/2 -translate-y-1/2 text-white/70 hover:text-white z-50 hidden">
+          <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        </button>
+        <button id="lb-next" class="absolute right-6 top-1/2 -translate-y-1/2 text-white/70 hover:text-white z-50 hidden">
+          <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </button>
+        <div id="lb-content" class="relative max-w-[90vw] max-h-[90vh]">
+          <img id="lb-img" class="max-w-full max-h-[90vh] object-contain transition-opacity duration-300" src="" alt="" />
+        </div>
+      `;
+      document.body.appendChild(lightbox);
+      
+      const lbState = { images: [], index: 0 };
+      
+      const updateImg = () => {
+        const imgEl = document.getElementById('lb-img') as HTMLImageElement;
+        const current = lbState.images[lbState.index];
+        imgEl.style.opacity = '0';
+        setTimeout(() => {
+          imgEl.src = current.highResSrc || current.src;
+          imgEl.alt = current.alt || '';
+          imgEl.style.opacity = '1';
+        }, 150);
+        
+        document.getElementById('lb-prev')!.style.display = lbState.images.length > 1 ? 'block' : 'none';
+        document.getElementById('lb-next')!.style.display = lbState.images.length > 1 ? 'block' : 'none';
+      };
+      
+      const close = () => {
+        lightbox.classList.remove('opacity-100', 'pointer-events-auto');
+        lightbox.classList.add('opacity-0', 'pointer-events-none');
+        setTimeout(() => {
+          (document.getElementById('lb-img') as HTMLImageElement).src = '';
+        }, 300);
+      };
+      
+      const next = (e) => { e?.stopPropagation(); lbState.index = (lbState.index + 1) % lbState.images.length; updateImg(); };
+      const prev = (e) => { e?.stopPropagation(); lbState.index = (lbState.index - 1 + lbState.images.length) % lbState.images.length; updateImg(); };
+      
+      document.getElementById('lb-close')!.addEventListener('click', close);
+      document.getElementById('lb-next')!.addEventListener('click', next);
+      document.getElementById('lb-prev')!.addEventListener('click', prev);
+      lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox || e.target === document.getElementById('lb-content')) {
+          close();
+        }
+      });
+      
+      document.addEventListener('keydown', (e) => {
+        if (lightbox.classList.contains('opacity-100')) {
+          if (e.key === 'Escape') close();
+          if (e.key === 'ArrowRight') next(null);
+          if (e.key === 'ArrowLeft') prev(null);
+        }
+      });
+      
+      // Store open function on the DOM element for access
+      (lightbox as any).open = (images, idx) => {
+        lbState.images = images;
+        lbState.index = idx;
+        updateImg();
+        lightbox.classList.remove('opacity-0', 'pointer-events-none');
+        lightbox.classList.add('opacity-100', 'pointer-events-auto');
+      };
+    }
+    
+    (lightbox as any).open(this.images, index);
+  }
+}
+customElements.define('lightbox-carousel', LightboxCarousel);
+</script>

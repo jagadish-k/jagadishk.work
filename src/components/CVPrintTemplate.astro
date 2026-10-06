@@ -62,7 +62,7 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
       <span class="print-phone-display hidden">{basics?.phone}</span>
       <span class="print-phone-separator hidden">|</span>
       <span>{basics?.email}</span>
-      {basics?.links && Object.entries(basics.links).map(([name, url]) => (
+      {basics?.links && Object.entries(basics.links).map(([_name, url]) => (
         <>
           <span>|</span>
           <a href={`https://${url}`} class="text-blue-600 no-underline hover:underline">{url}</a>

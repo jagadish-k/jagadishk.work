@@ -1,9 +1,10 @@
 ---
 import '@fontsource/outfit';
-import '../../styles/global.css';
+import '@portfolio/styles/global.css';
 import { getCollection, render } from 'astro:content';
-import CVPrintTemplate from '../../components/CVPrintTemplate.astro';
-import TopNav from '../../components/TopNav.astro';
+import LightboxCarousel from '@portfolio/components/LightboxCarousel.astro';
+import CVPrintTemplate from '@portfolio/components/CVPrintTemplate.astro';
+import TopNav from '@portfolio/components/TopNav.astro';
 
 const basicsList = await getCollection('resume', ({ data }) => data.type === 'basics');
 const summaryList = await getCollection('resume', ({ data }) => data.type === 'summary');
@@ -123,12 +124,12 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
       <h2 class="text-5xl font-black mb-16 text-center tracking-tight">Visions</h2>
       
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {sortedProjects.map((project, i) => (
+        {sortedProjects.map((project) => (
           <a href={project.data.url || '#'} class="glass-card p-4 block group no-underline flex flex-col justify-between">
             <div>
               <div class="aspect-square w-full mb-8 rounded-2xl overflow-hidden relative">
                 <div class="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent z-10 pointer-events-none"></div>
-                <img src={`https://picsum.photos/seed/holo${i}/600/600`} alt="" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                <LightboxCarousel images={project.data.images} imageClass="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" containerClass="absolute inset-0 w-full h-full" />
               </div>
               <h3 class="text-2xl font-black mb-3">{project.data.title}</h3>
               <p class="text-[#1a1a2e]/60 font-medium mb-8 leading-relaxed">{project.data.description}</p>

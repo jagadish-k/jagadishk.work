@@ -1,9 +1,10 @@
 ---
 import '@fontsource/pt-serif';
-import "../../styles/global.css";
-import { getCollection, render } from "astro:content";
-import CVPrintTemplate from "../../components/CVPrintTemplate.astro";
-import TopNav from "../../components/TopNav.astro";
+import '@portfolio/styles/global.css';
+import { getCollection, render } from 'astro:content';
+import LightboxCarousel from '@portfolio/components/LightboxCarousel.astro';
+import CVPrintTemplate from '@portfolio/components/CVPrintTemplate.astro';
+import TopNav from '@portfolio/components/TopNav.astro';
 
 const basicsList = await getCollection(
   "resume",
@@ -189,7 +190,7 @@ const { Content: SummaryContent } = summaryObj
         <h1
           class="text-[clamp(4rem,10vw,8rem)] font-bold tracking-tighter leading-none mb-6 cmyk-hover cursor-default"
         >
-          THE {basics?.name.split(" ")[1] || "CHRONICLE"}.
+          THE {basics?.name?.split(" ")[1] || "CHRONICLE"}.
         </h1>
 
         <div
@@ -229,17 +230,13 @@ const { Content: SummaryContent } = summaryObj
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             {
-              sortedProjects.map((project, i) => (
+              sortedProjects.map((project) => (
                 <a
                   href={project.data.url || "#"}
                   class="block group no-underline"
                 >
                   <div class="halftone-container aspect-square w-full mb-4 border border-black">
-                    <img
-                      src={`https://picsum.photos/seed/print${i}/600/600`}
-                      alt=""
-                      class="halftone-img w-full h-full object-cover grayscale"
-                    />
+                    <LightboxCarousel images={project.data.images} imageClass="halftone-img w-full h-full object-cover grayscale" containerClass="absolute inset-0 w-full h-full" />
                   </div>
                   <h3 class="text-2xl font-bold mb-2 leading-tight group-hover:underline">
                     {project.data.title}

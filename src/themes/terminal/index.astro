@@ -1,9 +1,10 @@
 ---
 import '@fontsource/space-mono';
-import '../../styles/global.css';
+import '@portfolio/styles/global.css';
 import { getCollection, render } from 'astro:content';
-import CVPrintTemplate from '../../components/CVPrintTemplate.astro';
-import TopNav from '../../components/TopNav.astro';
+import CVPrintTemplate from '@portfolio/components/CVPrintTemplate.astro';
+import TopNav from '@portfolio/components/TopNav.astro';
+import LightboxCarousel from '@portfolio/components/LightboxCarousel.astro';
 
 const basicsList = await getCollection('resume', ({ data }) => data.type === 'basics');
 const summaryList = await getCollection('resume', ({ data }) => data.type === 'summary');
@@ -143,9 +144,15 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
                 <span class="text-xs text-[#A3B8CC]/50">ID:00{i+1}</span>
               </div>
               
-              <div class="flex-grow flex items-center justify-center relative overflow-hidden mb-6 opacity-30 group-hover:opacity-100 transition-opacity">
-                <div class="absolute inset-0 bg-[#A3B8CC]/10"></div>
-                <div class="font-bold text-4xl text-[var(--cyan)] tracking-widest">[{project.data.title.substring(0,3).toUpperCase()}]</div>
+              <div class="flex-grow flex items-center justify-center relative overflow-hidden mb-6 opacity-30 group-hover:opacity-100 transition-opacity border border-[var(--cyan)]/20">
+                {project.data.images && project.data.images.length > 0 ? (
+                  <LightboxCarousel images={project.data.images} imageClass="w-full h-full object-cover grayscale contrast-125 opacity-70 group-hover:opacity-100 mix-blend-screen transition-opacity" containerClass="absolute inset-0 w-full h-full bg-[#0F1115]" />
+                ) : (
+                  <>
+                    <div class="absolute inset-0 bg-[#A3B8CC]/10"></div>
+                    <div class="font-bold text-4xl text-[var(--cyan)] tracking-widest relative z-10">[{project.data.title.substring(0,3).toUpperCase()}]</div>
+                  </>
+                )}
               </div>
 
               <div>
@@ -198,30 +205,30 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*";
     
     document.querySelectorAll('[data-scramble]').forEach(element => {
-      let interval = null;
+      let interval: any = null;
       
-      const scramble = (el) => {
+      const scramble = (el: any) => {
         let iteration = 0;
         const originalText = el.dataset.scramble;
         clearInterval(interval);
         
         interval = setInterval(() => {
-          el.innerText = originalText.split("").map((letter, index) => {
-            if(index < iteration) { return originalText[index]; }
+          el.innerText = (originalText || "").split("").map((_letter: string, index: number) => {
+            if(index < iteration) { return (originalText || "")[index]; }
             return letters[Math.floor(Math.random() * 42)];
           }).join("");
           
-          if(iteration >= originalText.length) { clearInterval(interval); }
+          if(iteration >= (originalText || "").length) { clearInterval(interval); }
           iteration += 1 / 3;
         }, 30);
       };
 
       // Trigger on load for hero, and hover for others
       if(element.tagName === 'H1') {
-        setTimeout(() => scramble(element), 500);
+        setTimeout(() => scramble(element as any), 500);
       }
       
-      element.addEventListener('mouseover', () => scramble(element));
+      element.addEventListener("mouseover", () => scramble(element as any));
     });
   </script>
 </body>

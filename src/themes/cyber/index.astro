@@ -1,9 +1,10 @@
 ---
 import '@fontsource/syncopate';
-import '../../styles/global.css';
+import '@portfolio/styles/global.css';
 import { getCollection, render } from 'astro:content';
-import CVPrintTemplate from '../../components/CVPrintTemplate.astro';
-import TopNav from '../../components/TopNav.astro';
+import LightboxCarousel from '@portfolio/components/LightboxCarousel.astro';
+import CVPrintTemplate from '@portfolio/components/CVPrintTemplate.astro';
+import TopNav from '@portfolio/components/TopNav.astro';
 
 const basicsList = await getCollection('resume', ({ data }) => data.type === 'basics');
 const summaryList = await getCollection('resume', ({ data }) => data.type === 'summary');
@@ -178,7 +179,7 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
         {sortedProjects.map((project, i) => (
           <a href={project.data.url || '#'} class="cyber-frame p-6 block group no-underline">
             <div class="glitch-box w-full aspect-video mb-6 border border-white/10">
-              <img src={`https://picsum.photos/seed/cyber${i}/800/450`} alt="" class="glitch-img w-full h-full object-cover grayscale brightness-75 group-hover:brightness-100" />
+              <LightboxCarousel images={project.data.images} imageClass="glitch-img w-full h-full object-cover grayscale brightness-75 group-hover:brightness-100" containerClass="absolute inset-0 w-full h-full" />
             </div>
             <div class="flex justify-between items-start mb-4">
               <h3 class="text-2xl font-cyber font-bold text-white group-hover:text-[var(--cyan)] transition-colors">{project.data.title}</h3>

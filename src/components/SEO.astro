@@ -1,5 +1,5 @@
 ---
-import { siteConfig } from '../config';
+import { siteConfig } from "@portfolio/config";
 
 interface Props {
   title?: string;
@@ -10,16 +10,19 @@ interface Props {
 
 const {
   title = `${siteConfig.name} | ${siteConfig.role}`,
-  description = 'Principal Engineer & Frontend Architect portfolio.',
-  image = new URL('/social.jpg', Astro.url).toString(),
-  article = false
+  description = "Principal Engineer & Frontend Architect portfolio.",
+  image = new URL("/social.jpg", Astro.url).toString(),
+  article = false,
 } = Astro.props;
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site || siteConfig.site);
+const canonicalURL = new URL(
+  Astro.url.pathname,
+  Astro.site || siteConfig.site || new URL("https://portfolio.local"),
+);
 ---
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="generator" content={Astro.generator} />
 
 <!-- Canonical URL -->
@@ -32,7 +35,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || siteConfig.site);
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
 <!-- Open Graph / Facebook -->
-<meta property="og:type" content={article ? 'article' : 'website'} />
+<meta property="og:type" content={article ? "article" : "website"} />
 <meta property="og:url" content={Astro.url} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />

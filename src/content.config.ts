@@ -19,9 +19,11 @@ const projectsCollection = defineCollection({
 		description: z.string(),
 		url: z.string().url().optional(),
 		tags: z.array(z.string()),
+		images: z.array(z.object({ src: z.string(), highResSrc: z.string().optional(), alt: z.string().optional() })).optional(),
 		order: z.number(),
 	}),
 });
+
 
 const blogCollection = defineCollection({
 	loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/blog' }),
@@ -30,7 +32,7 @@ const blogCollection = defineCollection({
 		description: z.string(),
 		pubDate: z.coerce.date(),
 		updatedDate: z.coerce.date().optional(),
-		heroImage: z.string().optional(),
+		images: z.array(z.object({ src: z.string(), highResSrc: z.string().optional(), alt: z.string().optional() })).optional(),
 		categories: z.array(z.string()),
 		tags: z.array(z.string()).optional(),
 		draft: z.boolean().default(false),
@@ -46,8 +48,8 @@ const resumeCollection = defineCollection({
 		email: z.string().optional(),
 		phone: z.string().optional(),
 		location: z.string().optional(),
-		links: z.record(z.string()).optional(),
-		categories: z.record(z.array(z.string())).optional(),
+		links: z.record(z.string(), z.string()).optional(),
+		categories: z.record(z.string(), z.array(z.string())).optional(),
 		degree: z.string().optional(),
 		university: z.string().optional(),
 		year: z.string().optional(),

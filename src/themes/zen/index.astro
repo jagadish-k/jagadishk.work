@@ -1,9 +1,10 @@
 ---
 import '@fontsource/cormorant-garamond';
-import '../../styles/global.css';
+import '@portfolio/styles/global.css';
 import { getCollection, render } from 'astro:content';
-import CVPrintTemplate from '../../components/CVPrintTemplate.astro';
-import TopNav from '../../components/TopNav.astro';
+import LightboxCarousel from '@portfolio/components/LightboxCarousel.astro';
+import CVPrintTemplate from '@portfolio/components/CVPrintTemplate.astro';
+import TopNav from '@portfolio/components/TopNav.astro';
 
 const basicsList = await getCollection('resume', ({ data }) => data.type === 'basics');
 const summaryList = await getCollection('resume', ({ data }) => data.type === 'summary');
@@ -134,17 +135,23 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
       </div>
 
       <div class="flex flex-col gap-48">
-        {sortedProjects.map((project, i) => (
+        {sortedProjects.map((project) => (
           <a href={project.data.url || '#'} class="group block no-underline fade-up">
-            <div class="flex flex-col md:flex-row gap-16 md:gap-32 items-center">
-              <div class="w-full md:w-5/12 overflow-hidden bg-[#E8E4D9]">
-                <img src={`https://picsum.photos/seed/zen${i}/600/800`} alt="" class="w-full h-full object-cover mix-blend-multiply opacity-80 grayscale transition-transform duration-[3s] var(--ease-zen) group-hover:scale-105" />
+            <div class="flex flex-col gap-12 items-start w-full">
+              <div class="w-full">
+                <h3 class="text-4xl md:text-5xl font-zen font-light mb-2 zen-link inline-block">{project.data.title}</h3>
               </div>
-              <div class="w-full md:w-7/12">
-                <h3 class="text-4xl md:text-5xl font-zen font-light mb-8 zen-link inline-block">{project.data.title}</h3>
-                <p class="text-lg font-light text-[#2C2B29]/60 leading-relaxed mb-12 max-w-md">{project.data.description}</p>
-                <div class="flex flex-col gap-4 text-xs tracking-widest uppercase opacity-40">
-                  {project.data.tags.map(tag => (
+              
+              {project.data.images && project.data.images.length > 0 && (
+                <div class="w-full aspect-video md:aspect-[21/9] overflow-hidden bg-[#E8E4D9] relative">
+                  <LightboxCarousel images={project.data.images} imageClass="w-full h-full object-cover mix-blend-multiply opacity-80 grayscale transition-transform duration-[3s] var(--ease-zen) group-hover:scale-105" containerClass="absolute inset-0 w-full h-full" />
+                </div>
+              )}
+              
+              <div class="w-full">
+                <p class="text-lg font-light text-[#2C2B29]/60 leading-relaxed mb-8 max-w-2xl">{project.data.description}</p>
+                <div class="flex flex-row flex-wrap gap-4 text-xs tracking-widest uppercase opacity-40">
+                  {project.data.tags.map((tag: string) => (
                     <span>— {tag}</span>
                   ))}
                 </div>

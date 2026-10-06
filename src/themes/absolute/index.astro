@@ -1,9 +1,10 @@
 ---
 import '@fontsource/manrope';
-import '../../styles/global.css';
+import '@portfolio/styles/global.css';
 import { getCollection, render } from 'astro:content';
-import CVPrintTemplate from '../../components/CVPrintTemplate.astro';
-import TopNav from '../../components/TopNav.astro';
+import LightboxCarousel from '@portfolio/components/LightboxCarousel.astro';
+import CVPrintTemplate from '@portfolio/components/CVPrintTemplate.astro';
+import TopNav from '@portfolio/components/TopNav.astro';
 
 const basicsList = await getCollection('resume', ({ data }) => data.type === 'basics');
 const summaryList = await getCollection('resume', ({ data }) => data.type === 'summary');
@@ -144,9 +145,9 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
       <h2 class="text-4xl md:text-6xl font-extrabold tracking-tighter mb-24">Works</h2>
       
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {sortedProjects.map((project, i) => (
+        {sortedProjects.map((project) => (
           <a href={project.data.url || '#'} class="morph-card aspect-square md:aspect-[4/3] block no-underline group cursor-none">
-            <img src={`https://picsum.photos/seed/abs${i}/800/800`} alt="" class="w-full h-full object-cover grayscale mix-blend-multiply opacity-80" />
+            <LightboxCarousel images={project.data.images} imageClass="w-full h-full object-cover grayscale mix-blend-multiply opacity-80" containerClass="absolute inset-0 w-full h-full" />
             
             <div class="morph-dot">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M12 5l7 7-7 7"/></svg>

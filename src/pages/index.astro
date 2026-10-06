@@ -1,5 +1,5 @@
 ---
-import { siteConfig } from "../config";
+import { siteConfig } from '@portfolio/config';
 import MonolithTheme from "../themes/monolith/index.astro";
 import KineticTheme from "../themes/kinetic/index.astro";
 import NeoBrutalistTheme from "../themes/neo-brutalist/index.astro";
@@ -70,7 +70,6 @@ const getThemeComponent = (theme: string) => {
 };
 
 const Theme = getThemeComponent(requestedTheme);
-const isDev = import.meta.env.DEV;
 ---
 
 <Theme />

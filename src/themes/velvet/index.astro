@@ -1,10 +1,11 @@
 ---
 import "@fontsource/cormorant-garamond";
 import "@fontsource/inter";
-import "../../styles/global.css";
-import { getCollection, render } from "astro:content";
-import CVPrintTemplate from "../../components/CVPrintTemplate.astro";
-import TopNav from "../../components/TopNav.astro";
+import '@portfolio/styles/global.css';
+import { getCollection, render } from 'astro:content';
+import LightboxCarousel from '@portfolio/components/LightboxCarousel.astro';
+import CVPrintTemplate from '@portfolio/components/CVPrintTemplate.astro';
+import TopNav from '@portfolio/components/TopNav.astro';
 
 const basicsList = await getCollection(
   "resume",
@@ -174,23 +175,25 @@ const { Content: SummaryContent } = summaryObj
                   class={`group block no-underline cascade-item ${margin} ${rotate}`}
                 >
                   <div class="velvet-bezel-outer">
-                    <div class="velvet-bezel-inner flex flex-col md:flex-row gap-12 items-center">
-                      <div class="w-full md:w-1/2 aspect-video rounded-2xl overflow-hidden bg-black/50">
-                        <img
-                          src={`https://picsum.photos/seed/velvet${i}/800/600`}
-                          class="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-1000 ease-[cubic-bezier(0.32,0.72,0,1)]"
-                          alt=""
-                        />
-                      </div>
-                      <div class="w-full md:w-1/2">
-                        <h3 class="text-4xl font-bold mb-4">
+                    <div class="velvet-bezel-inner flex flex-col gap-8 items-start">
+                      <div class="w-full">
+                        <h3 class="text-4xl font-bold mb-2">
                           {project.data.title}
                         </h3>
-                        <p class="text-xl text-white/50 leading-relaxed mb-8">
+                      </div>
+                      
+                      {project.data.images && project.data.images.length > 0 && (
+                        <div class="w-full aspect-video rounded-2xl overflow-hidden bg-black/50 relative">
+                          <LightboxCarousel images={project.data.images} imageClass="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-1000 ease-[cubic-bezier(0.32,0.72,0,1)]" containerClass="absolute inset-0 w-full h-full" />
+                        </div>
+                      )}
+                      
+                      <div class="w-full">
+                        <p class="text-xl text-white/50 leading-relaxed mb-6">
                           {project.data.description}
                         </p>
                         <div class="flex flex-wrap gap-2">
-                          {project.data.tags.map((tag) => (
+                          {project.data.tags.map((tag: string) => (
                             <span class="px-4 py-2 bg-[#A81E44]/20 text-[#F3E8EC] border border-[#A81E44]/30 rounded-full text-xs font-medium tracking-wider uppercase">
                               {tag}
                             </span>

@@ -1,9 +1,10 @@
 ---
 import '@fontsource/oswald';
-import '../../styles/global.css';
+import '@portfolio/styles/global.css';
 import { getCollection, render } from 'astro:content';
-import CVPrintTemplate from '../../components/CVPrintTemplate.astro';
-import TopNav from '../../components/TopNav.astro';
+import CVPrintTemplate from '@portfolio/components/CVPrintTemplate.astro';
+import TopNav from '@portfolio/components/TopNav.astro';
+import LightboxCarousel from '@portfolio/components/LightboxCarousel.astro';
 
 const basicsList = await getCollection('resume', ({ data }) => data.type === 'basics');
 const summaryList = await getCollection('resume', ({ data }) => data.type === 'summary');
@@ -127,12 +128,19 @@ const { Content: SummaryContent } = summaryObj ? await render(summaryObj) : { Co
     <section class="py-24">
       <h2 class="text-6xl md:text-8xl font-oswald font-bold mb-12 border-b-8 border-white pb-4">SELECTED WORKS</h2>
       <div class="flex flex-col border-t-2 border-white">
-        {sortedProjects.map((project, i) => (
-          <a href={project.data.url || '#'} class="chic-block py-12 md:py-16 px-4 md:px-8 flex flex-col md:flex-row justify-between items-center group no-underline">
-            <h3 class="text-5xl md:text-7xl font-oswald font-bold w-full md:w-1/2">{project.data.title}</h3>
-            <div class="w-full md:w-1/2 flex justify-between items-center mt-8 md:mt-0">
-              <span class="chic-accent font-serif italic text-2xl md:text-3xl max-w-sm">{project.data.description}</span>
-              <span class="font-oswald text-xl border-2 border-current px-4 py-1 rounded-full group-hover:bg-[var(--neon-pink)] group-hover:border-[var(--neon-pink)] group-hover:text-white transition-none">
+        {sortedProjects.map((project) => (
+          <a href={project.data.url || '#'} class="chic-block py-12 md:py-16 px-4 md:px-8 flex flex-col gap-8 group no-underline overflow-hidden relative">
+            <h3 class="text-5xl md:text-7xl font-oswald font-bold w-full relative z-10">{project.data.title}</h3>
+            
+            {project.data.images && project.data.images.length > 0 && (
+              <div class="w-full aspect-video md:aspect-[21/9] relative z-10 border-4 border-white overflow-hidden my-4 opacity-80 group-hover:opacity-100 transition-opacity">
+                <LightboxCarousel images={project.data.images} imageClass="w-full h-full object-cover filter grayscale contrast-150 mix-blend-screen" containerClass="absolute inset-0 w-full h-full bg-[var(--neon-pink)]" />
+              </div>
+            )}
+            
+            <div class="w-full flex justify-between items-center relative z-10 mt-4">
+              <span class="chic-accent font-serif italic text-2xl md:text-3xl max-w-2xl">{project.data.description}</span>
+              <span class="font-oswald text-xl border-2 border-current px-4 py-1 rounded-full group-hover:bg-[var(--neon-pink)] group-hover:border-[var(--neon-pink)] group-hover:text-white transition-none shrink-0">
                 VIEW
               </span>
             </div>
